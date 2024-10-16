@@ -26,7 +26,7 @@ if not os.path.exists(CFG_FILE):
               "shuffle_on_load": True,
               "from_folder": False,
               "autoload": True,
-              "reputation": 0}, f)
+              "reputation": 0}, f, indent=4)
 
 with open(CFG_FILE, "r") as f:
     jloaa = load(f)
