@@ -20,152 +20,168 @@
     var Ze = qn(Re => {
         (function () {
             "use strict";
-            var o = function () { this.init() }; o.prototype = {
-                init: function () {
+            class o {
+                constructor() { this.init(); }
+                init() {
                     var a = this || t;
-                    return a._counter = 1e3, a._html5AudioPool = [], a.html5PoolSize = 10, a._codecs = {}, a._howls = [], a._muted = false, a._volume = 1, a._canPlayEvent = "canplaythrough", a._navigator = typeof window < "u" && window.navigator ? window.navigator : null, a.masterGain = null, a.noAudio = false, a.usingWebAudio = true, a.autoSuspend = true, a.ctx = null, a.autoUnlock = true, a._setup(), a
-                }, volume: function (a) {
+                    return a._counter = 1e3, a._html5AudioPool = [], a.html5PoolSize = 10, a._codecs = {}, a._howls = [], a._muted = false, a._volume = 1, a._canPlayEvent = "canplaythrough", a._navigator = typeof window < "u" && window.navigator ? window.navigator : null, a.masterGain = null, a.noAudio = false, a.usingWebAudio = true, a.autoSuspend = true, a.ctx = null, a.autoUnlock = true, a._setup(), a;
+                }
+                volume(a) {
                     var r = this || t;
                     if (a = parseFloat(a), r.ctx || m(), typeof a < "u" && a >= 0 && a <= 1) {
                         if (r._volume = a, r._muted) return r; r.usingWebAudio && r.masterGain.gain.setValueAtTime(a, t.ctx.currentTime);
-                        for (var d = 0; d < r._howls.length; d++)if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
-                            var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.volume = f._volume * a)
+                        for (var d = 0; d < r._howls.length; d++) if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
+                            var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.volume = f._volume * a);
                         }
-                        return r
+                        return r;
                     }
-                    return r._volume
-                }, mute: function (a) {
+                    return r._volume;
+                }
+                mute(a) {
                     var r = this || t; r.ctx || m(), r._muted = a, r.usingWebAudio && r.masterGain.gain.setValueAtTime(a ? 0 : r._volume, t.ctx.currentTime);
-                    for (var d = 0; d < r._howls.length; d++)if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
-                        var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.muted = a ? true : f._muted)
+                    for (var d = 0; d < r._howls.length; d++) if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
+                        var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.muted = a ? true : f._muted);
                     }
-                    return r
-                }, stop: function () {
-                    for (var a = this || t, r = 0; r < a._howls.length; r++)a._howls[r].stop();
-                    return a
-                }, unload: function () {
-                    for (var a = this || t, r = a._howls.length - 1; r >= 0; r--)a._howls[r].unload();
-                    return a.usingWebAudio && a.ctx && typeof a.ctx.close < "u" && (a.ctx.close(), a.ctx = null, m()), a
-                }, codecs: function (a) { return (this || t)._codecs[a.replace(/^x-/, "")] }, _setup: function () {
+                    return r;
+                }
+                stop() {
+                    for (var a = this || t, r = 0; r < a._howls.length; r++) a._howls[r].stop();
+                    return a;
+                }
+                unload() {
+                    for (var a = this || t, r = a._howls.length - 1; r >= 0; r--) a._howls[r].unload();
+                    return a.usingWebAudio && a.ctx && typeof a.ctx.close < "u" && (a.ctx.close(), a.ctx = null, m()), a;
+                }
+                codecs(a) { return (this || t)._codecs[a.replace(/^x-/, "")]; }
+                _setup() {
                     var a = this || t;
                     if (a.state = a.ctx && a.ctx.state || "suspended", a._autoSuspend(), !a.usingWebAudio) if (typeof Audio < "u") try {
-                        var r = new Audio; typeof r.oncanplaythrough > "u" && (a._canPlayEvent = "canplay")
+                        var r = new Audio; typeof r.oncanplaythrough > "u" && (a._canPlayEvent = "canplay");
                     }
                         catch {
-                            a.noAudio = true
+                            a.noAudio = true;
                         }
                     else a.noAudio = true;
                     try {
-                        var r = new Audio; r.muted && (a.noAudio = true)
+                        var r = new Audio; r.muted && (a.noAudio = true);
                     }
                     catch { }
-                    return a.noAudio || a._setupCodecs(), a
-                }, _setupCodecs: function () {
+                    return a.noAudio || a._setupCodecs(), a;
+                }
+                _setupCodecs() {
                     var a = this || t, r = null;
                     try {
-                        r = typeof Audio < "u" ? new Audio : null
+                        r = typeof Audio < "u" ? new Audio : null;
                     }
                     catch {
-                        return a
+                        return a;
                     }
                     if (!r || typeof r.canPlayType != "function") return a;
                     var d = r.canPlayType("audio/mpeg;").replace(/^no$/, ""), u = a._navigator ? a._navigator.userAgent : "", p = u.match(/OPR\/(\d+)/g), f = p && parseInt(p[0].split("/")[1], 10) < 33, Q = u.indexOf("Safari") !== -1 && u.indexOf("Chrome") === -1, b = u.match(/Version\/(.*?) /), g = Q && b && parseInt(b[1], 10) < 15;
-                    return a._codecs = { mp3: !!(!f && (d || r.canPlayType("audio/mp3;").replace(/^no$/, ""))), mpeg: !!d, opus: !!r.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, ""), ogg: !!r.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ""), oga: !!r.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ""), wav: !!(r.canPlayType('audio/wav; codecs="1"') || r.canPlayType("audio/wav")).replace(/^no$/, ""), aac: !!r.canPlayType("audio/aac;").replace(/^no$/, ""), caf: !!r.canPlayType("audio/x-caf;").replace(/^no$/, ""), m4a: !!(r.canPlayType("audio/x-m4a;") || r.canPlayType("audio/m4a;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), m4b: !!(r.canPlayType("audio/x-m4b;") || r.canPlayType("audio/m4b;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), mp4: !!(r.canPlayType("audio/x-mp4;") || r.canPlayType("audio/mp4;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), weba: !!(!g && r.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, "")), webm: !!(!g && r.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, "")), dolby: !!r.canPlayType('audio/mp4; codecs="ec-3"').replace(/^no$/, ""), flac: !!(r.canPlayType("audio/x-flac;") || r.canPlayType("audio/flac;")).replace(/^no$/, "") }, a
-                }, _unlockAudio: function () {
+                    return a._codecs = { mp3: !!(!f && (d || r.canPlayType("audio/mp3;").replace(/^no$/, ""))), mpeg: !!d, opus: !!r.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, ""), ogg: !!r.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ""), oga: !!r.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ""), wav: !!(r.canPlayType('audio/wav; codecs="1"') || r.canPlayType("audio/wav")).replace(/^no$/, ""), aac: !!r.canPlayType("audio/aac;").replace(/^no$/, ""), caf: !!r.canPlayType("audio/x-caf;").replace(/^no$/, ""), m4a: !!(r.canPlayType("audio/x-m4a;") || r.canPlayType("audio/m4a;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), m4b: !!(r.canPlayType("audio/x-m4b;") || r.canPlayType("audio/m4b;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), mp4: !!(r.canPlayType("audio/x-mp4;") || r.canPlayType("audio/mp4;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), weba: !!(!g && r.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, "")), webm: !!(!g && r.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, "")), dolby: !!r.canPlayType('audio/mp4; codecs="ec-3"').replace(/^no$/, ""), flac: !!(r.canPlayType("audio/x-flac;") || r.canPlayType("audio/flac;")).replace(/^no$/, "") }, a;
+                }
+                _unlockAudio() {
                     var a = this || t;
                     if (!(a._audioUnlocked || !a.ctx)) {
                         a._audioUnlocked = false, a.autoUnlock = false, !a._mobileUnloaded && a.ctx.sampleRate !== 44100 && (a._mobileUnloaded = true, a.unload()), a._scratchBuffer = a.ctx.createBuffer(1, 1, 22050);
                         var r = function (d) {
-                            for (; a._html5AudioPool.length < a.html5PoolSize;)try {
-                                var u = new Audio; u._unlocked = true, a._releaseHtml5Audio(u)
+                            for (; a._html5AudioPool.length < a.html5PoolSize;) try {
+                                var u = new Audio; u._unlocked = true, a._releaseHtml5Audio(u);
                             }
                                 catch {
-                                    a.noAudio = true; break
+                                    a.noAudio = true; break;
                                 }
-                            for (var p = 0; p < a._howls.length; p++)if (!a._howls[p]._webAudio) for (var f = a._howls[p]._getSoundIds(), Q = 0; Q < f.length; Q++) {
-                                var b = a._howls[p]._soundById(f[Q]); b && b._node && !b._node._unlocked && (b._node._unlocked = true, b._node.load())
+                            for (var p = 0; p < a._howls.length; p++) if (!a._howls[p]._webAudio) for (var f = a._howls[p]._getSoundIds(), Q = 0; Q < f.length; Q++) {
+                                var b = a._howls[p]._soundById(f[Q]); b && b._node && !b._node._unlocked && (b._node._unlocked = true, b._node.load());
                             }
                             a._autoResume();
                             var g = a.ctx.createBufferSource(); g.buffer = a._scratchBuffer, g.connect(a.ctx.destination), typeof g.start > "u" ? g.noteOn(0) : g.start(0), typeof a.ctx.resume == "function" && a.ctx.resume(), g.onended = function () {
                                 g.disconnect(0), a._audioUnlocked = true, document.removeEventListener("touchstart", r, true), document.removeEventListener("touchend", r, true), document.removeEventListener("click", r, true), document.removeEventListener("keydown", r, true);
-                                for (var B = 0; B < a._howls.length; B++)a._howls[B]._emit("unlock")
-                            }
+                                for (var B = 0; B < a._howls.length; B++) a._howls[B]._emit("unlock");
+                            };
                         };
-                        return document.addEventListener("touchstart", r, true), document.addEventListener("touchend", r, true), document.addEventListener("click", r, true), document.addEventListener("keydown", r, true), a
+                        return document.addEventListener("touchstart", r, true), document.addEventListener("touchend", r, true), document.addEventListener("click", r, true), document.addEventListener("keydown", r, true), a;
                     }
-                }, _obtainHtml5Audio: function () {
+                }
+                _obtainHtml5Audio() {
                     var a = this || t;
                     if (a._html5AudioPool.length) return a._html5AudioPool.pop();
                     var r = new Audio().play();
-                    return r && typeof Promise < "u" && (r instanceof Promise || typeof r.then == "function") && r.catch(function () { console.warn("HTML5 Audio pool exhausted, returning potentially locked audio object.") }), new Audio
-                }, _releaseHtml5Audio: function (a) {
+                    return r && typeof Promise < "u" && (r instanceof Promise || typeof r.then == "function") && r.catch(function () { console.warn("HTML5 Audio pool exhausted, returning potentially locked audio object."); }), new Audio;
+                }
+                _releaseHtml5Audio(a) {
                     var r = this || t;
-                    return a._unlocked && r._html5AudioPool.push(a), r
-                }, _autoSuspend: function () {
+                    return a._unlocked && r._html5AudioPool.push(a), r;
+                }
+                _autoSuspend() {
                     var a = this;
                     if (!(!a.autoSuspend || !a.ctx || typeof a.ctx.suspend > "u" || !t.usingWebAudio)) {
-                        for (var r = 0; r < a._howls.length; r++)if (a._howls[r]._webAudio) {
-                            for (var d = 0; d < a._howls[r]._sounds.length; d++)if (!a._howls[r]._sounds[d]._paused) return a
+                        for (var r = 0; r < a._howls.length; r++) if (a._howls[r]._webAudio) {
+                            for (var d = 0; d < a._howls[r]._sounds.length; d++) if (!a._howls[r]._sounds[d]._paused) return a;
                         }
                         return a._suspendTimer && clearTimeout(a._suspendTimer), a._suspendTimer = setTimeout(function () {
                             if (a.autoSuspend) {
                                 a._suspendTimer = null, a.state = "suspending";
-                                var u = function () { a.state = "suspended", a._resumeAfterSuspend && (delete a._resumeAfterSuspend, a._autoResume()) }; a.ctx.suspend().then(u, u)
+                                var u = function () { a.state = "suspended", a._resumeAfterSuspend && (delete a._resumeAfterSuspend, a._autoResume()); }; a.ctx.suspend().then(u, u);
                             }
-                        }, 3e4), a
+                        }, 3e4), a;
                     }
-                }, _autoResume: function () {
+                }
+                _autoResume() {
                     var a = this;
                     if (!(!a.ctx || typeof a.ctx.resume > "u" || !t.usingWebAudio)) return a.state === "running" && a.ctx.state !== "interrupted" && a._suspendTimer ? (clearTimeout(a._suspendTimer), a._suspendTimer = null) : a.state === "suspended" || a.state === "running" && a.ctx.state === "interrupted" ? (a.ctx.resume().then(function () {
                         a.state = "running";
-                        for (var r = 0; r < a._howls.length; r++)a._howls[r]._emit("resume")
-                    }), a._suspendTimer && (clearTimeout(a._suspendTimer), a._suspendTimer = null)) : a.state === "suspending" && (a._resumeAfterSuspend = true), a
+                        for (var r = 0; r < a._howls.length; r++) a._howls[r]._emit("resume");
+                    }), a._suspendTimer && (clearTimeout(a._suspendTimer), a._suspendTimer = null)) : a.state === "suspending" && (a._resumeAfterSuspend = true), a;
                 }
-            };
-            var t = new o, e = function (a) {
-                var r = this;
-                if (!a.src || a.src.length === 0) {
-                    console.error("An array of source files must be passed with any new Howl.");
-                    return
+            }
+            var t = new o;class e {
+                constructor(a) {
+                    var r = this;
+                    if (!a.src || a.src.length === 0) {
+                        console.error("An array of source files must be passed with any new Howl.");
+                        return;
+                    }
+                    r.init(a);
                 }
-                r.init(a)
-            }; e.prototype = {
-                init: function (a) {
+                init(a) {
                     var r = this;
                     return t.ctx || m(), r._autoplay = a.autoplay || false, r._format = typeof a.format != "string" ? a.format : [a.format], r._html5 = a.html5 || false, r._muted = a.mute || false, r._loop = a.loop || false, r._pool = a.pool || 5, r._preload = typeof a.preload == "boolean" || a.preload === "metadata" ? a.preload : true, r._rate = a.rate || 1, r._sprite = a.sprite || {}, r._src = typeof a.src != "string" ? a.src : [a.src], r._volume = a.volume !== void 0 ? a.volume : 1, r._xhr = { method: a.xhr && a.xhr.method ? a.xhr.method : "GET", headers: a.xhr && a.xhr.headers ? a.xhr.headers : null, withCredentials: a.xhr && a.xhr.withCredentials ? a.xhr.withCredentials : false }, r._duration = 0, r._state = "unloaded", r._sounds = [], r._endTimers = {}, r._queue = [], r._playLock = false, r._onend = a.onend ? [{ fn: a.onend }] : [], r._onfade = a.onfade ? [{ fn: a.onfade }] : [], r._onload = a.onload ? [{ fn: a.onload }] : [], r._onloaderror = a.onloaderror ? [{ fn: a.onloaderror }] : [], r._onplayerror = a.onplayerror ? [{ fn: a.onplayerror }] : [], r._onpause = a.onpause ? [{ fn: a.onpause }] : [], r._onplay = a.onplay ? [{ fn: a.onplay }] : [], r._onstop = a.onstop ? [{ fn: a.onstop }] : [], r._onmute = a.onmute ? [{ fn: a.onmute }] : [], r._onvolume = a.onvolume ? [{ fn: a.onvolume }] : [], r._onrate = a.onrate ? [{ fn: a.onrate }] : [], r._onseek = a.onseek ? [{ fn: a.onseek }] : [], r._onunlock = a.onunlock ? [{ fn: a.onunlock }] : [], r._onresume = [], r._webAudio = t.usingWebAudio && !r._html5, typeof t.ctx < "u" && t.ctx && t.autoUnlock && t._unlockAudio(), t._howls.push(r), r._autoplay && r._queue.push({
                         event: "play", action: function () {
-                            r.play()
+                            r.play();
                         }
-                    }), r._preload && r._preload !== "none" && r.load(), r
-                }, load: function () {
+                    }), r._preload && r._preload !== "none" && r.load(), r;
+                }
+                load() {
                     var a = this, r = null;
                     if (t.noAudio) {
                         a._emit("loaderror", null, "No audio support.");
-                        return
+                        return;
                     }
                     typeof a._src == "string" && (a._src = [a._src]);
                     for (var d = 0; d < a._src.length; d++) {
                         var u, p;
                         if (a._format && a._format[d]) u = a._format[d]; else {
                             if (p = a._src[d], typeof p != "string") {
-                                a._emit("loaderror", null, "Non-string found in selected audio sources - ignoring."); continue
+                                a._emit("loaderror", null, "Non-string found in selected audio sources - ignoring."); continue;
                             }
-                            u = /^data:audio\/([^;,]+);/i.exec(p), u || (u = /\.([^.]+)$/.exec(p.split("?", 1)[0])), u && (u = u[1].toLowerCase())
+                            u = /^data:audio\/([^;,]+);/i.exec(p), u || (u = /\.([^.]+)$/.exec(p.split("?", 1)[0])), u && (u = u[1].toLowerCase());
                         }
                         if (u || console.warn('No file extension was found. Consider using the "format" property or specify an extension.'), u && t.codecs(u)) {
-                            r = a._src[d]; break
+                            r = a._src[d]; break;
                         }
                     } if (!r) {
                         a._emit("loaderror", null, "No codec support for selected audio sources.");
-                        return
+                        return;
                     }
-                    return a._src = r, a._state = "loading", window.location.protocol === "https:" && r.slice(0, 5) === "http:" && (a._html5 = true, a._webAudio = false), new n(a), a._webAudio && s(a), a
-                }, play: function (a, r) {
+                    return a._src = r, a._state = "loading", window.location.protocol === "https:" && r.slice(0, 5) === "http:" && (a._html5 = true, a._webAudio = false), new n(a), a._webAudio && s(a), a;
+                }
+                play(a, r) {
                     var d = this, u = null;
                     if (typeof a == "number") u = a, a = null; else {
                         if (typeof a == "string" && d._state === "loaded" && !d._sprite[a]) return null;
                         if (typeof a > "u" && (a = "__default", !d._playLock)) {
-                            for (var p = 0, f = 0; f < d._sounds.length; f++)d._sounds[f]._paused && !d._sounds[f]._ended && (p++, u = d._sounds[f]._id); p === 1 ? a = null : u = null
+                            for (var p = 0, f = 0; f < d._sounds.length; f++) d._sounds[f]._paused && !d._sounds[f]._ended && (p++, u = d._sounds[f]._id); p === 1 ? a = null : u = null;
                         }
                     } var Q = u ? d._soundById(u) : d._inactiveSound();
                     if (!Q) return null;
@@ -174,24 +190,24 @@
                         var b = Q._id;
                         return d._queue.push({
                             event: "play", action: function () {
-                                d.play(b)
+                                d.play(b);
                             }
-                        }), b
+                        }), b;
 
                     }
                     if (u && !Q._paused) return r || d._loadQueue("play"), Q._id; d._webAudio && t._autoResume();
                     var g = Math.max(0, Q._seek > 0 ? Q._seek : d._sprite[a][0] / 1e3), B = Math.max(0, (d._sprite[a][0] + d._sprite[a][1]) / 1e3 - g), x = B * 1e3 / Math.abs(Q._rate), E = d._sprite[a][0] / 1e3, W = (d._sprite[a][0] + d._sprite[a][1]) / 1e3; Q._sprite = a, Q._ended = false;
-                    var y = function () { Q._paused = false, Q._seek = g, Q._start = E, Q._stop = W, Q._loop = !!(Q._loop || d._sprite[a][2]) };
+                    var y = function () { Q._paused = false, Q._seek = g, Q._start = E, Q._stop = W, Q._loop = !!(Q._loop || d._sprite[a][2]); };
                     if (g >= W) {
                         d._ended(Q);
-                        return
+                        return;
                     }
                     var w = Q._node;
                     if (d._webAudio) {
                         var k = function () {
                             d._playLock = false, y(), d._refreshBuffer(Q);
-                            var L = Q._muted || d._muted ? 0 : Q._volume; w.gain.setValueAtTime(L, t.ctx.currentTime), Q._playStart = t.ctx.currentTime, typeof w.bufferSource.start > "u" ? Q._loop ? w.bufferSource.noteGrainOn(0, g, 86400) : w.bufferSource.noteGrainOn(0, g, B) : Q._loop ? w.bufferSource.start(0, g, 86400) : w.bufferSource.start(0, g, B), x !== 1 / 0 && (d._endTimers[Q._id] = setTimeout(d._ended.bind(d, Q), x)), r || setTimeout(function () { d._emit("play", Q._id), d._loadQueue() }, 0)
-                        }; t.state === "running" && t.ctx.state !== "interrupted" ? k() : (d._playLock = true, d.once("resume", k), d._clearTimer(Q._id))
+                            var L = Q._muted || d._muted ? 0 : Q._volume; w.gain.setValueAtTime(L, t.ctx.currentTime), Q._playStart = t.ctx.currentTime, typeof w.bufferSource.start > "u" ? Q._loop ? w.bufferSource.noteGrainOn(0, g, 86400) : w.bufferSource.noteGrainOn(0, g, B) : Q._loop ? w.bufferSource.start(0, g, 86400) : w.bufferSource.start(0, g, B), x !== 1 / 0 && (d._endTimers[Q._id] = setTimeout(d._ended.bind(d, Q), x)), r || setTimeout(function () { d._emit("play", Q._id), d._loadQueue(); }, 0);
+                        }; t.state === "running" && t.ctx.state !== "interrupted" ? k() : (d._playLock = true, d.once("resume", k), d._clearTimer(Q._id));
 
                     }
                     else {
@@ -199,276 +215,309 @@
                             w.currentTime = g, w.muted = Q._muted || d._muted || t._muted || w.muted, w.volume = Q._volume * t.volume(), w.playbackRate = Q._rate;
                             try {
                                 var L = w.play();
-                                if (L && typeof Promise < "u" && (L instanceof Promise || typeof L.then == "function") ? (d._playLock = true, y(), L.then(function () { d._playLock = false, w._unlocked = true, r ? d._loadQueue() : d._emit("play", Q._id) }).catch(function () { d._playLock = false, d._emit("playerror", Q._id, "Playback was unable to start. This is most commonly an issue on mobile devices and Chrome where playback was not within a user interaction."), Q._ended = true, Q._paused = true })) : r || (d._playLock = false, y(), d._emit("play", Q._id)), w.playbackRate = Q._rate, w.paused) {
+                                if (L && typeof Promise < "u" && (L instanceof Promise || typeof L.then == "function") ? (d._playLock = true, y(), L.then(function () { d._playLock = false, w._unlocked = true, r ? d._loadQueue() : d._emit("play", Q._id); }).catch(function () { d._playLock = false, d._emit("playerror", Q._id, "Playback was unable to start. This is most commonly an issue on mobile devices and Chrome where playback was not within a user interaction."), Q._ended = true, Q._paused = true; })) : r || (d._playLock = false, y(), d._emit("play", Q._id)), w.playbackRate = Q._rate, w.paused) {
                                     d._emit("playerror", Q._id, "Playback was unable to start. This is most commonly an issue on mobile devices and Chrome where playback was not within a user interaction.");
-                                    return
+                                    return;
                                 }
-                                a !== "__default" || Q._loop ? d._endTimers[Q._id] = setTimeout(d._ended.bind(d, Q), x) : (d._endTimers[Q._id] = function () { d._ended(Q), w.removeEventListener("ended", d._endTimers[Q._id], false) }, w.addEventListener("ended", d._endTimers[Q._id], false))
+                                a !== "__default" || Q._loop ? d._endTimers[Q._id] = setTimeout(d._ended.bind(d, Q), x) : (d._endTimers[Q._id] = function () { d._ended(Q), w.removeEventListener("ended", d._endTimers[Q._id], false); }, w.addEventListener("ended", d._endTimers[Q._id], false));
                             }
                             catch (Y) {
-                                d._emit("playerror", Q._id, Y)
+                                d._emit("playerror", Q._id, Y);
                             }
                         }; w.src === "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA" && (w.src = d._src, w.load());
                         var S = window && window.ejecta || !w.readyState && t._navigator.isCocoonJS;
                         if (w.readyState >= 3 || S) U(); else {
                             d._playLock = true, d._state = "loading";
-                            var T = function () { d._state = "loaded", U(), w.removeEventListener(t._canPlayEvent, T, false) }; w.addEventListener(t._canPlayEvent, T, false), d._clearTimer(Q._id)
+                            var T = function () { d._state = "loaded", U(), w.removeEventListener(t._canPlayEvent, T, false); }; w.addEventListener(t._canPlayEvent, T, false), d._clearTimer(Q._id);
                         }
 
                     }
-                    return Q._id
-                }, pause: function (a) {
+                    return Q._id;
+                }
+                pause(a) {
                     var r = this;
                     if (r._state !== "loaded" || r._playLock) return r._queue.push({
                         event: "pause", action: function () {
-                            r.pause(a)
+                            r.pause(a);
                         }
                     }), r;
                     for (var d = r._getSoundIds(a), u = 0; u < d.length; u++) {
                         r._clearTimer(d[u]);
                         var p = r._soundById(d[u]);
                         if (p && !p._paused && (p._seek = r.seek(d[u]), p._rateSeek = 0, p._paused = true, r._stopFade(d[u]), p._node)) if (r._webAudio) {
-                            if (!p._node.bufferSource) continue; typeof p._node.bufferSource.stop > "u" ? p._node.bufferSource.noteOff(0) : p._node.bufferSource.stop(0), r._cleanBuffer(p._node)
+                            if (!p._node.bufferSource) continue; typeof p._node.bufferSource.stop > "u" ? p._node.bufferSource.noteOff(0) : p._node.bufferSource.stop(0), r._cleanBuffer(p._node);
                         }
-                        else (!isNaN(p._node.duration) || p._node.duration === 1 / 0) && p._node.pause(); arguments[1] || r._emit("pause", p ? p._id : null)
+                        else (!isNaN(p._node.duration) || p._node.duration === 1 / 0) && p._node.pause(); arguments[1] || r._emit("pause", p ? p._id : null);
 
                     }
-                    return r
-                }, stop: function (a, r) {
+                    return r;
+                }
+                stop(a, r) {
                     var d = this;
                     if (d._state !== "loaded" || d._playLock) return d._queue.push({
                         event: "stop", action: function () {
-                            d.stop(a)
+                            d.stop(a);
                         }
                     }), d;
                     for (var u = d._getSoundIds(a), p = 0; p < u.length; p++) {
                         d._clearTimer(u[p]);
-                        var f = d._soundById(u[p]); f && (f._seek = f._start || 0, f._rateSeek = 0, f._paused = true, f._ended = true, d._stopFade(u[p]), f._node && (d._webAudio ? f._node.bufferSource && (typeof f._node.bufferSource.stop > "u" ? f._node.bufferSource.noteOff(0) : f._node.bufferSource.stop(0), d._cleanBuffer(f._node)) : (!isNaN(f._node.duration) || f._node.duration === 1 / 0) && (f._node.currentTime = f._start || 0, f._node.pause(), f._node.duration === 1 / 0 && d._clearSound(f._node))), r || d._emit("stop", f._id))
+                        var f = d._soundById(u[p]); f && (f._seek = f._start || 0, f._rateSeek = 0, f._paused = true, f._ended = true, d._stopFade(u[p]), f._node && (d._webAudio ? f._node.bufferSource && (typeof f._node.bufferSource.stop > "u" ? f._node.bufferSource.noteOff(0) : f._node.bufferSource.stop(0), d._cleanBuffer(f._node)) : (!isNaN(f._node.duration) || f._node.duration === 1 / 0) && (f._node.currentTime = f._start || 0, f._node.pause(), f._node.duration === 1 / 0 && d._clearSound(f._node))), r || d._emit("stop", f._id));
 
                     }
-                    return d
-                }, mute: function (a, r) {
+                    return d;
+                }
+                mute(a, r) {
                     var d = this;
                     if (d._state !== "loaded" || d._playLock) return d._queue.push({
                         event: "mute", action: function () {
-                            d.mute(a, r)
+                            d.mute(a, r);
                         }
                     }), d;
                     if (typeof r > "u") if (typeof a == "boolean") d._muted = a; else return d._muted;
                     for (var u = d._getSoundIds(r), p = 0; p < u.length; p++) {
-                        var f = d._soundById(u[p]); f && (f._muted = a, f._interval && d._stopFade(f._id), d._webAudio && f._node ? f._node.gain.setValueAtTime(a ? 0 : f._volume, t.ctx.currentTime) : f._node && (f._node.muted = t._muted ? true : a), d._emit("mute", f._id))
+                        var f = d._soundById(u[p]); f && (f._muted = a, f._interval && d._stopFade(f._id), d._webAudio && f._node ? f._node.gain.setValueAtTime(a ? 0 : f._volume, t.ctx.currentTime) : f._node && (f._node.muted = t._muted ? true : a), d._emit("mute", f._id));
                     }
-                    return d
-                }, volume: function () {
+                    return d;
+                }
+                volume() {
                     var a = this, r = arguments, d, u;
                     if (r.length === 0) return a._volume;
                     if (r.length === 1 || r.length === 2 && typeof r[1] > "u") {
-                        var p = a._getSoundIds(), f = p.indexOf(r[0]); f >= 0 ? u = parseInt(r[0], 10) : d = parseFloat(r[0])
+                        var p = a._getSoundIds(), f = p.indexOf(r[0]); f >= 0 ? u = parseInt(r[0], 10) : d = parseFloat(r[0]);
                     }
                     else r.length >= 2 && (d = parseFloat(r[0]), u = parseInt(r[1], 10));
                     var Q;
                     if (typeof d < "u" && d >= 0 && d <= 1) {
                         if (a._state !== "loaded" || a._playLock) return a._queue.push({
                             event: "volume", action: function () {
-                                a.volume.apply(a, r)
+                                a.volume.apply(a, r);
                             }
                         }), a; typeof u > "u" && (a._volume = d), u = a._getSoundIds(u);
-                        for (var b = 0; b < u.length; b++)Q = a._soundById(u[b]), Q && (Q._volume = d, r[2] || a._stopFade(u[b]), a._webAudio && Q._node && !Q._muted ? Q._node.gain.setValueAtTime(d, t.ctx.currentTime) : Q._node && !Q._muted && (Q._node.volume = d * t.volume()), a._emit("volume", Q._id))
+                        for (var b = 0; b < u.length; b++) Q = a._soundById(u[b]), Q && (Q._volume = d, r[2] || a._stopFade(u[b]), a._webAudio && Q._node && !Q._muted ? Q._node.gain.setValueAtTime(d, t.ctx.currentTime) : Q._node && !Q._muted && (Q._node.volume = d * t.volume()), a._emit("volume", Q._id));
                     }
                     else return Q = u ? a._soundById(u) : a._sounds[0], Q ? Q._volume : 0;
-                    return a
-                }, fade: function (a, r, d, u) {
+                    return a;
+                }
+                fade(a, r, d, u) {
                     var p = this;
                     if (p._state !== "loaded" || p._playLock) return p._queue.push({
                         event: "fade", action: function () {
-                            p.fade(a, r, d, u)
+                            p.fade(a, r, d, u);
                         }
                     }), p; a = Math.min(Math.max(0, parseFloat(a)), 1), r = Math.min(Math.max(0, parseFloat(r)), 1), d = parseFloat(d), p.volume(a, u);
                     for (var f = p._getSoundIds(u), Q = 0; Q < f.length; Q++) {
                         var b = p._soundById(f[Q]);
                         if (b) {
                             if (u || p._stopFade(f[Q]), p._webAudio && !b._muted) {
-                                var g = t.ctx.currentTime, B = g + d / 1e3; b._volume = a, b._node.gain.setValueAtTime(a, g), b._node.gain.linearRampToValueAtTime(r, B)
+                                var g = t.ctx.currentTime, B = g + d / 1e3; b._volume = a, b._node.gain.setValueAtTime(a, g), b._node.gain.linearRampToValueAtTime(r, B);
                             }
-                            p._startFadeInterval(b, a, r, d, f[Q], typeof u > "u")
+                            p._startFadeInterval(b, a, r, d, f[Q], typeof u > "u");
                         }
-                    } return p
-                }, _startFadeInterval: function (a, r, d, u, p, f) { var Q = this, b = r, g = d - r, B = Math.abs(g / .01), x = Math.max(4, B > 0 ? u / B : u), E = Date.now(); a._fadeTo = d, a._interval = setInterval(function () { var W = (Date.now() - E) / u; E = Date.now(), b += g * W, b = Math.round(b * 100) / 100, g < 0 ? b = Math.max(d, b) : b = Math.min(d, b), Q._webAudio ? a._volume = b : Q.volume(b, a._id, true), f && (Q._volume = b), (d < r && b <= d || d > r && b >= d) && (clearInterval(a._interval), a._interval = null, a._fadeTo = null, Q.volume(d, a._id), Q._emit("fade", a._id)) }, x) }, _stopFade: function (a) {
+                    } return p;
+                }
+                _startFadeInterval(a, r, d, u, p, f) { var Q = this, b = r, g = d - r, B = Math.abs(g / .01), x = Math.max(4, B > 0 ? u / B : u), E = Date.now(); a._fadeTo = d, a._interval = setInterval(function () { var W = (Date.now() - E) / u; E = Date.now(), b += g * W, b = Math.round(b * 100) / 100, g < 0 ? b = Math.max(d, b) : b = Math.min(d, b), Q._webAudio ? a._volume = b : Q.volume(b, a._id, true), f && (Q._volume = b), (d < r && b <= d || d > r && b >= d) && (clearInterval(a._interval), a._interval = null, a._fadeTo = null, Q.volume(d, a._id), Q._emit("fade", a._id)); }, x); }
+                _stopFade(a) {
                     var r = this, d = r._soundById(a);
-                    return d && d._interval && (r._webAudio && d._node.gain.cancelScheduledValues(t.ctx.currentTime), clearInterval(d._interval), d._interval = null, r.volume(d._fadeTo, a), d._fadeTo = null, r._emit("fade", a)), r
-                }, loop: function () {
+                    return d && d._interval && (r._webAudio && d._node.gain.cancelScheduledValues(t.ctx.currentTime), clearInterval(d._interval), d._interval = null, r.volume(d._fadeTo, a), d._fadeTo = null, r._emit("fade", a)), r;
+                }
+                loop() {
                     var a = this, r = arguments, d, u, p;
                     if (r.length === 0) return a._loop;
                     if (r.length === 1) if (typeof r[0] == "boolean") d = r[0], a._loop = d; else return p = a._soundById(parseInt(r[0], 10)), p ? p._loop : false; else r.length === 2 && (d = r[0], u = parseInt(r[1], 10));
-                    for (var f = a._getSoundIds(u), Q = 0; Q < f.length; Q++)p = a._soundById(f[Q]), p && (p._loop = d, a._webAudio && p._node && p._node.bufferSource && (p._node.bufferSource.loop = d, d && (p._node.bufferSource.loopStart = p._start || 0, p._node.bufferSource.loopEnd = p._stop, a.playing(f[Q]) && (a.pause(f[Q], true), a.play(f[Q], true)))));
-                    return a
-                }, rate: function () {
+                    for (var f = a._getSoundIds(u), Q = 0; Q < f.length; Q++) p = a._soundById(f[Q]), p && (p._loop = d, a._webAudio && p._node && p._node.bufferSource && (p._node.bufferSource.loop = d, d && (p._node.bufferSource.loopStart = p._start || 0, p._node.bufferSource.loopEnd = p._stop, a.playing(f[Q]) && (a.pause(f[Q], true), a.play(f[Q], true)))));
+                    return a;
+                }
+                rate() {
                     var a = this, r = arguments, d, u;
                     if (r.length === 0) u = a._sounds[0]._id; else if (r.length === 1) {
-                        var p = a._getSoundIds(), f = p.indexOf(r[0]); f >= 0 ? u = parseInt(r[0], 10) : d = parseFloat(r[0])
+                        var p = a._getSoundIds(), f = p.indexOf(r[0]); f >= 0 ? u = parseInt(r[0], 10) : d = parseFloat(r[0]);
                     }
                     else r.length === 2 && (d = parseFloat(r[0]), u = parseInt(r[1], 10));
                     var Q;
                     if (typeof d == "number") {
                         if (a._state !== "loaded" || a._playLock) return a._queue.push({
                             event: "rate", action: function () {
-                                a.rate.apply(a, r)
+                                a.rate.apply(a, r);
                             }
                         }), a; typeof u > "u" && (a._rate = d), u = a._getSoundIds(u);
-                        for (var b = 0; b < u.length; b++)if (Q = a._soundById(u[b]), Q) {
+                        for (var b = 0; b < u.length; b++) if (Q = a._soundById(u[b]), Q) {
                             a.playing(u[b]) && (Q._rateSeek = a.seek(u[b]), Q._playStart = a._webAudio ? t.ctx.currentTime : Q._playStart), Q._rate = d, a._webAudio && Q._node && Q._node.bufferSource ? Q._node.bufferSource.playbackRate.setValueAtTime(d, t.ctx.currentTime) : Q._node && (Q._node.playbackRate = d);
-                            var g = a.seek(u[b]), B = (a._sprite[Q._sprite][0] + a._sprite[Q._sprite][1]) / 1e3 - g, x = B * 1e3 / Math.abs(Q._rate); (a._endTimers[u[b]] || !Q._paused) && (a._clearTimer(u[b]), a._endTimers[u[b]] = setTimeout(a._ended.bind(a, Q), x)), a._emit("rate", Q._id)
+                            var g = a.seek(u[b]), B = (a._sprite[Q._sprite][0] + a._sprite[Q._sprite][1]) / 1e3 - g, x = B * 1e3 / Math.abs(Q._rate); (a._endTimers[u[b]] || !Q._paused) && (a._clearTimer(u[b]), a._endTimers[u[b]] = setTimeout(a._ended.bind(a, Q), x)), a._emit("rate", Q._id);
                         }
 
                     }
                     else return Q = a._soundById(u), Q ? Q._rate : a._rate;
-                    return a
-                }, seek: function () {
+                    return a;
+                }
+                seek() {
                     var a = this, r = arguments, d, u;
                     if (r.length === 0) a._sounds.length && (u = a._sounds[0]._id); else if (r.length === 1) {
-                        var p = a._getSoundIds(), f = p.indexOf(r[0]); f >= 0 ? u = parseInt(r[0], 10) : a._sounds.length && (u = a._sounds[0]._id, d = parseFloat(r[0]))
+                        var p = a._getSoundIds(), f = p.indexOf(r[0]); f >= 0 ? u = parseInt(r[0], 10) : a._sounds.length && (u = a._sounds[0]._id, d = parseFloat(r[0]));
                     }
                     else r.length === 2 && (d = parseFloat(r[0]), u = parseInt(r[1], 10));
                     if (typeof u > "u") return 0;
                     if (typeof d == "number" && (a._state !== "loaded" || a._playLock)) return a._queue.push({
                         event: "seek", action: function () {
-                            a.seek.apply(a, r)
+                            a.seek.apply(a, r);
                         }
                     }), a;
                     var Q = a._soundById(u);
                     if (Q) if (typeof d == "number" && d >= 0) {
                         var b = a.playing(u); b && a.pause(u, true), Q._seek = d, Q._ended = false, a._clearTimer(u), !a._webAudio && Q._node && !isNaN(Q._node.duration) && (Q._node.currentTime = d);
-                        var g = function () { b && a.play(u, true), a._emit("seek", u) };
+                        var g = function () { b && a.play(u, true), a._emit("seek", u); };
                         if (b && !a._webAudio) {
-                            var B = function () { a._playLock ? setTimeout(B, 0) : g() }; setTimeout(B, 0)
+                            var B = function () { a._playLock ? setTimeout(B, 0) : g(); }; setTimeout(B, 0);
                         }
-                        else g()
+                        else g();
 
                     }
                     else if (a._webAudio) {
                         var x = a.playing(u) ? t.ctx.currentTime - Q._playStart : 0, E = Q._rateSeek ? Q._rateSeek - Q._seek : 0;
-                        return Q._seek + (E + x * Math.abs(Q._rate))
+                        return Q._seek + (E + x * Math.abs(Q._rate));
                     }
                     else return Q._node.currentTime;
-                    return a
-                }, playing: function (a) {
+                    return a;
+                }
+                playing(a) {
                     var r = this;
                     if (typeof a == "number") {
                         var d = r._soundById(a);
-                        return d ? !d._paused : false
+                        return d ? !d._paused : false;
                     }
-                    for (var u = 0; u < r._sounds.length; u++)if (!r._sounds[u]._paused) return true;
-                    return false
-                }, duration: function (a) {
+                    for (var u = 0; u < r._sounds.length; u++) if (!r._sounds[u]._paused) return true;
+                    return false;
+                }
+                duration(a) {
                     var r = this, d = r._duration, u = r._soundById(a);
-                    return u && (d = r._sprite[u._sprite][1] / 1e3), d
-                }, state: function () { return this._state }, unload: function () {
-                    for (var a = this, r = a._sounds, d = 0; d < r.length; d++)r[d]._paused || a.stop(r[d]._id), a._webAudio || (a._clearSound(r[d]._node), r[d]._node.removeEventListener("error", r[d]._errorFn, false), r[d]._node.removeEventListener(t._canPlayEvent, r[d]._loadFn, false), r[d]._node.removeEventListener("ended", r[d]._endFn, false), t._releaseHtml5Audio(r[d]._node)), delete r[d]._node, a._clearTimer(r[d]._id);
+                    return u && (d = r._sprite[u._sprite][1] / 1e3), d;
+                }
+                state() { return this._state; }
+                unload() {
+                    for (var a = this, r = a._sounds, d = 0; d < r.length; d++) r[d]._paused || a.stop(r[d]._id), a._webAudio || (a._clearSound(r[d]._node), r[d]._node.removeEventListener("error", r[d]._errorFn, false), r[d]._node.removeEventListener(t._canPlayEvent, r[d]._loadFn, false), r[d]._node.removeEventListener("ended", r[d]._endFn, false), t._releaseHtml5Audio(r[d]._node)), delete r[d]._node, a._clearTimer(r[d]._id);
                     var u = t._howls.indexOf(a); u >= 0 && t._howls.splice(u, 1);
                     var p = true;
-                    for (d = 0; d < t._howls.length; d++)if (t._howls[d]._src === a._src || a._src.indexOf(t._howls[d]._src) >= 0) {
-                        p = false; break
+                    for (d = 0; d < t._howls.length; d++) if (t._howls[d]._src === a._src || a._src.indexOf(t._howls[d]._src) >= 0) {
+                        p = false; break;
                     }
-                    return i && p && delete i[a._src], t.noAudio = false, a._state = "unloaded", a._sounds = [], a = null, null
-                }, on: function (a, r, d, u) {
+                    return i && p && delete i[a._src], t.noAudio = false, a._state = "unloaded", a._sounds = [], a = null, null;
+                }
+                on(a, r, d, u) {
                     var p = this, f = p["_on" + a];
                     return typeof r == "function" && f.push(u ? {
                         id: d, fn: r, once: u
                     }
-                        : { id: d, fn: r }), p
-                }, off: function (a, r, d) {
+                        : { id: d, fn: r }), p;
+                }
+                off(a, r, d) {
                     var u = this, p = u["_on" + a], f = 0;
                     if (typeof r == "number" && (d = r, r = null), r || d) for (f = 0; f < p.length; f++) {
                         var Q = d === p[f].id;
                         if (r === p[f].fn && Q || !r && Q) {
-                            p.splice(f, 1); break
+                            p.splice(f, 1); break;
                         }
                     } else if (a) u["_on" + a] = []; else {
                         var b = Object.keys(u);
-                        for (f = 0; f < b.length; f++)b[f].indexOf("_on") === 0 && Array.isArray(u[b[f]]) && (u[b[f]] = [])
+                        for (f = 0; f < b.length; f++) b[f].indexOf("_on") === 0 && Array.isArray(u[b[f]]) && (u[b[f]] = []);
                     }
-                    return u
-                }, once: function (a, r, d) {
+                    return u;
+                }
+                once(a, r, d) {
                     var u = this;
-                    return u.on(a, r, d, 1), u
-                }, _emit: function (a, r, d) {
-                    for (var u = this, p = u["_on" + a], f = p.length - 1; f >= 0; f--)(!p[f].id || p[f].id === r || a === "load") && (setTimeout(function (Q) { Q.call(this, r, d) }.bind(u, p[f].fn), 0), p[f].once && u.off(a, p[f].fn, p[f].id));
-                    return u._loadQueue(a), u
-                }, _loadQueue: function (a) {
+                    return u.on(a, r, d, 1), u;
+                }
+                _emit(a, r, d) {
+                    for (var u = this, p = u["_on" + a], f = p.length - 1; f >= 0; f--) (!p[f].id || p[f].id === r || a === "load") && (setTimeout(function (Q) { Q.call(this, r, d); }.bind(u, p[f].fn), 0), p[f].once && u.off(a, p[f].fn, p[f].id));
+                    return u._loadQueue(a), u;
+                }
+                _loadQueue(a) {
                     var r = this;
                     if (r._queue.length > 0) {
-                        var d = r._queue[0]; d.event === a && (r._queue.shift(), r._loadQueue()), a || d.action()
+                        var d = r._queue[0]; d.event === a && (r._queue.shift(), r._loadQueue()), a || d.action();
                     }
-                    return r
-                }, _ended: function (a) {
+                    return r;
+                }
+                _ended(a) {
                     var r = this, d = a._sprite;
                     if (!r._webAudio && a._node && !a._node.paused && !a._node.ended && a._node.currentTime < a._stop) return setTimeout(r._ended.bind(r, a), 100), r;
                     var u = !!(a._loop || r._sprite[d][2]);
                     if (r._emit("end", a._id), !r._webAudio && u && r.stop(a._id, true).play(a._id), r._webAudio && u) {
                         r._emit("play", a._id), a._seek = a._start || 0, a._rateSeek = 0, a._playStart = t.ctx.currentTime;
-                        var p = (a._stop - a._start) * 1e3 / Math.abs(a._rate); r._endTimers[a._id] = setTimeout(r._ended.bind(r, a), p)
+                        var p = (a._stop - a._start) * 1e3 / Math.abs(a._rate); r._endTimers[a._id] = setTimeout(r._ended.bind(r, a), p);
 
                     }
-                    return r._webAudio && !u && (a._paused = true, a._ended = true, a._seek = a._start || 0, a._rateSeek = 0, r._clearTimer(a._id), r._cleanBuffer(a._node), t._autoSuspend()), !r._webAudio && !u && r.stop(a._id, true), r
-                }, _clearTimer: function (a) {
+                    return r._webAudio && !u && (a._paused = true, a._ended = true, a._seek = a._start || 0, a._rateSeek = 0, r._clearTimer(a._id), r._cleanBuffer(a._node), t._autoSuspend()), !r._webAudio && !u && r.stop(a._id, true), r;
+                }
+                _clearTimer(a) {
                     var r = this;
                     if (r._endTimers[a]) {
                         if (typeof r._endTimers[a] != "function") clearTimeout(r._endTimers[a]); else {
-                            var d = r._soundById(a); d && d._node && d._node.removeEventListener("ended", r._endTimers[a], false)
+                            var d = r._soundById(a); d && d._node && d._node.removeEventListener("ended", r._endTimers[a], false);
                         }
-                        delete r._endTimers[a]
+                        delete r._endTimers[a];
                     }
-                    return r
-                }, _soundById: function (a) {
-                    for (var r = this, d = 0; d < r._sounds.length; d++)if (a === r._sounds[d]._id) return r._sounds[d];
-                    return null
-                }, _inactiveSound: function () {
+                    return r;
+                }
+                _soundById(a) {
+                    for (var r = this, d = 0; d < r._sounds.length; d++) if (a === r._sounds[d]._id) return r._sounds[d];
+                    return null;
+                }
+                _inactiveSound() {
                     var a = this; a._drain();
-                    for (var r = 0; r < a._sounds.length; r++)if (a._sounds[r]._ended) return a._sounds[r].reset();
-                    return new n(a)
-                }, _drain: function () {
+                    for (var r = 0; r < a._sounds.length; r++) if (a._sounds[r]._ended) return a._sounds[r].reset();
+                    return new n(a);
+                }
+                _drain() {
                     var a = this, r = a._pool, d = 0, u = 0;
                     if (!(a._sounds.length < r)) {
-                        for (u = 0; u < a._sounds.length; u++)a._sounds[u]._ended && d++;
+                        for (u = 0; u < a._sounds.length; u++) a._sounds[u]._ended && d++;
                         for (u = a._sounds.length - 1; u >= 0; u--) {
-                            if (d <= r) return; a._sounds[u]._ended && (a._webAudio && a._sounds[u]._node && a._sounds[u]._node.disconnect(0), a._sounds.splice(u, 1), d--)
+                            if (d <= r) return; a._sounds[u]._ended && (a._webAudio && a._sounds[u]._node && a._sounds[u]._node.disconnect(0), a._sounds.splice(u, 1), d--);
                         }
                     }
-                }, _getSoundIds: function (a) {
+                }
+                _getSoundIds(a) {
                     var r = this;
                     if (typeof a > "u") {
-                        for (var d = [], u = 0; u < r._sounds.length; u++)d.push(r._sounds[u]._id);
-                        return d
+                        for (var d = [], u = 0; u < r._sounds.length; u++) d.push(r._sounds[u]._id);
+                        return d;
                     }
-                    else return [a]
-                }, _refreshBuffer: function (a) {
+                    else return [a];
+                }
+                _refreshBuffer(a) {
                     var r = this;
-                    return a._node.bufferSource = t.ctx.createBufferSource(), a._node.bufferSource.buffer = i[r._src], a._panner ? a._node.bufferSource.connect(a._panner) : a._node.bufferSource.connect(a._node), a._node.bufferSource.loop = a._loop, a._loop && (a._node.bufferSource.loopStart = a._start || 0, a._node.bufferSource.loopEnd = a._stop || 0), a._node.bufferSource.playbackRate.setValueAtTime(a._rate, t.ctx.currentTime), r
-                }, _cleanBuffer: function (a) {
+                    return a._node.bufferSource = t.ctx.createBufferSource(), a._node.bufferSource.buffer = i[r._src], a._panner ? a._node.bufferSource.connect(a._panner) : a._node.bufferSource.connect(a._node), a._node.bufferSource.loop = a._loop, a._loop && (a._node.bufferSource.loopStart = a._start || 0, a._node.bufferSource.loopEnd = a._stop || 0), a._node.bufferSource.playbackRate.setValueAtTime(a._rate, t.ctx.currentTime), r;
+                }
+                _cleanBuffer(a) {
                     var r = this, d = t._navigator && t._navigator.vendor.indexOf("Apple") >= 0;
                     if (!a.bufferSource) return r;
                     if (t._scratchBuffer && a.bufferSource && (a.bufferSource.onended = null, a.bufferSource.disconnect(0), d)) try {
-                        a.bufferSource.buffer = t._scratchBuffer
+                        a.bufferSource.buffer = t._scratchBuffer;
                     }
                         catch { }
-                    return a.bufferSource = null, r
-                }, _clearSound: function (a) { var r = /MSIE |Trident\//.test(t._navigator && t._navigator.userAgent); r || (a.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA") }
-            };
-            var n = function (a) { this._parent = a, this.init() }; n.prototype = {
-                init: function () {
-                    var a = this, r = a._parent;
-                    return a._muted = r._muted, a._loop = r._loop, a._volume = r._volume, a._rate = r._rate, a._seek = 0, a._paused = true, a._ended = true, a._sprite = "__default", a._id = ++t._counter, r._sounds.push(a), a.create(), a
-                }, create: function () {
-                    var a = this, r = a._parent, d = t._muted || a._muted || a._parent._muted ? 0 : a._volume;
-                    return r._webAudio ? (a._node = typeof t.ctx.createGain > "u" ? t.ctx.createGainNode() : t.ctx.createGain(), a._node.gain.setValueAtTime(d, t.ctx.currentTime), a._node.paused = true, a._node.connect(t.masterGain)) : t.noAudio || (a._node = t._obtainHtml5Audio(), a._errorFn = a._errorListener.bind(a), a._node.addEventListener("error", a._errorFn, false), a._loadFn = a._loadListener.bind(a), a._node.addEventListener(t._canPlayEvent, a._loadFn, false), a._endFn = a._endListener.bind(a), a._node.addEventListener("ended", a._endFn, false), a._node.src = r._src, a._node.preload = r._preload === true ? "auto" : r._preload, a._node.volume = d * t.volume(), a._node.load()), a
-                }, reset: function () {
-                    var a = this, r = a._parent;
-                    return a._muted = r._muted, a._loop = r._loop, a._volume = r._volume, a._rate = r._rate, a._seek = 0, a._rateSeek = 0, a._paused = true, a._ended = true, a._sprite = "__default", a._id = ++t._counter, a
-                }, _errorListener: function () { var a = this; a._parent._emit("loaderror", a._id, a._node.error ? a._node.error.code : 0), a._node.removeEventListener("error", a._errorFn, false) }, _loadListener: function () { var a = this, r = a._parent; r._duration = Math.ceil(a._node.duration * 10) / 10, Object.keys(r._sprite).length === 0 && (r._sprite = { __default: [0, r._duration * 1e3] }), r._state !== "loaded" && (r._state = "loaded", r._emit("load"), r._loadQueue()), a._node.removeEventListener(t._canPlayEvent, a._loadFn, false) }, _endListener: function () {
-                    var a = this, r = a._parent; r._duration === 1 / 0 && (r._duration = Math.ceil(a._node.duration * 10) / 10, r._sprite.__default[1] === 1 / 0 && (r._sprite.__default[1] = r._duration * 1e3), r._ended(a)), a._node.removeEventListener("ended", a._endFn, false)
+                    return a.bufferSource = null, r;
                 }
-            };
-            var i = {}, s = function (a) {
+                _clearSound(a) { var r = /MSIE |Trident\//.test(t._navigator && t._navigator.userAgent); r || (a.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA"); }
+            }
+            class n {
+                constructor(a) { this._parent = a, this.init(); }
+                init() {
+                    var a = this, r = a._parent;
+                    return a._muted = r._muted, a._loop = r._loop, a._volume = r._volume, a._rate = r._rate, a._seek = 0, a._paused = true, a._ended = true, a._sprite = "__default", a._id = ++t._counter, r._sounds.push(a), a.create(), a;
+                }
+                create() {
+                    var a = this, r = a._parent, d = t._muted || a._muted || a._parent._muted ? 0 : a._volume;
+                    return r._webAudio ? (a._node = typeof t.ctx.createGain > "u" ? t.ctx.createGainNode() : t.ctx.createGain(), a._node.gain.setValueAtTime(d, t.ctx.currentTime), a._node.paused = true, a._node.connect(t.masterGain)) : t.noAudio || (a._node = t._obtainHtml5Audio(), a._errorFn = a._errorListener.bind(a), a._node.addEventListener("error", a._errorFn, false), a._loadFn = a._loadListener.bind(a), a._node.addEventListener(t._canPlayEvent, a._loadFn, false), a._endFn = a._endListener.bind(a), a._node.addEventListener("ended", a._endFn, false), a._node.src = r._src, a._node.preload = r._preload === true ? "auto" : r._preload, a._node.volume = d * t.volume(), a._node.load()), a;
+                }
+                reset() {
+                    var a = this, r = a._parent;
+                    return a._muted = r._muted, a._loop = r._loop, a._volume = r._volume, a._rate = r._rate, a._seek = 0, a._rateSeek = 0, a._paused = true, a._ended = true, a._sprite = "__default", a._id = ++t._counter, a;
+                }
+                _errorListener() { var a = this; a._parent._emit("loaderror", a._id, a._node.error ? a._node.error.code : 0), a._node.removeEventListener("error", a._errorFn, false); }
+                _loadListener() { var a = this, r = a._parent; r._duration = Math.ceil(a._node.duration * 10) / 10, Object.keys(r._sprite).length === 0 && (r._sprite = { __default: [0, r._duration * 1e3] }), r._state !== "loaded" && (r._state = "loaded", r._emit("load"), r._loadQueue()), a._node.removeEventListener(t._canPlayEvent, a._loadFn, false); }
+                _endListener() {
+                    var a = this, r = a._parent; r._duration === 1 / 0 && (r._duration = Math.ceil(a._node.duration * 10) / 10, r._sprite.__default[1] === 1 / 0 && (r._sprite.__default[1] = r._duration * 1e3), r._ended(a)), a._node.removeEventListener("ended", a._endFn, false);
+                }
+            }            var i = {}, s = function (a) {
                 var r = a._src;
                 if (i[r]) {
                     a._duration = i[r].duration, h(a);
