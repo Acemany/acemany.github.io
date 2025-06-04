@@ -1,25 +1,24 @@
 (() => {
-    var fo = Object.create;
-    var jt = Object.defineProperty;
-    var Qo = Object.getOwnPropertyDescriptor;
-    var bo = Object.getOwnPropertyNames;
-    var go = Object.getPrototypeOf, Fo = Object.prototype.hasOwnProperty;
-    var Bo = (o, t, e) => t in o ? jt(o, t, { enumerable: !0, configurable: !0, writable: !0, value: e }) : o[t] = e;
+    var Bo = (o, t, e) => t in o ? Object.defineProperty(o, t, { enumerable: true, configurable: true, writable: true, value: e }) : o[t] = e;
     var Et = (o => typeof require < "u" ? require : typeof Proxy < "u" ? new Proxy(o, { get: (t, e) => (typeof require < "u" ? require : t)[e] }) : o)(function (o) { if (typeof require < "u") return require.apply(this, arguments); throw Error('Dynamic require of "' + o + '" is not supported') });
     var qn = (o, t) => () => (t || o((t = { exports: {} }).exports, t), t.exports);
-    var J = (o, t) => { for (var e in t) jt(o, e, { get: t[e], enumerable: !0 }) };
+    var J = (o, t) => {
+        for (var e in t)
+            Object.defineProperty(o, e, { get: t[e], enumerable: true })
+    };
     var Uo = (o, t, e, n) => {
         if (t && typeof t == "object" || typeof t == "function")
-            for (let i of bo(t))
-                !Fo.call(o, i) && i !== e && jt(o, i, { get: () => t[i], enumerable: !(n = Qo(t, i)) || n.enumerable });
-        return o };
-    var Pt = (o, t, e) => (e = o != null ? fo(go(o)) : {}, Uo(t || !o || !o.__esModule ? jt(e, "default", { value: o, enumerable: !0 }) : e, o));
+            for (let i of Object.getOwnPropertyNames(t))
+                !Object.prototype.hasOwnProperty.call(o, i) && i !== e && Object.defineProperty(o, i, { get: () => t[i], enumerable: !(n = Object.getOwnPropertyDescriptor(t, i)) || n.enumerable });
+        return o
+    };
+    var Pt = (o, t, e) => (e = o != null ? Object.create(Object.getPrototypeOf(o)) : {}, Uo(t || !o || !o.__esModule ? Object.defineProperty(e, "default", { value: o, enumerable: true }) : e, o));
     var R = (o, t, e) => (Bo(o, typeof t != "symbol" ? t + "" : t, e), e);
     var Ze = qn(Re => {
         (function () {
             "use strict";
             var o = function () { this.init() }; o.prototype = {
-                init: function () { var a = this || t; return a._counter = 1e3, a._html5AudioPool = [], a.html5PoolSize = 10, a._codecs = {}, a._howls = [], a._muted = !1, a._volume = 1, a._canPlayEvent = "canplaythrough", a._navigator = typeof window < "u" && window.navigator ? window.navigator : null, a.masterGain = null, a.noAudio = !1, a.usingWebAudio = !0, a.autoSuspend = !0, a.ctx = null, a.autoUnlock = !0, a._setup(), a }, volume: function (a) {
+                init: function () { var a = this || t; return a._counter = 1e3, a._html5AudioPool = [], a.html5PoolSize = 10, a._codecs = {}, a._howls = [], a._muted = false, a._volume = 1, a._canPlayEvent = "canplaythrough", a._navigator = typeof window < "u" && window.navigator ? window.navigator : null, a.masterGain = null, a.noAudio = false, a.usingWebAudio = true, a.autoSuspend = true, a.ctx = null, a.autoUnlock = true, a._setup(), a }, volume: function (a) {
                     var r = this || t; if (a = parseFloat(a), r.ctx || m(), typeof a < "u" && a >= 0 && a <= 1) {
                         if (r._volume = a, r._muted) return r; r.usingWebAudio && r.masterGain.gain.setValueAtTime(a, t.ctx.currentTime); for (var d = 0; d < r._howls.length; d++)if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
                             var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.volume = f._volume * a)
@@ -29,7 +28,7 @@
                     return r._volume
                 }, mute: function (a) {
                     var r = this || t; r.ctx || m(), r._muted = a, r.usingWebAudio && r.masterGain.gain.setValueAtTime(a ? 0 : r._volume, t.ctx.currentTime); for (var d = 0; d < r._howls.length; d++)if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
-                        var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.muted = a ? !0 : f._muted)
+                        var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.muted = a ? true : f._muted)
                     }
                     return r
                 }, stop: function () { for (var a = this || t, r = 0; r < a._howls.length; r++)a._howls[r].stop(); return a }, unload: function () { for (var a = this || t, r = a._howls.length - 1; r >= 0; r--)a._howls[r].unload(); return a.usingWebAudio && a.ctx && typeof a.ctx.close < "u" && (a.ctx.close(), a.ctx = null, m()), a }, codecs: function (a) { return (this || t)._codecs[a.replace(/^x-/, "")] }, _setup: function () {
@@ -37,10 +36,10 @@
                         var r = new Audio; typeof r.oncanplaythrough > "u" && (a._canPlayEvent = "canplay")
                     }
                         catch {
-                            a.noAudio = !0
+                            a.noAudio = true
                         }
-                    else a.noAudio = !0; try {
-                        var r = new Audio; r.muted && (a.noAudio = !0)
+                    else a.noAudio = true; try {
+                        var r = new Audio; r.muted && (a.noAudio = true)
                     }
                     catch {
                     }
@@ -56,20 +55,20 @@
                     var d = r.canPlayType("audio/mpeg;").replace(/^no$/, ""), u = a._navigator ? a._navigator.userAgent : "", p = u.match(/OPR\/(\d+)/g), f = p && parseInt(p[0].split("/")[1], 10) < 33, Q = u.indexOf("Safari") !== -1 && u.indexOf("Chrome") === -1, b = u.match(/Version\/(.*?) /), g = Q && b && parseInt(b[1], 10) < 15; return a._codecs = { mp3: !!(!f && (d || r.canPlayType("audio/mp3;").replace(/^no$/, ""))), mpeg: !!d, opus: !!r.canPlayType('audio/ogg; codecs="opus"').replace(/^no$/, ""), ogg: !!r.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ""), oga: !!r.canPlayType('audio/ogg; codecs="vorbis"').replace(/^no$/, ""), wav: !!(r.canPlayType('audio/wav; codecs="1"') || r.canPlayType("audio/wav")).replace(/^no$/, ""), aac: !!r.canPlayType("audio/aac;").replace(/^no$/, ""), caf: !!r.canPlayType("audio/x-caf;").replace(/^no$/, ""), m4a: !!(r.canPlayType("audio/x-m4a;") || r.canPlayType("audio/m4a;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), m4b: !!(r.canPlayType("audio/x-m4b;") || r.canPlayType("audio/m4b;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), mp4: !!(r.canPlayType("audio/x-mp4;") || r.canPlayType("audio/mp4;") || r.canPlayType("audio/aac;")).replace(/^no$/, ""), weba: !!(!g && r.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, "")), webm: !!(!g && r.canPlayType('audio/webm; codecs="vorbis"').replace(/^no$/, "")), dolby: !!r.canPlayType('audio/mp4; codecs="ec-3"').replace(/^no$/, ""), flac: !!(r.canPlayType("audio/x-flac;") || r.canPlayType("audio/flac;")).replace(/^no$/, "") }, a
                 }, _unlockAudio: function () {
                     var a = this || t; if (!(a._audioUnlocked || !a.ctx)) {
-                        a._audioUnlocked = !1, a.autoUnlock = !1, !a._mobileUnloaded && a.ctx.sampleRate !== 44100 && (a._mobileUnloaded = !0, a.unload()), a._scratchBuffer = a.ctx.createBuffer(1, 1, 22050);
+                        a._audioUnlocked = false, a.autoUnlock = false, !a._mobileUnloaded && a.ctx.sampleRate !== 44100 && (a._mobileUnloaded = true, a.unload()), a._scratchBuffer = a.ctx.createBuffer(1, 1, 22050);
                         var r = function (d) {
                             for (; a._html5AudioPool.length < a.html5PoolSize;)try {
-                                var u = new Audio; u._unlocked = !0, a._releaseHtml5Audio(u)
+                                var u = new Audio; u._unlocked = true, a._releaseHtml5Audio(u)
                             }
                                 catch {
-                                    a.noAudio = !0; break
+                                    a.noAudio = true; break
                                 }
                             for (var p = 0; p < a._howls.length; p++)if (!a._howls[p]._webAudio) for (var f = a._howls[p]._getSoundIds(), Q = 0; Q < f.length; Q++) {
-                                var b = a._howls[p]._soundById(f[Q]); b && b._node && !b._node._unlocked && (b._node._unlocked = !0, b._node.load())
+                                var b = a._howls[p]._soundById(f[Q]); b && b._node && !b._node._unlocked && (b._node._unlocked = true, b._node.load())
                             }
                             a._autoResume();
-                            var g = a.ctx.createBufferSource(); g.buffer = a._scratchBuffer, g.connect(a.ctx.destination), typeof g.start > "u" ? g.noteOn(0) : g.start(0), typeof a.ctx.resume == "function" && a.ctx.resume(), g.onended = function () { g.disconnect(0), a._audioUnlocked = !0, document.removeEventListener("touchstart", r, !0), document.removeEventListener("touchend", r, !0), document.removeEventListener("click", r, !0), document.removeEventListener("keydown", r, !0); for (var B = 0; B < a._howls.length; B++)a._howls[B]._emit("unlock") }
-                        }; return document.addEventListener("touchstart", r, !0), document.addEventListener("touchend", r, !0), document.addEventListener("click", r, !0), document.addEventListener("keydown", r, !0), a
+                            var g = a.ctx.createBufferSource(); g.buffer = a._scratchBuffer, g.connect(a.ctx.destination), typeof g.start > "u" ? g.noteOn(0) : g.start(0), typeof a.ctx.resume == "function" && a.ctx.resume(), g.onended = function () { g.disconnect(0), a._audioUnlocked = true, document.removeEventListener("touchstart", r, true), document.removeEventListener("touchend", r, true), document.removeEventListener("click", r, true), document.removeEventListener("keydown", r, true); for (var B = 0; B < a._howls.length; B++)a._howls[B]._emit("unlock") }
+                        }; return document.addEventListener("touchstart", r, true), document.addEventListener("touchend", r, true), document.addEventListener("click", r, true), document.addEventListener("keydown", r, true), a
                     }
                 }, _obtainHtml5Audio: function () {
                     var a = this || t; if (a._html5AudioPool.length) return a._html5AudioPool.pop();
@@ -86,7 +85,7 @@
                             }
                         }, 3e4), a
                     }
-                }, _autoResume: function () { var a = this; if (!(!a.ctx || typeof a.ctx.resume > "u" || !t.usingWebAudio)) return a.state === "running" && a.ctx.state !== "interrupted" && a._suspendTimer ? (clearTimeout(a._suspendTimer), a._suspendTimer = null) : a.state === "suspended" || a.state === "running" && a.ctx.state === "interrupted" ? (a.ctx.resume().then(function () { a.state = "running"; for (var r = 0; r < a._howls.length; r++)a._howls[r]._emit("resume") }), a._suspendTimer && (clearTimeout(a._suspendTimer), a._suspendTimer = null)) : a.state === "suspending" && (a._resumeAfterSuspend = !0), a }
+                }, _autoResume: function () { var a = this; if (!(!a.ctx || typeof a.ctx.resume > "u" || !t.usingWebAudio)) return a.state === "running" && a.ctx.state !== "interrupted" && a._suspendTimer ? (clearTimeout(a._suspendTimer), a._suspendTimer = null) : a.state === "suspended" || a.state === "running" && a.ctx.state === "interrupted" ? (a.ctx.resume().then(function () { a.state = "running"; for (var r = 0; r < a._howls.length; r++)a._howls[r]._emit("resume") }), a._suspendTimer && (clearTimeout(a._suspendTimer), a._suspendTimer = null)) : a.state === "suspending" && (a._resumeAfterSuspend = true), a }
             };
             var t = new o, e = function (a) {
                 var r = this; if (!a.src || a.src.length === 0) {
@@ -95,7 +94,7 @@
                 r.init(a)
             }; e.prototype = {
                 init: function (a) {
-                    var r = this; return t.ctx || m(), r._autoplay = a.autoplay || !1, r._format = typeof a.format != "string" ? a.format : [a.format], r._html5 = a.html5 || !1, r._muted = a.mute || !1, r._loop = a.loop || !1, r._pool = a.pool || 5, r._preload = typeof a.preload == "boolean" || a.preload === "metadata" ? a.preload : !0, r._rate = a.rate || 1, r._sprite = a.sprite || {}, r._src = typeof a.src != "string" ? a.src : [a.src], r._volume = a.volume !== void 0 ? a.volume : 1, r._xhr = { method: a.xhr && a.xhr.method ? a.xhr.method : "GET", headers: a.xhr && a.xhr.headers ? a.xhr.headers : null, withCredentials: a.xhr && a.xhr.withCredentials ? a.xhr.withCredentials : !1 }, r._duration = 0, r._state = "unloaded", r._sounds = [], r._endTimers = {}, r._queue = [], r._playLock = !1, r._onend = a.onend ? [{ fn: a.onend }] : [], r._onfade = a.onfade ? [{ fn: a.onfade }] : [], r._onload = a.onload ? [{ fn: a.onload }] : [], r._onloaderror = a.onloaderror ? [{ fn: a.onloaderror }] : [], r._onplayerror = a.onplayerror ? [{ fn: a.onplayerror }] : [], r._onpause = a.onpause ? [{ fn: a.onpause }] : [], r._onplay = a.onplay ? [{ fn: a.onplay }] : [], r._onstop = a.onstop ? [{ fn: a.onstop }] : [], r._onmute = a.onmute ? [{ fn: a.onmute }] : [], r._onvolume = a.onvolume ? [{ fn: a.onvolume }] : [], r._onrate = a.onrate ? [{ fn: a.onrate }] : [], r._onseek = a.onseek ? [{ fn: a.onseek }] : [], r._onunlock = a.onunlock ? [{ fn: a.onunlock }] : [], r._onresume = [], r._webAudio = t.usingWebAudio && !r._html5, typeof t.ctx < "u" && t.ctx && t.autoUnlock && t._unlockAudio(), t._howls.push(r), r._autoplay && r._queue.push({
+                    var r = this; return t.ctx || m(), r._autoplay = a.autoplay || false, r._format = typeof a.format != "string" ? a.format : [a.format], r._html5 = a.html5 || false, r._muted = a.mute || false, r._loop = a.loop || false, r._pool = a.pool || 5, r._preload = typeof a.preload == "boolean" || a.preload === "metadata" ? a.preload : true, r._rate = a.rate || 1, r._sprite = a.sprite || {}, r._src = typeof a.src != "string" ? a.src : [a.src], r._volume = a.volume !== void 0 ? a.volume : 1, r._xhr = { method: a.xhr && a.xhr.method ? a.xhr.method : "GET", headers: a.xhr && a.xhr.headers ? a.xhr.headers : null, withCredentials: a.xhr && a.xhr.withCredentials ? a.xhr.withCredentials : false }, r._duration = 0, r._state = "unloaded", r._sounds = [], r._endTimers = {}, r._queue = [], r._playLock = false, r._onend = a.onend ? [{ fn: a.onend }] : [], r._onfade = a.onfade ? [{ fn: a.onfade }] : [], r._onload = a.onload ? [{ fn: a.onload }] : [], r._onloaderror = a.onloaderror ? [{ fn: a.onloaderror }] : [], r._onplayerror = a.onplayerror ? [{ fn: a.onplayerror }] : [], r._onpause = a.onpause ? [{ fn: a.onpause }] : [], r._onplay = a.onplay ? [{ fn: a.onplay }] : [], r._onstop = a.onstop ? [{ fn: a.onstop }] : [], r._onmute = a.onmute ? [{ fn: a.onmute }] : [], r._onvolume = a.onvolume ? [{ fn: a.onvolume }] : [], r._onrate = a.onrate ? [{ fn: a.onrate }] : [], r._onseek = a.onseek ? [{ fn: a.onseek }] : [], r._onunlock = a.onunlock ? [{ fn: a.onunlock }] : [], r._onresume = [], r._webAudio = t.usingWebAudio && !r._html5, typeof t.ctx < "u" && t.ctx && t.autoUnlock && t._unlockAudio(), t._howls.push(r), r._autoplay && r._queue.push({
                         event: "play", action: function () {
                             r.play()
                         }
@@ -117,14 +116,14 @@
                     } if (!r) {
                         a._emit("loaderror", null, "No codec support for selected audio sources."); return
                     }
-                    return a._src = r, a._state = "loading", window.location.protocol === "https:" && r.slice(0, 5) === "http:" && (a._html5 = !0, a._webAudio = !1), new n(a), a._webAudio && s(a), a
+                    return a._src = r, a._state = "loading", window.location.protocol === "https:" && r.slice(0, 5) === "http:" && (a._html5 = true, a._webAudio = false), new n(a), a._webAudio && s(a), a
                 }, play: function (a, r) {
                     var d = this, u = null; if (typeof a == "number") u = a, a = null; else {
                         if (typeof a == "string" && d._state === "loaded" && !d._sprite[a]) return null; if (typeof a > "u" && (a = "__default", !d._playLock)) {
                             for (var p = 0, f = 0; f < d._sounds.length; f++)d._sounds[f]._paused && !d._sounds[f]._ended && (p++, u = d._sounds[f]._id); p === 1 ? a = null : u = null
                         }
                     } var Q = u ? d._soundById(u) : d._inactiveSound(); if (!Q) return null; if (u && !a && (a = Q._sprite || "__default"), d._state !== "loaded") {
-                        Q._sprite = a, Q._ended = !1;
+                        Q._sprite = a, Q._ended = false;
                         var b = Q._id; return d._queue.push({
                             event: "play", action: function () {
                                 d.play(b)
@@ -133,32 +132,32 @@
 
                     }
                     if (u && !Q._paused) return r || d._loadQueue("play"), Q._id; d._webAudio && t._autoResume();
-                    var g = Math.max(0, Q._seek > 0 ? Q._seek : d._sprite[a][0] / 1e3), B = Math.max(0, (d._sprite[a][0] + d._sprite[a][1]) / 1e3 - g), x = B * 1e3 / Math.abs(Q._rate), E = d._sprite[a][0] / 1e3, W = (d._sprite[a][0] + d._sprite[a][1]) / 1e3; Q._sprite = a, Q._ended = !1;
-                    var y = function () { Q._paused = !1, Q._seek = g, Q._start = E, Q._stop = W, Q._loop = !!(Q._loop || d._sprite[a][2]) }; if (g >= W) {
+                    var g = Math.max(0, Q._seek > 0 ? Q._seek : d._sprite[a][0] / 1e3), B = Math.max(0, (d._sprite[a][0] + d._sprite[a][1]) / 1e3 - g), x = B * 1e3 / Math.abs(Q._rate), E = d._sprite[a][0] / 1e3, W = (d._sprite[a][0] + d._sprite[a][1]) / 1e3; Q._sprite = a, Q._ended = false;
+                    var y = function () { Q._paused = false, Q._seek = g, Q._start = E, Q._stop = W, Q._loop = !!(Q._loop || d._sprite[a][2]) }; if (g >= W) {
                         d._ended(Q); return
                     }
                     var w = Q._node; if (d._webAudio) {
                         var k = function () {
-                            d._playLock = !1, y(), d._refreshBuffer(Q);
+                            d._playLock = false, y(), d._refreshBuffer(Q);
                             var L = Q._muted || d._muted ? 0 : Q._volume; w.gain.setValueAtTime(L, t.ctx.currentTime), Q._playStart = t.ctx.currentTime, typeof w.bufferSource.start > "u" ? Q._loop ? w.bufferSource.noteGrainOn(0, g, 86400) : w.bufferSource.noteGrainOn(0, g, B) : Q._loop ? w.bufferSource.start(0, g, 86400) : w.bufferSource.start(0, g, B), x !== 1 / 0 && (d._endTimers[Q._id] = setTimeout(d._ended.bind(d, Q), x)), r || setTimeout(function () { d._emit("play", Q._id), d._loadQueue() }, 0)
-                        }; t.state === "running" && t.ctx.state !== "interrupted" ? k() : (d._playLock = !0, d.once("resume", k), d._clearTimer(Q._id))
+                        }; t.state === "running" && t.ctx.state !== "interrupted" ? k() : (d._playLock = true, d.once("resume", k), d._clearTimer(Q._id))
 
                     }
                     else {
                         var U = function () {
                             w.currentTime = g, w.muted = Q._muted || d._muted || t._muted || w.muted, w.volume = Q._volume * t.volume(), w.playbackRate = Q._rate; try {
-                                var L = w.play(); if (L && typeof Promise < "u" && (L instanceof Promise || typeof L.then == "function") ? (d._playLock = !0, y(), L.then(function () { d._playLock = !1, w._unlocked = !0, r ? d._loadQueue() : d._emit("play", Q._id) }).catch(function () { d._playLock = !1, d._emit("playerror", Q._id, "Playback was unable to start. This is most commonly an issue on mobile devices and Chrome where playback was not within a user interaction."), Q._ended = !0, Q._paused = !0 })) : r || (d._playLock = !1, y(), d._emit("play", Q._id)), w.playbackRate = Q._rate, w.paused) {
+                                var L = w.play(); if (L && typeof Promise < "u" && (L instanceof Promise || typeof L.then == "function") ? (d._playLock = true, y(), L.then(function () { d._playLock = false, w._unlocked = true, r ? d._loadQueue() : d._emit("play", Q._id) }).catch(function () { d._playLock = false, d._emit("playerror", Q._id, "Playback was unable to start. This is most commonly an issue on mobile devices and Chrome where playback was not within a user interaction."), Q._ended = true, Q._paused = true })) : r || (d._playLock = false, y(), d._emit("play", Q._id)), w.playbackRate = Q._rate, w.paused) {
                                     d._emit("playerror", Q._id, "Playback was unable to start. This is most commonly an issue on mobile devices and Chrome where playback was not within a user interaction."); return
                                 }
-                                a !== "__default" || Q._loop ? d._endTimers[Q._id] = setTimeout(d._ended.bind(d, Q), x) : (d._endTimers[Q._id] = function () { d._ended(Q), w.removeEventListener("ended", d._endTimers[Q._id], !1) }, w.addEventListener("ended", d._endTimers[Q._id], !1))
+                                a !== "__default" || Q._loop ? d._endTimers[Q._id] = setTimeout(d._ended.bind(d, Q), x) : (d._endTimers[Q._id] = function () { d._ended(Q), w.removeEventListener("ended", d._endTimers[Q._id], false) }, w.addEventListener("ended", d._endTimers[Q._id], false))
                             }
-                                catch (Y) {
-                                    d._emit("playerror", Q._id, Y)
-                                }
+                            catch (Y) {
+                                d._emit("playerror", Q._id, Y)
+                            }
                         }; w.src === "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA" && (w.src = d._src, w.load());
                         var S = window && window.ejecta || !w.readyState && t._navigator.isCocoonJS; if (w.readyState >= 3 || S) U(); else {
-                            d._playLock = !0, d._state = "loading";
-                            var T = function () { d._state = "loaded", U(), w.removeEventListener(t._canPlayEvent, T, !1) }; w.addEventListener(t._canPlayEvent, T, !1), d._clearTimer(Q._id)
+                            d._playLock = true, d._state = "loading";
+                            var T = function () { d._state = "loaded", U(), w.removeEventListener(t._canPlayEvent, T, false) }; w.addEventListener(t._canPlayEvent, T, false), d._clearTimer(Q._id)
                         }
 
                     }
@@ -170,7 +169,7 @@
                         }
                     }), r; for (var d = r._getSoundIds(a), u = 0; u < d.length; u++) {
                         r._clearTimer(d[u]);
-                        var p = r._soundById(d[u]); if (p && !p._paused && (p._seek = r.seek(d[u]), p._rateSeek = 0, p._paused = !0, r._stopFade(d[u]), p._node)) if (r._webAudio) {
+                        var p = r._soundById(d[u]); if (p && !p._paused && (p._seek = r.seek(d[u]), p._rateSeek = 0, p._paused = true, r._stopFade(d[u]), p._node)) if (r._webAudio) {
                             if (!p._node.bufferSource) continue; typeof p._node.bufferSource.stop > "u" ? p._node.bufferSource.noteOff(0) : p._node.bufferSource.stop(0), r._cleanBuffer(p._node)
                         }
                         else (!isNaN(p._node.duration) || p._node.duration === 1 / 0) && p._node.pause(); arguments[1] || r._emit("pause", p ? p._id : null)
@@ -184,7 +183,7 @@
                         }
                     }), d; for (var u = d._getSoundIds(a), p = 0; p < u.length; p++) {
                         d._clearTimer(u[p]);
-                        var f = d._soundById(u[p]); f && (f._seek = f._start || 0, f._rateSeek = 0, f._paused = !0, f._ended = !0, d._stopFade(u[p]), f._node && (d._webAudio ? f._node.bufferSource && (typeof f._node.bufferSource.stop > "u" ? f._node.bufferSource.noteOff(0) : f._node.bufferSource.stop(0), d._cleanBuffer(f._node)) : (!isNaN(f._node.duration) || f._node.duration === 1 / 0) && (f._node.currentTime = f._start || 0, f._node.pause(), f._node.duration === 1 / 0 && d._clearSound(f._node))), r || d._emit("stop", f._id))
+                        var f = d._soundById(u[p]); f && (f._seek = f._start || 0, f._rateSeek = 0, f._paused = true, f._ended = true, d._stopFade(u[p]), f._node && (d._webAudio ? f._node.bufferSource && (typeof f._node.bufferSource.stop > "u" ? f._node.bufferSource.noteOff(0) : f._node.bufferSource.stop(0), d._cleanBuffer(f._node)) : (!isNaN(f._node.duration) || f._node.duration === 1 / 0) && (f._node.currentTime = f._start || 0, f._node.pause(), f._node.duration === 1 / 0 && d._clearSound(f._node))), r || d._emit("stop", f._id))
 
                     }
                     return d
@@ -194,7 +193,7 @@
                             d.mute(a, r)
                         }
                     }), d; if (typeof r > "u") if (typeof a == "boolean") d._muted = a; else return d._muted; for (var u = d._getSoundIds(r), p = 0; p < u.length; p++) {
-                        var f = d._soundById(u[p]); f && (f._muted = a, f._interval && d._stopFade(f._id), d._webAudio && f._node ? f._node.gain.setValueAtTime(a ? 0 : f._volume, t.ctx.currentTime) : f._node && (f._node.muted = t._muted ? !0 : a), d._emit("mute", f._id))
+                        var f = d._soundById(u[p]); f && (f._muted = a, f._interval && d._stopFade(f._id), d._webAudio && f._node ? f._node.gain.setValueAtTime(a ? 0 : f._volume, t.ctx.currentTime) : f._node && (f._node.muted = t._muted ? true : a), d._emit("mute", f._id))
                     }
                     return d
                 }, volume: function () {
@@ -223,7 +222,7 @@
                             p._startFadeInterval(b, a, r, d, f[Q], typeof u > "u")
                         }
                     } return p
-                }, _startFadeInterval: function (a, r, d, u, p, f) { var Q = this, b = r, g = d - r, B = Math.abs(g / .01), x = Math.max(4, B > 0 ? u / B : u), E = Date.now(); a._fadeTo = d, a._interval = setInterval(function () { var W = (Date.now() - E) / u; E = Date.now(), b += g * W, b = Math.round(b * 100) / 100, g < 0 ? b = Math.max(d, b) : b = Math.min(d, b), Q._webAudio ? a._volume = b : Q.volume(b, a._id, !0), f && (Q._volume = b), (d < r && b <= d || d > r && b >= d) && (clearInterval(a._interval), a._interval = null, a._fadeTo = null, Q.volume(d, a._id), Q._emit("fade", a._id)) }, x) }, _stopFade: function (a) { var r = this, d = r._soundById(a); return d && d._interval && (r._webAudio && d._node.gain.cancelScheduledValues(t.ctx.currentTime), clearInterval(d._interval), d._interval = null, r.volume(d._fadeTo, a), d._fadeTo = null, r._emit("fade", a)), r }, loop: function () { var a = this, r = arguments, d, u, p; if (r.length === 0) return a._loop; if (r.length === 1) if (typeof r[0] == "boolean") d = r[0], a._loop = d; else return p = a._soundById(parseInt(r[0], 10)), p ? p._loop : !1; else r.length === 2 && (d = r[0], u = parseInt(r[1], 10)); for (var f = a._getSoundIds(u), Q = 0; Q < f.length; Q++)p = a._soundById(f[Q]), p && (p._loop = d, a._webAudio && p._node && p._node.bufferSource && (p._node.bufferSource.loop = d, d && (p._node.bufferSource.loopStart = p._start || 0, p._node.bufferSource.loopEnd = p._stop, a.playing(f[Q]) && (a.pause(f[Q], !0), a.play(f[Q], !0))))); return a }, rate: function () {
+                }, _startFadeInterval: function (a, r, d, u, p, f) { var Q = this, b = r, g = d - r, B = Math.abs(g / .01), x = Math.max(4, B > 0 ? u / B : u), E = Date.now(); a._fadeTo = d, a._interval = setInterval(function () { var W = (Date.now() - E) / u; E = Date.now(), b += g * W, b = Math.round(b * 100) / 100, g < 0 ? b = Math.max(d, b) : b = Math.min(d, b), Q._webAudio ? a._volume = b : Q.volume(b, a._id, true), f && (Q._volume = b), (d < r && b <= d || d > r && b >= d) && (clearInterval(a._interval), a._interval = null, a._fadeTo = null, Q.volume(d, a._id), Q._emit("fade", a._id)) }, x) }, _stopFade: function (a) { var r = this, d = r._soundById(a); return d && d._interval && (r._webAudio && d._node.gain.cancelScheduledValues(t.ctx.currentTime), clearInterval(d._interval), d._interval = null, r.volume(d._fadeTo, a), d._fadeTo = null, r._emit("fade", a)), r }, loop: function () { var a = this, r = arguments, d, u, p; if (r.length === 0) return a._loop; if (r.length === 1) if (typeof r[0] == "boolean") d = r[0], a._loop = d; else return p = a._soundById(parseInt(r[0], 10)), p ? p._loop : false; else r.length === 2 && (d = r[0], u = parseInt(r[1], 10)); for (var f = a._getSoundIds(u), Q = 0; Q < f.length; Q++)p = a._soundById(f[Q]), p && (p._loop = d, a._webAudio && p._node && p._node.bufferSource && (p._node.bufferSource.loop = d, d && (p._node.bufferSource.loopStart = p._start || 0, p._node.bufferSource.loopEnd = p._stop, a.playing(f[Q]) && (a.pause(f[Q], true), a.play(f[Q], true))))); return a }, rate: function () {
                     var a = this, r = arguments, d, u; if (r.length === 0) u = a._sounds[0]._id; else if (r.length === 1) {
                         var p = a._getSoundIds(), f = p.indexOf(r[0]); f >= 0 ? u = parseInt(r[0], 10) : d = parseFloat(r[0])
                     }
@@ -250,8 +249,8 @@
                         }
                     }), a;
                     var Q = a._soundById(u); if (Q) if (typeof d == "number" && d >= 0) {
-                        var b = a.playing(u); b && a.pause(u, !0), Q._seek = d, Q._ended = !1, a._clearTimer(u), !a._webAudio && Q._node && !isNaN(Q._node.duration) && (Q._node.currentTime = d);
-                        var g = function () { b && a.play(u, !0), a._emit("seek", u) }; if (b && !a._webAudio) {
+                        var b = a.playing(u); b && a.pause(u, true), Q._seek = d, Q._ended = false, a._clearTimer(u), !a._webAudio && Q._node && !isNaN(Q._node.duration) && (Q._node.currentTime = d);
+                        var g = function () { b && a.play(u, true), a._emit("seek", u) }; if (b && !a._webAudio) {
                             var B = function () { a._playLock ? setTimeout(B, 0) : g() }; setTimeout(B, 0)
                         }
                         else g()
@@ -263,16 +262,16 @@
                     else return Q._node.currentTime; return a
                 }, playing: function (a) {
                     var r = this; if (typeof a == "number") {
-                        var d = r._soundById(a); return d ? !d._paused : !1
+                        var d = r._soundById(a); return d ? !d._paused : false
                     }
-                    for (var u = 0; u < r._sounds.length; u++)if (!r._sounds[u]._paused) return !0; return !1
+                    for (var u = 0; u < r._sounds.length; u++)if (!r._sounds[u]._paused) return true; return false
                 }, duration: function (a) { var r = this, d = r._duration, u = r._soundById(a); return u && (d = r._sprite[u._sprite][1] / 1e3), d }, state: function () { return this._state }, unload: function () {
-                    for (var a = this, r = a._sounds, d = 0; d < r.length; d++)r[d]._paused || a.stop(r[d]._id), a._webAudio || (a._clearSound(r[d]._node), r[d]._node.removeEventListener("error", r[d]._errorFn, !1), r[d]._node.removeEventListener(t._canPlayEvent, r[d]._loadFn, !1), r[d]._node.removeEventListener("ended", r[d]._endFn, !1), t._releaseHtml5Audio(r[d]._node)), delete r[d]._node, a._clearTimer(r[d]._id);
+                    for (var a = this, r = a._sounds, d = 0; d < r.length; d++)r[d]._paused || a.stop(r[d]._id), a._webAudio || (a._clearSound(r[d]._node), r[d]._node.removeEventListener("error", r[d]._errorFn, false), r[d]._node.removeEventListener(t._canPlayEvent, r[d]._loadFn, false), r[d]._node.removeEventListener("ended", r[d]._endFn, false), t._releaseHtml5Audio(r[d]._node)), delete r[d]._node, a._clearTimer(r[d]._id);
                     var u = t._howls.indexOf(a); u >= 0 && t._howls.splice(u, 1);
-                    var p = !0; for (d = 0; d < t._howls.length; d++)if (t._howls[d]._src === a._src || a._src.indexOf(t._howls[d]._src) >= 0) {
-                        p = !1; break
+                    var p = true; for (d = 0; d < t._howls.length; d++)if (t._howls[d]._src === a._src || a._src.indexOf(t._howls[d]._src) >= 0) {
+                        p = false; break
                     }
-                    return i && p && delete i[a._src], t.noAudio = !1, a._state = "unloaded", a._sounds = [], a = null, null
+                    return i && p && delete i[a._src], t.noAudio = false, a._state = "unloaded", a._sounds = [], a = null, null
                 }, on: function (a, r, d, u) {
                     var p = this, f = p["_on" + a]; return typeof r == "function" && f.push(u ? {
                         id: d, fn: r, once: u
@@ -294,16 +293,16 @@
                     return r
                 }, _ended: function (a) {
                     var r = this, d = a._sprite; if (!r._webAudio && a._node && !a._node.paused && !a._node.ended && a._node.currentTime < a._stop) return setTimeout(r._ended.bind(r, a), 100), r;
-                    var u = !!(a._loop || r._sprite[d][2]); if (r._emit("end", a._id), !r._webAudio && u && r.stop(a._id, !0).play(a._id), r._webAudio && u) {
+                    var u = !!(a._loop || r._sprite[d][2]); if (r._emit("end", a._id), !r._webAudio && u && r.stop(a._id, true).play(a._id), r._webAudio && u) {
                         r._emit("play", a._id), a._seek = a._start || 0, a._rateSeek = 0, a._playStart = t.ctx.currentTime;
                         var p = (a._stop - a._start) * 1e3 / Math.abs(a._rate); r._endTimers[a._id] = setTimeout(r._ended.bind(r, a), p)
 
                     }
-                    return r._webAudio && !u && (a._paused = !0, a._ended = !0, a._seek = a._start || 0, a._rateSeek = 0, r._clearTimer(a._id), r._cleanBuffer(a._node), t._autoSuspend()), !r._webAudio && !u && r.stop(a._id, !0), r
+                    return r._webAudio && !u && (a._paused = true, a._ended = true, a._seek = a._start || 0, a._rateSeek = 0, r._clearTimer(a._id), r._cleanBuffer(a._node), t._autoSuspend()), !r._webAudio && !u && r.stop(a._id, true), r
                 }, _clearTimer: function (a) {
                     var r = this; if (r._endTimers[a]) {
                         if (typeof r._endTimers[a] != "function") clearTimeout(r._endTimers[a]); else {
-                            var d = r._soundById(a); d && d._node && d._node.removeEventListener("ended", r._endTimers[a], !1)
+                            var d = r._soundById(a); d && d._node && d._node.removeEventListener("ended", r._endTimers[a], false)
                         }
                         delete r._endTimers[a]
                     }
@@ -329,8 +328,8 @@
                 }, _clearSound: function (a) { var r = /MSIE |Trident\//.test(t._navigator && t._navigator.userAgent); r || (a.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA") }
             };
             var n = function (a) { this._parent = a, this.init() }; n.prototype = {
-                init: function () { var a = this, r = a._parent; return a._muted = r._muted, a._loop = r._loop, a._volume = r._volume, a._rate = r._rate, a._seek = 0, a._paused = !0, a._ended = !0, a._sprite = "__default", a._id = ++t._counter, r._sounds.push(a), a.create(), a }, create: function () { var a = this, r = a._parent, d = t._muted || a._muted || a._parent._muted ? 0 : a._volume; return r._webAudio ? (a._node = typeof t.ctx.createGain > "u" ? t.ctx.createGainNode() : t.ctx.createGain(), a._node.gain.setValueAtTime(d, t.ctx.currentTime), a._node.paused = !0, a._node.connect(t.masterGain)) : t.noAudio || (a._node = t._obtainHtml5Audio(), a._errorFn = a._errorListener.bind(a), a._node.addEventListener("error", a._errorFn, !1), a._loadFn = a._loadListener.bind(a), a._node.addEventListener(t._canPlayEvent, a._loadFn, !1), a._endFn = a._endListener.bind(a), a._node.addEventListener("ended", a._endFn, !1), a._node.src = r._src, a._node.preload = r._preload === !0 ? "auto" : r._preload, a._node.volume = d * t.volume(), a._node.load()), a }, reset: function () { var a = this, r = a._parent; return a._muted = r._muted, a._loop = r._loop, a._volume = r._volume, a._rate = r._rate, a._seek = 0, a._rateSeek = 0, a._paused = !0, a._ended = !0, a._sprite = "__default", a._id = ++t._counter, a }, _errorListener: function () { var a = this; a._parent._emit("loaderror", a._id, a._node.error ? a._node.error.code : 0), a._node.removeEventListener("error", a._errorFn, !1) }, _loadListener: function () { var a = this, r = a._parent; r._duration = Math.ceil(a._node.duration * 10) / 10, Object.keys(r._sprite).length === 0 && (r._sprite = { __default: [0, r._duration * 1e3] }), r._state !== "loaded" && (r._state = "loaded", r._emit("load"), r._loadQueue()), a._node.removeEventListener(t._canPlayEvent, a._loadFn, !1) }, _endListener: function () {
-                    var a = this, r = a._parent; r._duration === 1 / 0 && (r._duration = Math.ceil(a._node.duration * 10) / 10, r._sprite.__default[1] === 1 / 0 && (r._sprite.__default[1] = r._duration * 1e3), r._ended(a)), a._node.removeEventListener("ended", a._endFn, !1)
+                init: function () { var a = this, r = a._parent; return a._muted = r._muted, a._loop = r._loop, a._volume = r._volume, a._rate = r._rate, a._seek = 0, a._paused = true, a._ended = true, a._sprite = "__default", a._id = ++t._counter, r._sounds.push(a), a.create(), a }, create: function () { var a = this, r = a._parent, d = t._muted || a._muted || a._parent._muted ? 0 : a._volume; return r._webAudio ? (a._node = typeof t.ctx.createGain > "u" ? t.ctx.createGainNode() : t.ctx.createGain(), a._node.gain.setValueAtTime(d, t.ctx.currentTime), a._node.paused = true, a._node.connect(t.masterGain)) : t.noAudio || (a._node = t._obtainHtml5Audio(), a._errorFn = a._errorListener.bind(a), a._node.addEventListener("error", a._errorFn, false), a._loadFn = a._loadListener.bind(a), a._node.addEventListener(t._canPlayEvent, a._loadFn, false), a._endFn = a._endListener.bind(a), a._node.addEventListener("ended", a._endFn, false), a._node.src = r._src, a._node.preload = r._preload === true ? "auto" : r._preload, a._node.volume = d * t.volume(), a._node.load()), a }, reset: function () { var a = this, r = a._parent; return a._muted = r._muted, a._loop = r._loop, a._volume = r._volume, a._rate = r._rate, a._seek = 0, a._rateSeek = 0, a._paused = true, a._ended = true, a._sprite = "__default", a._id = ++t._counter, a }, _errorListener: function () { var a = this; a._parent._emit("loaderror", a._id, a._node.error ? a._node.error.code : 0), a._node.removeEventListener("error", a._errorFn, false) }, _loadListener: function () { var a = this, r = a._parent; r._duration = Math.ceil(a._node.duration * 10) / 10, Object.keys(r._sprite).length === 0 && (r._sprite = { __default: [0, r._duration * 1e3] }), r._state !== "loaded" && (r._state = "loaded", r._emit("load"), r._loadQueue()), a._node.removeEventListener(t._canPlayEvent, a._loadFn, false) }, _endListener: function () {
+                    var a = this, r = a._parent; r._duration === 1 / 0 && (r._duration = Math.ceil(a._node.duration * 10) / 10, r._sprite.__default[1] === 1 / 0 && (r._sprite.__default[1] = r._duration * 1e3), r._ended(a)), a._node.removeEventListener("ended", a._endFn, false)
                 }
             };
             var i = {}, s = function (a) {
@@ -341,12 +340,12 @@
                     for (var d = atob(r.split(",")[1]), u = new Uint8Array(d.length), p = 0; p < d.length; ++p)u[p] = d.charCodeAt(p); c(u.buffer, a)
                 }
                 else {
-                    var f = new XMLHttpRequest; f.open(a._xhr.method, r, !0), f.withCredentials = a._xhr.withCredentials, f.responseType = "arraybuffer", a._xhr.headers && Object.keys(a._xhr.headers).forEach(function (Q) { f.setRequestHeader(Q, a._xhr.headers[Q]) }), f.onload = function () {
+                    var f = new XMLHttpRequest; f.open(a._xhr.method, r, true), f.withCredentials = a._xhr.withCredentials, f.responseType = "arraybuffer", a._xhr.headers && Object.keys(a._xhr.headers).forEach(function (Q) { f.setRequestHeader(Q, a._xhr.headers[Q]) }), f.onload = function () {
                         var Q = (f.status + "")[0]; if (Q !== "0" && Q !== "2" && Q !== "3") {
                             a._emit("loaderror", null, "Failed loading audio file with status: " + f.status + "."); return
                         }
                         c(f.response, a)
-                    }, f.onerror = function () { a._webAudio && (a._html5 = !0, a._webAudio = !1, a._sounds = [], delete i[r], a.load()) }, l(f)
+                    }, f.onerror = function () { a._webAudio && (a._html5 = true, a._webAudio = false, a._sounds = [], delete i[r], a.load()) }, l(f)
                 }
             }, l = function (a) {
                 try {
@@ -358,14 +357,14 @@
             }, c = function (a, r) { var d = function () { r._emit("loaderror", null, "Decoding audio data failed.") }, u = function (p) { p && r._sounds.length > 0 ? (i[r._src] = p, h(r, p)) : d() }; typeof Promise < "u" && t.ctx.decodeAudioData.length === 1 ? t.ctx.decodeAudioData(a).then(u).catch(d) : t.ctx.decodeAudioData(a, u, d) }, h = function (a, r) { r && !a._duration && (a._duration = r.duration), Object.keys(a._sprite).length === 0 && (a._sprite = { __default: [0, a._duration * 1e3] }), a._state !== "loaded" && (a._state = "loaded", a._emit("load"), a._loadQueue()) }, m = function () {
                 if (t.usingWebAudio) {
                     try {
-                        typeof AudioContext < "u" ? t.ctx = new AudioContext : typeof webkitAudioContext < "u" ? t.ctx = new webkitAudioContext : t.usingWebAudio = !1
+                        typeof AudioContext < "u" ? t.ctx = new AudioContext : typeof webkitAudioContext < "u" ? t.ctx = new webkitAudioContext : t.usingWebAudio = false
                     }
                     catch {
-                        t.usingWebAudio = !1
+                        t.usingWebAudio = false
                     }
-                    t.ctx || (t.usingWebAudio = !1);
+                    t.ctx || (t.usingWebAudio = false);
                     var a = /iP(hone|od|ad)/.test(t._navigator && t._navigator.platform), r = t._navigator && t._navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/), d = r ? parseInt(r[1], 10) : null; if (a && d && d < 9) {
-                        var u = /safari/.test(t._navigator && t._navigator.userAgent.toLowerCase()); t._navigator && !u && (t.usingWebAudio = !1)
+                        var u = /safari/.test(t._navigator && t._navigator.userAgent.toLowerCase()); t._navigator && !u && (t.usingWebAudio = false)
                     }
                     t.usingWebAudio && (t.masterGain = typeof t.ctx.createGain > "u" ? t.ctx.createGainNode() : t.ctx.createGain(), t.masterGain.gain.setValueAtTime(t._muted ? 0 : t._volume, t.ctx.currentTime), t.masterGain.connect(t.ctx.destination)), t._setup()
                 }
@@ -426,7 +425,7 @@
                     var e = this, n = e._parent; return e._orientation = n._orientation, e._stereo = n._stereo, e._pos = n._pos, e._pannerAttr = n._pannerAttr, e._stereo ? n.stereo(e._stereo) : e._pos ? n.pos(e._pos[0], e._pos[1], e._pos[2], e._id) : e._panner && (e._panner.disconnect(0), e._panner = void 0, n._refreshBuffer(e)), t.call(this)
                 }
             }(Sound.prototype.reset);
-            var o = function (t, e) { e = e || "spatial", e === "spatial" ? (t._panner = Howler.ctx.createPanner(), t._panner.coneInnerAngle = t._pannerAttr.coneInnerAngle, t._panner.coneOuterAngle = t._pannerAttr.coneOuterAngle, t._panner.coneOuterGain = t._pannerAttr.coneOuterGain, t._panner.distanceModel = t._pannerAttr.distanceModel, t._panner.maxDistance = t._pannerAttr.maxDistance, t._panner.refDistance = t._pannerAttr.refDistance, t._panner.rolloffFactor = t._pannerAttr.rolloffFactor, t._panner.panningModel = t._pannerAttr.panningModel, typeof t._panner.positionX < "u" ? (t._panner.positionX.setValueAtTime(t._pos[0], Howler.ctx.currentTime), t._panner.positionY.setValueAtTime(t._pos[1], Howler.ctx.currentTime), t._panner.positionZ.setValueAtTime(t._pos[2], Howler.ctx.currentTime)) : t._panner.setPosition(t._pos[0], t._pos[1], t._pos[2]), typeof t._panner.orientationX < "u" ? (t._panner.orientationX.setValueAtTime(t._orientation[0], Howler.ctx.currentTime), t._panner.orientationY.setValueAtTime(t._orientation[1], Howler.ctx.currentTime), t._panner.orientationZ.setValueAtTime(t._orientation[2], Howler.ctx.currentTime)) : t._panner.setOrientation(t._orientation[0], t._orientation[1], t._orientation[2])) : (t._panner = Howler.ctx.createStereoPanner(), t._panner.pan.setValueAtTime(t._stereo, Howler.ctx.currentTime)), t._panner.connect(t._node), t._paused || t._parent.pause(t._id, !0).play(t._id, !0) }
+            var o = function (t, e) { e = e || "spatial", e === "spatial" ? (t._panner = Howler.ctx.createPanner(), t._panner.coneInnerAngle = t._pannerAttr.coneInnerAngle, t._panner.coneOuterAngle = t._pannerAttr.coneOuterAngle, t._panner.coneOuterGain = t._pannerAttr.coneOuterGain, t._panner.distanceModel = t._pannerAttr.distanceModel, t._panner.maxDistance = t._pannerAttr.maxDistance, t._panner.refDistance = t._pannerAttr.refDistance, t._panner.rolloffFactor = t._pannerAttr.rolloffFactor, t._panner.panningModel = t._pannerAttr.panningModel, typeof t._panner.positionX < "u" ? (t._panner.positionX.setValueAtTime(t._pos[0], Howler.ctx.currentTime), t._panner.positionY.setValueAtTime(t._pos[1], Howler.ctx.currentTime), t._panner.positionZ.setValueAtTime(t._pos[2], Howler.ctx.currentTime)) : t._panner.setPosition(t._pos[0], t._pos[1], t._pos[2]), typeof t._panner.orientationX < "u" ? (t._panner.orientationX.setValueAtTime(t._orientation[0], Howler.ctx.currentTime), t._panner.orientationY.setValueAtTime(t._orientation[1], Howler.ctx.currentTime), t._panner.orientationZ.setValueAtTime(t._orientation[2], Howler.ctx.currentTime)) : t._panner.setOrientation(t._orientation[0], t._orientation[1], t._orientation[2])) : (t._panner = Howler.ctx.createStereoPanner(), t._panner.pan.setValueAtTime(t._stereo, Howler.ctx.currentTime)), t._panner.connect(t._node), t._paused || t._parent.pause(t._id, true).play(t._id, true) }
         })()
     });
     var lo = qn((ro, zn) => {
@@ -435,7 +434,7 @@
                 function i(c, h) {
                     if (!e[c]) {
                         if (!t[c]) {
-                            var m = typeof Et == "function" && Et; if (!h && m) return m(c, !0); if (s) return s(c, !0);
+                            var m = typeof Et == "function" && Et; if (!h && m) return m(c, true); if (s) return s(c, true);
                             var a = new Error("Cannot find module '" + c + "'"); throw a.code = "MODULE_NOT_FOUND", a
 
                         }
@@ -581,7 +580,7 @@
                         var s = parseFloat(n, 10); return i[0] = s, i[1] = n.match(/[\d.\-\+]*\s*(.*)/)[1] || "", i
                     }
                 }, {}], 34: [function (o, t, e) {
-                    "use strict"; Object.defineProperty(e, "__esModule", { value: !0 }), e.create = void 0;
+                    "use strict"; Object.defineProperty(e, "__esModule", { value: true }), e.create = void 0;
                     var n = s(o("parse-unit")), i = s(o("eases")); function s(E) {
                         return E && E.__esModule ? E : {
                             default: E
@@ -592,28 +591,28 @@
                         }
                             : function (W) { return W && typeof Symbol == "function" && W.constructor === Symbol && W !== Symbol.prototype ? "symbol" : typeof W })(E)
                     }
-                    var c, h, m, a = [], r = typeof window < "u", d = function () { return (document.scrollingElement || document.documentElement).scrollTop }, u = function () { return window.innerHeight || window.outerHeight }, p = function (E) { return isNaN((0, n.default)(E)[0]) === !1 }, f = function (E) {
+                    var c, h, m, a = [], r = typeof window < "u", d = function () { return (document.scrollingElement || document.documentElement).scrollTop }, u = function () { return window.innerHeight || window.outerHeight }, p = function (E) { return isNaN((0, n.default)(E)[0]) === false }, f = function (E) {
                         var W = (0, n.default)(E); return {
                             value: W[0], unit: W[1]
                         }
-                    }, Q = function (E) { return String(E).match(/^[a-z]+-[a-z]+$/) !== null }, b = function (E, W) { return E === !0 ? W.elem : E instanceof HTMLElement ? W.direct : W.global }, g = function (E, W) { var y = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : d(), w = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : u(), k = W.getBoundingClientRect(), U = E.match(/^[a-z]+/)[0], S = E.match(/[a-z]+$/)[0], T = 0; return S === "top" && (T -= 0), S === "middle" && (T -= w / 2), S === "bottom" && (T -= w), U === "top" && (T += k.top + y), U === "middle" && (T += k.top + y + k.height / 2), U === "bottom" && (T += k.top + y + k.height), "".concat(T, "px") }, B = function (E) {
-                        var W = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : d(), y = E.getData(), w = y.to.value - y.from.value, k = W - y.from.value, U = k / (w / 100), S = Math.min(Math.max(U, 0), 100), T = b(y.direct, { global: document.documentElement, elem: y.elem, direct: y.direct }), L = Object.keys(y.props).reduce(function (Jt, zt) { var lt = y.props[zt], Ht = lt.from.unit || lt.to.unit, ho = lt.from.value - lt.to.value, uo = lt.timing(S / 100), mo = lt.from.value - ho * uo, po = Math.round(1e4 * mo) / 1e4; return Jt[zt] = po + Ht, Jt }, {}), Y = U >= 0 && U <= 100, ke = U < 0 || U > 100; return Y === !0 && y.inside(E, U, L), ke === !0 && y.outside(E, U, L), {
+                    }, Q = function (E) { return String(E).match(/^[a-z]+-[a-z]+$/) !== null }, b = function (E, W) { return E === true ? W.elem : E instanceof HTMLElement ? W.direct : W.global }, g = function (E, W) { var y = arguments.length > 2 && arguments[2] !== void 0 ? arguments[2] : d(), w = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : u(), k = W.getBoundingClientRect(), U = E.match(/^[a-z]+/)[0], S = E.match(/[a-z]+$/)[0], T = 0; return S === "top" && (T -= 0), S === "middle" && (T -= w / 2), S === "bottom" && (T -= w), U === "top" && (T += k.top + y), U === "middle" && (T += k.top + y + k.height / 2), U === "bottom" && (T += k.top + y + k.height), "".concat(T, "px") }, B = function (E) {
+                        var W = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : d(), y = E.getData(), w = y.to.value - y.from.value, k = W - y.from.value, U = k / (w / 100), S = Math.min(Math.max(U, 0), 100), T = b(y.direct, { global: document.documentElement, elem: y.elem, direct: y.direct }), L = Object.keys(y.props).reduce(function (Jt, zt) { var lt = y.props[zt], Ht = lt.from.unit || lt.to.unit, ho = lt.from.value - lt.to.value, uo = lt.timing(S / 100), mo = lt.from.value - ho * uo, po = Math.round(1e4 * mo) / 1e4; return Jt[zt] = po + Ht, Jt }, {}), Y = U >= 0 && U <= 100, ke = U < 0 || U > 100; return Y === true && y.inside(E, U, L), ke === true && y.outside(E, U, L), {
                             elem: T, props: L
                         }
                     }, x = function (E, W) { Object.keys(W).forEach(function (y) { return function (w, k) { w.style.setProperty(k.key, k.value) }(E, { key: y, value: W[y] }) }) }; e.create = function (E) {
-                        var W = null, y = !1, w = {
+                        var W = null, y = false, w = {
                             isActive: function () { return y }, getData: function () { return W }, calculate: function () {
                                 W = function () {
-                                    var U = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}; if ((U = Object.assign({}, U)).inside == null && (U.inside = function () { }), U.outside == null && (U.outside = function () { }), U.direct == null && (U.direct = !1), U.track == null && (U.track = !0), U.props == null && (U.props = {}), U.from == null) throw new Error("Missing property `from`"); if (U.to == null) throw new Error("Missing property `to`"); if (typeof U.inside != "function") throw new Error("Property `inside` must be undefined or a function"); if (typeof U.outside != "function") throw new Error("Property `outside` must be undefined or a function"); if (typeof U.direct != "boolean" && U.direct instanceof HTMLElement == 0) throw new Error("Property `direct` must be undefined, a boolean or a DOM element/node"); if (U.direct === !0 && U.elem == null) throw new Error("Property `elem` is required when `direct` is true"); if (typeof U.track != "boolean") throw new Error("Property `track` must be undefined or a boolean"); if (l(U.props) !== "object") throw new Error("Property `props` must be undefined or an object"); if (U.elem == null) {
-                                        if (p(U.from) === !1) throw new Error("Property `from` must be a absolute value when no `elem` has been provided"); if (p(U.to) === !1) throw new Error("Property `to` must be a absolute value when no `elem` has been provided")
+                                    var U = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : {}; if ((U = Object.assign({}, U)).inside == null && (U.inside = function () { }), U.outside == null && (U.outside = function () { }), U.direct == null && (U.direct = false), U.track == null && (U.track = true), U.props == null && (U.props = {}), U.from == null) throw new Error("Missing property `from`"); if (U.to == null) throw new Error("Missing property `to`"); if (typeof U.inside != "function") throw new Error("Property `inside` must be undefined or a function"); if (typeof U.outside != "function") throw new Error("Property `outside` must be undefined or a function"); if (typeof U.direct != "boolean" && U.direct instanceof HTMLElement == 0) throw new Error("Property `direct` must be undefined, a boolean or a DOM element/node"); if (U.direct === true && U.elem == null) throw new Error("Property `elem` is required when `direct` is true"); if (typeof U.track != "boolean") throw new Error("Property `track` must be undefined or a boolean"); if (l(U.props) !== "object") throw new Error("Property `props` must be undefined or an object"); if (U.elem == null) {
+                                        if (p(U.from) === false) throw new Error("Property `from` must be a absolute value when no `elem` has been provided"); if (p(U.to) === false) throw new Error("Property `to` must be a absolute value when no `elem` has been provided")
                                     }
-                                    else Q(U.from) === !0 && (U.from = g(U.from, U.elem)), Q(U.to) === !0 && (U.to = g(U.to, U.elem)); return U.from = f(U.from), U.to = f(U.to), U.props = Object.keys(U.props).reduce(function (S, T) { var L = Object.assign({}, U.props[T]); if (p(L.from) === !1) throw new Error("Property `from` of prop must be a absolute value"); if (p(L.to) === !1) throw new Error("Property `from` of prop must be a absolute value"); if (L.from = f(L.from), L.to = f(L.to), L.timing == null && (L.timing = i.default.linear), typeof L.timing != "string" && typeof L.timing != "function") throw new Error("Property `timing` of prop must be undefined, a string or a function"); if (typeof L.timing == "string" && i.default[L.timing] == null) throw new Error("Unknown timing for property `timing` of prop"); return typeof L.timing == "string" && (L.timing = i.default[L.timing]), S[T] = L, S }, {}), U
+                                    else Q(U.from) === true && (U.from = g(U.from, U.elem)), Q(U.to) === true && (U.to = g(U.to, U.elem)); return U.from = f(U.from), U.to = f(U.to), U.props = Object.keys(U.props).reduce(function (S, T) { var L = Object.assign({}, U.props[T]); if (p(L.from) === false) throw new Error("Property `from` of prop must be a absolute value"); if (p(L.to) === false) throw new Error("Property `from` of prop must be a absolute value"); if (L.from = f(L.from), L.to = f(L.to), L.timing == null && (L.timing = i.default.linear), typeof L.timing != "string" && typeof L.timing != "function") throw new Error("Property `timing` of prop must be undefined, a string or a function"); if (typeof L.timing == "string" && i.default[L.timing] == null) throw new Error("Unknown timing for property `timing` of prop"); return typeof L.timing == "string" && (L.timing = i.default[L.timing]), S[T] = L, S }, {}), U
                                 }(E)
-                            }, update: function () { var U = B(w), S = U.elem, T = U.props; return x(S, T), T }, start: function () { y = !0 }, stop: function () { y = !1 }, destroy: function () {
+                            }, update: function () { var U = B(w), S = U.elem, T = U.props; return x(S, T), T }, start: function () { y = true }, stop: function () { y = false }, destroy: function () {
                                 a[k] = void 0
                             }
                         }, k = a.push(w) - 1; return w.calculate(), w
-                    }, r === !0 ? (function E(W, y) {
+                    }, r === true ? (function E(W, y) {
                         var w = function () { requestAnimationFrame(function () { return E(W, y) }) }, k = function (S) { return S.filter(function (T) { return T != null && T.isActive() }) }(a); if (k.length === 0) return w();
                         var U = d(); if (y === U) return w(); y = U, k.map(function (S) { return B(S, U) }).forEach(function (S) { var T = S.elem, L = S.props; return x(T, L) }), w()
                     }(), window.addEventListener("resize", (c = function () { (function (E) { return E.filter(function (W) { return W != null && W.getData().track }) })(a).forEach(function (E) { E.calculate(), E.update() }) }, h = 50, m = null, function () { for (var E = arguments.length, W = new Array(E), y = 0; y < E; y++)W[y] = arguments[y]; clearTimeout(m), m = setTimeout(function () { return c.apply(void 0, W) }, h) }))) : console.warn("basicScroll is not executing because you are using it in an environment without a `window` object")
@@ -652,20 +651,20 @@
             let { stopImmediatePropagation: t
             }
                 = o; return Object.assign(o, {
-                    immediatePropagationStopped: !1, stopImmediatePropagation() {
-                        this.immediatePropagationStopped = !0, t.call(this)
+                    immediatePropagationStopped: false, stopImmediatePropagation() {
+                        this.immediatePropagationStopped = true, t.call(this)
                     }
                 })
         }
     } var Ge = class {
         constructor(t) {
-            this.application = t, this.eventListenerMaps = new Map, this.started = !1
+            this.application = t, this.eventListenerMaps = new Map, this.started = false
         }
         start() {
-            this.started || (this.started = !0, this.eventListeners.forEach(t => t.connect()))
+            this.started || (this.started = true, this.eventListeners.forEach(t => t.connect()))
         }
         stop() {
-            this.started && (this.started = !1, this.eventListeners.forEach(t => t.disconnect()))
+            this.started && (this.started = false, this.eventListeners.forEach(t => t.disconnect()))
         }
         get eventListeners() {
             return Array.from(this.eventListenerMaps.values()).reduce((t, e) => t.concat(Array.from(e.values())), [])
@@ -673,7 +672,7 @@
         bindingConnected(t) {
             this.fetchEventListenerForBinding(t).bindingConnected(t)
         }
-        bindingDisconnected(t, e = !1) {
+        bindingDisconnected(t, e = false) {
             this.fetchEventListenerForBinding(t).bindingDisconnected(t), e && this.clearEventListenersForBinding(t)
         }
         handleError(t, e, n = {}) {
@@ -705,8 +704,8 @@
             let n = [t]; return Object.keys(e).sort().forEach(i => { n.push(`${e[i] ? "" : "!"}${i}`) }), n.join(":")
         }
     }, yo = {
-        stop({ event: o, value: t }) { return t && o.stopPropagation(), !0 }, prevent({ event: o, value: t }) { return t && o.preventDefault(), !0 }, self({ event: o, value: t, element: e }) {
-            return t ? e === o.target : !0
+        stop({ event: o, value: t }) { return t && o.stopPropagation(), true }, prevent({ event: o, value: t }) { return t && o.preventDefault(), true }, self({ event: o, value: t, element: e }) {
+            return t ? e === o.target : true
         }
     }, Eo = /^(?:(?:([^.]+?)\+)?(.+?)(?:\.(.+?))?(?:@(window|document))?->)?(.+?)(?:#([^:]+?))(?::(.+))?$/; function xo(o) {
         let e = o.trim().match(Eo) || [], n = e[2], i = e[3]; return i && !["keydown", "keyup", "keypress"].includes(n) && (n += `.${i}`, i = ""), {
@@ -753,16 +752,16 @@
             let t = this.keyFilter ? `.${this.keyFilter}` : "", e = this.eventTargetName ? `@${this.eventTargetName}` : ""; return `${this.eventName}${t}${e}->${this.identifier}#${this.methodName}`
         }
         shouldIgnoreKeyboardEvent(t) {
-            if (!this.keyFilter) return !1; let e = this.keyFilter.split("+"); if (this.keyFilterDissatisfied(t, e)) return !0; let n = e.filter(i => !ei.includes(i))[0]; return n ? (_e(this.keyMappings, n) || Kt(`contains unknown key filter: ${this.keyFilter}`), this.keyMappings[n].toLowerCase() !== t.key.toLowerCase()) : !1
+            if (!this.keyFilter) return false; let e = this.keyFilter.split("+"); if (this.keyFilterDissatisfied(t, e)) return true; let n = e.filter(i => !ei.includes(i))[0]; return n ? (_e(this.keyMappings, n) || Kt(`contains unknown key filter: ${this.keyFilter}`), this.keyMappings[n].toLowerCase() !== t.key.toLowerCase()) : false
         }
         shouldIgnoreMouseEvent(t) {
-            if (!this.keyFilter) return !1; let e = [this.keyFilter]; return !!this.keyFilterDissatisfied(t, e)
+            if (!this.keyFilter) return false; let e = [this.keyFilter]; return !!this.keyFilterDissatisfied(t, e)
         }
         get params() {
             let t = {}, e = new RegExp(`^data-${this.identifier}-(.+)-param$`, "i"); for (let { name: n, value: i
             }
                 of Array.from(this.element.attributes)) {
-                    let s = n.match(e), l = s && s[1]; l && (t[ln(l)] = Zo(i))
+                let s = n.match(e), l = s && s[1]; l && (t[ln(l)] = Zo(i))
             }
             return t
         }
@@ -818,12 +817,12 @@
             }
                 = this.action, { actionDescriptorFilters: n
                 }
-                = this.context.application, { controller: i
-                }
-                = this.context, s = !0; for (let [l, c] of Object.entries(this.eventOptions)) if (l in n) {
-                    let h = n[l]; s = s && h({ name: l, value: c, event: t, element: e, controller: i })
-                }
-                else continue; return s
+                    = this.context.application, { controller: i
+                    }
+                    = this.context, s = true; for (let [l, c] of Object.entries(this.eventOptions)) if (l in n) {
+                        let h = n[l]; s = s && h({ name: l, value: c, event: t, element: e, controller: i })
+                    }
+                    else continue; return s
         }
         prepareActionEvent(t) {
             return Object.assign(t, { params: this.action.params })
@@ -840,7 +839,7 @@
                     = this, m = { identifier: s, controller: l, element: c, index: h, event: t }; this.context.handleError(i, `invoking action "${this.action}"`, m)
             }
         } willBeInvokedByEvent(t) {
-            let e = t.target; return t instanceof KeyboardEvent && this.action.shouldIgnoreKeyboardEvent(t) || t instanceof MouseEvent && this.action.shouldIgnoreMouseEvent(t) ? !1 : this.element === e ? !0 : e instanceof Element && this.element.contains(e) ? this.scope.containsElement(e) : this.scope.containsElement(this.action.element)
+            let e = t.target; return t instanceof KeyboardEvent && this.action.shouldIgnoreKeyboardEvent(t) || t instanceof MouseEvent && this.action.shouldIgnoreMouseEvent(t) ? false : this.element === e ? true : e instanceof Element && this.element.contains(e) ? this.scope.containsElement(e) : this.scope.containsElement(this.action.element)
         }
         get controller() {
             return this.context.controller
@@ -856,16 +855,16 @@
         }
     }, $t = class {
         constructor(t, e) {
-            this.mutationObserverInit = { attributes: !0, childList: !0, subtree: !0 }, this.element = t, this.started = !1, this.delegate = e, this.elements = new Set, this.mutationObserver = new MutationObserver(n => this.processMutations(n))
+            this.mutationObserverInit = { attributes: true, childList: true, subtree: true }, this.element = t, this.started = false, this.delegate = e, this.elements = new Set, this.mutationObserver = new MutationObserver(n => this.processMutations(n))
         }
         start() {
-            this.started || (this.started = !0, this.mutationObserver.observe(this.element, this.mutationObserverInit), this.refresh())
+            this.started || (this.started = true, this.mutationObserver.observe(this.element, this.mutationObserverInit), this.refresh())
         }
         pause(t) {
-            this.started && (this.mutationObserver.disconnect(), this.started = !1), t(), this.started || (this.mutationObserver.observe(this.element, this.mutationObserverInit), this.started = !0)
+            this.started && (this.mutationObserver.disconnect(), this.started = false), t(), this.started || (this.mutationObserver.observe(this.element, this.mutationObserverInit), this.started = true)
         }
         stop() {
-            this.started && (this.mutationObserver.takeRecords(), this.mutationObserver.disconnect(), this.started = !1)
+            this.started && (this.mutationObserver.takeRecords(), this.mutationObserver.disconnect(), this.started = false)
         }
         refresh() {
             if (this.started) {
@@ -901,7 +900,7 @@
             if (t.nodeType == Node.ELEMENT_NODE) return t
         }
         elementIsActive(t) {
-            return t.isConnected != this.element.isConnected ? !1 : this.element.contains(t)
+            return t.isConnected != this.element.isConnected ? false : this.element.contains(t)
         }
         addElement(t) {
             this.elements.has(t) || this.elementIsActive(t) && (this.elements.add(t), this.delegate.elementMatched && this.delegate.elementMatched(t))
@@ -1030,7 +1029,7 @@
                 = this; if (e) {
                     let n = t.matches(e); return this.delegate.selectorMatchElement ? n && this.delegate.selectorMatchElement(t, this.details) : n
                 }
-            else return !1
+            else return false
         }
         matchElementsInTree(t) {
             let { selector: e
@@ -1062,13 +1061,13 @@
         }
     }, Ye = class {
         constructor(t, e) {
-            this.element = t, this.delegate = e, this.started = !1, this.stringMap = new Map, this.mutationObserver = new MutationObserver(n => this.processMutations(n))
+            this.element = t, this.delegate = e, this.started = false, this.stringMap = new Map, this.mutationObserver = new MutationObserver(n => this.processMutations(n))
         }
         start() {
-            this.started || (this.started = !0, this.mutationObserver.observe(this.element, { attributes: !0, attributeOldValue: !0 }), this.refresh())
+            this.started || (this.started = true, this.mutationObserver.observe(this.element, { attributes: true, attributeOldValue: true }), this.refresh())
         }
         stop() {
-            this.started && (this.mutationObserver.takeRecords(), this.mutationObserver.disconnect(), this.started = !1)
+            this.started && (this.mutationObserver.takeRecords(), this.mutationObserver.disconnect(), this.started = false)
         }
         refresh() {
             if (this.started) for (let t of this.knownAttributeNames) this.refreshAttribute(t, null)
@@ -1192,14 +1191,14 @@
             }
                 = t, { value: n
                 }
-                = this.fetchParseResultForToken(t); n && (this.fetchValuesByTokenForElement(e).set(t, n), this.delegate.elementMatchedValue(e, n))
+                    = this.fetchParseResultForToken(t); n && (this.fetchValuesByTokenForElement(e).set(t, n), this.delegate.elementMatchedValue(e, n))
         }
         tokenUnmatched(t) {
             let { element: e
             }
                 = t, { value: n
                 }
-                = this.fetchParseResultForToken(t); n && (this.fetchValuesByTokenForElement(e).delete(t), this.delegate.elementUnmatchedValue(e, n))
+                    = this.fetchParseResultForToken(t); n && (this.fetchValuesByTokenForElement(e).delete(t), this.delegate.elementUnmatchedValue(e, n))
         }
         fetchParseResultForToken(t) {
             let e = this.parseResultsByToken.get(t); return e || (e = this.parseToken(t), this.parseResultsByToken.set(t, e)), e
@@ -1250,7 +1249,7 @@
             let e = this.bindingsByAction.get(t); e && (this.bindingsByAction.delete(t), this.delegate.bindingDisconnected(e))
         }
         disconnectAllActions() {
-            this.bindings.forEach(t => this.delegate.bindingDisconnected(t, !0)), this.bindingsByAction.clear()
+            this.bindings.forEach(t => this.delegate.bindingDisconnected(t, true)), this.bindingsByAction.clear()
         }
         parseValueForToken(t) {
             let e = Ne.forToken(t, this.schema); if (e.identifier == this.identifier) return e
@@ -1299,9 +1298,9 @@
                 let l = this.valueDescriptorNameMap[t]; try {
                     let c = l.reader(e), h = n; n && (h = l.reader(n)), s.call(this.receiver, c, h)
                 }
-                    catch (c) {
-                        throw c instanceof TypeError && (c.message = `Stimulus Value "${this.context.identifier}.${l.name}" - ${c.message}`), c
-                    }
+                catch (c) {
+                    throw c instanceof TypeError && (c.message = `Stimulus Value "${this.context.identifier}.${l.name}" - ${c.message}`), c
+                }
             }
         }
         get valueDescriptors() {
@@ -1366,16 +1365,16 @@
     }
     var je = class {
         constructor(t, e) {
-            this.started = !1, this.context = t, this.delegate = e, this.outletsByName = new it, this.outletElementsByName = new it, this.selectorObserverMap = new Map, this.attributeObserverMap = new Map
+            this.started = false, this.context = t, this.delegate = e, this.outletsByName = new it, this.outletElementsByName = new it, this.selectorObserverMap = new Map, this.attributeObserverMap = new Map
         }
         start() {
-            this.started || (this.outletDefinitions.forEach(t => { this.setupSelectorObserverForOutlet(t), this.setupAttributeObserverForOutlet(t) }), this.started = !0, this.dependentContexts.forEach(t => t.refresh()))
+            this.started || (this.outletDefinitions.forEach(t => { this.setupSelectorObserverForOutlet(t), this.setupAttributeObserverForOutlet(t) }), this.started = true, this.dependentContexts.forEach(t => t.refresh()))
         }
         refresh() {
             this.selectorObserverMap.forEach(t => t.refresh()), this.attributeObserverMap.forEach(t => t.refresh())
         }
         stop() {
-            this.started && (this.started = !1, this.disconnectAllOutlets(), this.stopSelectorObservers(), this.stopAttributeObservers())
+            this.started && (this.started = false, this.disconnectAllOutlets(), this.stopSelectorObservers(), this.stopAttributeObservers())
         }
         stopSelectorObservers() {
             this.selectorObserverMap.size > 0 && (this.selectorObserverMap.forEach(t => t.stop()), this.selectorObserverMap.clear())
@@ -1390,7 +1389,7 @@
             let i = this.getOutletFromMap(t, n); i && this.disconnectOutlet(i, t, n)
         }
         selectorMatchElement(t, { outletName: e }) {
-            let n = this.selector(e), i = this.hasOutlet(t, e), s = t.matches(`[${this.schema.controllerAttribute}~=${e}]`); return n ? i && s && t.matches(n) : !1
+            let n = this.selector(e), i = this.hasOutlet(t, e), s = t.matches(`[${this.schema.controllerAttribute}~=${e}]`); return n ? i && s && t.matches(n) : false
         }
         elementMatchedAttribute(t, e) {
             let n = this.getOutletNameFromOutletAttributeName(e); n && this.updateSelectorObserverForOutlet(n)
@@ -1480,9 +1479,9 @@
             this.bindingObserver.start(), this.valueObserver.start(), this.targetObserver.start(), this.outletObserver.start(); try {
                 this.controller.connect(), this.logDebugActivity("connect")
             }
-                catch (t) {
-                    this.handleError(t, "connecting controller")
-                }
+            catch (t) {
+                this.handleError(t, "connecting controller")
+            }
         } refresh() {
             this.outletObserver.refresh()
         }
@@ -1644,9 +1643,9 @@
         }
         delete(t) {
             if (this.has(t)) {
-                let e = this.getAttributeNameForKey(t); return this.element.removeAttribute(e), !0
+                let e = this.getAttributeNameForKey(t); return this.element.removeAttribute(e), true
             }
-            else return !1
+            else return false
         }
         getAttributeNameForKey(t) {
             return `data-${this.identifier}-${ci(t)}`
@@ -1867,7 +1866,7 @@
     }
     var ne = class {
         constructor(t = document.documentElement, e = jo) {
-            this.logger = console, this.debug = !1, this.logDebugActivity = (n, i, s = {}) => { this.debug && this.logFormattedMessage(n, i, s) }, this.element = t, this.schema = e, this.dispatcher = new Ge(this), this.router = new rn(this), this.actionDescriptorFilters = Object.assign({}, yo)
+            this.logger = console, this.debug = false, this.logDebugActivity = (n, i, s = {}) => { this.debug && this.logFormattedMessage(n, i, s) }, this.element = t, this.schema = e, this.dispatcher = new Ge(this), this.router = new rn(this), this.actionDescriptorFilters = Object.assign({}, yo)
         }
         static start(t, e) {
             let n = new this(t, e); return n.start(), n
@@ -1918,7 +1917,7 @@
                     let { classes: t
                     }
                         = this; if (t.has(o)) return t.get(o); {
-                            let e = t.getAttributeName(o); throw new Error(`Missing attribute "${e}"`)
+                        let e = t.getAttributeName(o); throw new Error(`Missing attribute "${e}"`)
                     }
                 }
             }, [`${o}Classes`]: {
@@ -2046,7 +2045,7 @@
             = o, n = `${ci(t)}-value`, i = sa(o); return {
                 type: i, key: n, name: ln(n), get defaultValue() { return ra(e) }, get hasCustomDefaultValue() { return xt(e) !== void 0 }, reader: ca[i], writer: ri[i] || ri.default
             }
-    } var si = { get array() { return [] }, boolean: !1, number: 0, get object() { return {} }, string: "" }, ca = {
+    } var si = { get array() { return [] }, boolean: false, number: 0, get object() { return {} }, string: "" }, ca = {
         array(o) { let t = JSON.parse(o); if (!Array.isArray(t)) throw new TypeError(`expected value of type "array" but instead got value "${o}" of type "${xt(t)}"`); return t }, boolean(o) { return !(o == "0" || String(o).toLowerCase() == "false") }, number(o) { return Number(o.replace(/_/g, "")) }, object(o) { let t = JSON.parse(o); if (t === null || typeof t != "object" || Array.isArray(t)) throw new TypeError(`expected value of type "object" but instead got value "${o}" of type "${xt(t)}"`); return t }, string(o) {
             return o
         }
@@ -2061,7 +2060,7 @@
             this.context = t
         }
         static get shouldLoad() {
-            return !0
+            return true
         }
         static afterLoad(t, e) {
         }
@@ -2095,26 +2094,26 @@
         }
         disconnect() {
         }
-        dispatch(t, { target: e = this.element, detail: n = {}, prefix: i = this.identifier, bubbles: s = !0, cancelable: l = !0
+        dispatch(t, { target: e = this.element, detail: n = {}, prefix: i = this.identifier, bubbles: s = true, cancelable: l = true
         }
             = {}) {
-                let c = i ? `${i}:${t}` : t, h = new CustomEvent(c, { detail: n, bubbles: s, cancelable: l }); return e.dispatchEvent(h), h
+            let c = i ? `${i}:${t}` : t, h = new CustomEvent(c, { detail: n, bubbles: s, cancelable: l }); return e.dispatchEvent(h), h
         }
     }; V.blessings = [Ko, ea, ia, qo]; V.targets = []; V.outlets = []; V.values = {};
-    var F = (o, t = 1e4) => (o = parseFloat(o + "") || 0, Math.round((o + Number.EPSILON) * t) / t), xn = function (o) { if (!(o && o instanceof Element && o.offsetParent)) return !1; let t = o.scrollHeight > o.clientHeight, e = window.getComputedStyle(o).overflowY, n = e.indexOf("hidden") !== -1, i = e.indexOf("visible") !== -1; return t && !n && !i }, Qe = function (o, t = void 0) { return !(!o || o === document.body || t && o === t) && (xn(o) ? o : Qe(o.parentElement, t)) }, tt = function (o) {
+    var F = (o, t = 1e4) => (o = parseFloat(o + "") || 0, Math.round((o + Number.EPSILON) * t) / t), xn = function (o) { if (!(o && o instanceof Element && o.offsetParent)) return false; let t = o.scrollHeight > o.clientHeight, e = window.getComputedStyle(o).overflowY, n = e.indexOf("hidden") !== -1, i = e.indexOf("visible") !== -1; return t && !n && !i }, Qe = function (o, t = void 0) { return !(!o || o === document.body || t && o === t) && (xn(o) ? o : Qe(o.parentElement, t)) }, tt = function (o) {
         var t = new DOMParser().parseFromString(o, "text/html").body; if (t.childElementCount > 1) {
             for (var e = document.createElement("div"); t.firstChild;)e.appendChild(t.firstChild); return e
         }
         return t.firstChild
-    }, Vn = o => `${o || ""}`.split(" ").filter(t => !!t), et = (o, t, e) => { o && Vn(t).forEach(n => { o.classList.toggle(n, e || !1) }) }, dt = class {
+    }, Vn = o => `${o || ""}`.split(" ").filter(t => !!t), et = (o, t, e) => { o && Vn(t).forEach(n => { o.classList.toggle(n, e || false) }) }, dt = class {
         constructor(t) {
-            Object.defineProperty(this, "pageX", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "pageY", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "clientX", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "clientY", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "id", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "time", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "nativePointer", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), this.nativePointer = t, this.pageX = t.pageX, this.pageY = t.pageY, this.clientX = t.clientX, this.clientY = t.clientY, this.id = self.Touch && t instanceof Touch ? t.identifier : -1, this.time = Date.now()
+            Object.defineProperty(this, "pageX", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "pageY", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "clientX", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "clientY", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "id", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "time", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "nativePointer", { enumerable: true, configurable: true, writable: true, value: void 0 }), this.nativePointer = t, this.pageX = t.pageX, this.pageY = t.pageY, this.clientX = t.clientX, this.clientY = t.clientY, this.id = self.Touch && t instanceof Touch ? t.identifier : -1, this.time = Date.now()
         }
-    }, bt = { passive: !1 }, wn = class {
-        constructor(t, { start: e = () => !0, move: n = () => { }, end: i = () => {
+    }, bt = { passive: false }, wn = class {
+        constructor(t, { start: e = () => true, move: n = () => { }, end: i = () => {
         }
         }) {
-            Object.defineProperty(this, "element", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "startCallback", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "moveCallback", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "endCallback", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "currentPointers", { enumerable: !0, configurable: !0, writable: !0, value: [] }), Object.defineProperty(this, "startPointers", { enumerable: !0, configurable: !0, writable: !0, value: [] }), this.element = t, this.startCallback = e, this.moveCallback = n, this.endCallback = i; for (let s of ["onPointerStart", "onTouchStart", "onMove", "onTouchEnd", "onPointerEnd", "onWindowBlur"]) this[s] = this[s].bind(this); this.element.addEventListener("mousedown", this.onPointerStart, bt), this.element.addEventListener("touchstart", this.onTouchStart, bt), this.element.addEventListener("touchmove", this.onMove, bt), this.element.addEventListener("touchend", this.onTouchEnd), this.element.addEventListener("touchcancel", this.onTouchEnd)
+            Object.defineProperty(this, "element", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "startCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "moveCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "endCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "currentPointers", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "startPointers", { enumerable: true, configurable: true, writable: true, value: [] }), this.element = t, this.startCallback = e, this.moveCallback = n, this.endCallback = i; for (let s of ["onPointerStart", "onTouchStart", "onMove", "onTouchEnd", "onPointerEnd", "onWindowBlur"]) this[s] = this[s].bind(this); this.element.addEventListener("mousedown", this.onPointerStart, bt), this.element.addEventListener("touchstart", this.onTouchStart, bt), this.element.addEventListener("touchmove", this.onMove, bt), this.element.addEventListener("touchend", this.onTouchEnd), this.element.addEventListener("touchcancel", this.onTouchEnd)
         }
         onPointerStart(t) {
             if (!t.buttons || t.button !== 0) return; let e = new dt(t); this.currentPointers.some(n => n.id === e.id) || this.triggerPointerStart(e, t) && (window.addEventListener("mousemove", this.onMove), window.addEventListener("mouseup", this.onPointerEnd), window.addEventListener("blur", this.onWindowBlur))
@@ -2135,7 +2134,7 @@
             for (let e of Array.from(t.changedTouches || [])) this.triggerPointerEnd(t, new dt(e))
         }
         triggerPointerStart(t, e) {
-            return !!this.startCallback(e, t, this.currentPointers.slice()) && (this.currentPointers.push(t), this.startPointers.push(t), !0)
+            return !!this.startCallback(e, t, this.currentPointers.slice()) && (this.currentPointers.push(t), this.startPointers.push(t), true)
         }
         triggerPointerEnd(t, e) {
             let n = this.currentPointers.findIndex(i => i.id === e.id); n < 0 || (this.currentPointers.splice(n, 1), this.startPointers.splice(n, 1), this.endCallback(t, e, this.currentPointers.slice()))
@@ -2145,7 +2144,7 @@
         }
         clear() {
             for (; this.currentPointers.length;) {
-                let t = this.currentPointers[this.currentPointers.length - 1]; this.currentPointers.splice(this.currentPointers.length - 1, 1), this.startPointers.splice(this.currentPointers.length - 1, 1), this.endCallback(new Event("touchend", { bubbles: !0, cancelable: !0, clientX: t.clientX, clientY: t.clientY }), t, this.currentPointers.slice())
+                let t = this.currentPointers[this.currentPointers.length - 1]; this.currentPointers.splice(this.currentPointers.length - 1, 1), this.startPointers.splice(this.currentPointers.length - 1, 1), this.endCallback(new Event("touchend", { bubbles: true, cancelable: true, clientX: t.clientX, clientY: t.clientY }), t, this.currentPointers.slice())
             }
         } stop() {
             this.element.removeEventListener("mousedown", this.onPointerStart, bt), this.element.removeEventListener("touchstart", this.onTouchStart, bt), this.element.removeEventListener("touchmove", this.onMove, bt), this.element.removeEventListener("touchend", this.onTouchEnd), this.element.removeEventListener("touchcancel", this.onTouchEnd), window.removeEventListener("mousemove", this.onMove), window.removeEventListener("mouseup", this.onPointerEnd), window.removeEventListener("blur", this.onWindowBlur)
@@ -2166,7 +2165,7 @@
         return o
     }, cn = function (o, t) { return o.split(".").reduce((e, n) => typeof e == "object" ? e[n] : void 0, t) }, yt = class {
         constructor(t = {}) {
-            Object.defineProperty(this, "options", { enumerable: !0, configurable: !0, writable: !0, value: t }), Object.defineProperty(this, "events", { enumerable: !0, configurable: !0, writable: !0, value: new Map }), this.setOptions(t); for (let e of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) e.startsWith("on") && typeof this[e] == "function" && (this[e] = this[e].bind(this))
+            Object.defineProperty(this, "options", { enumerable: true, configurable: true, writable: true, value: t }), Object.defineProperty(this, "events", { enumerable: true, configurable: true, writable: true, value: new Map }), this.setOptions(t); for (let e of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) e.startsWith("on") && typeof this[e] == "function" && (this[e] = this[e].bind(this))
         }
         setOptions(t) {
             this.options = t ? X({}, this.constructor.defaults, t) : {}; for (let [e, n] of Object.entries(this.option("on") || {})) this.on(e, n)
@@ -2176,7 +2175,7 @@
         }
         optionFor(t, e, n, ...i) {
             let s = cn(e, t);
-            var l; typeof (l = s) != "string" || isNaN(l) || isNaN(parseFloat(l)) || (s = parseFloat(s)), s === "true" && (s = !0), s === "false" && (s = !1), s && typeof s == "function" && (s = s.call(this, this, t, ...i)); let c = cn(e, this.options); return c && typeof c == "function" ? s = c.call(this, this, t, ...i, s) : s === void 0 && (s = c), s === void 0 ? n : s
+            var l; typeof (l = s) != "string" || isNaN(l) || isNaN(parseFloat(l)) || (s = parseFloat(s)), s === "true" && (s = true), s === "false" && (s = false), s && typeof s == "function" && (s = s.call(this, this, t, ...i)); let c = cn(e, this.options); return c && typeof c == "function" ? s = c.call(this, this, t, ...i, s) : s === void 0 && (s = c), s === void 0 ? n : s
 
         }
         cn(t) {
@@ -2196,14 +2195,14 @@
             })
         }
         emit(t, ...e) { [...this.events.get(t) || []].forEach(n => n(this, ...e)), t !== "*" && this.emit("*", t, ...e) }
-    }; Object.defineProperty(yt, "version", { enumerable: !0, configurable: !0, writable: !0, value: "5.0.36" }), Object.defineProperty(yt, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: {} });
+    }; Object.defineProperty(yt, "version", { enumerable: true, configurable: true, writable: true, value: "5.0.36" }), Object.defineProperty(yt, "defaults", { enumerable: true, configurable: true, writable: true, value: {} });
     var Ot = class extends yt {
         constructor(t = {}) {
-            super(t), Object.defineProperty(this, "plugins", { enumerable: !0, configurable: !0, writable: !0, value: {} })
+            super(t), Object.defineProperty(this, "plugins", { enumerable: true, configurable: true, writable: true, value: {} })
         }
         attachPlugins(t = {}) {
             let e = new Map; for (let [n, i] of Object.entries(t)) {
-                let s = this.option(n), l = this.plugins[n]; l || s === !1 ? l && s === !1 && (l.detach(), delete this.plugins[n]) : e.set(n, new i(this, s || {}))
+                let s = this.option(n), l = this.plugins[n]; l || s === false ? l && s === false && (l.detach(), delete this.plugins[n]) : e.set(n, new i(this, s || {}))
             }
             for (let [n, i] of e) this.plugins[n] = i, i.attach()
         }
@@ -2214,7 +2213,7 @@
             return this.emit("detachPlugins"), this
         }
     }, O; (function (o) { o[o.Init = 0] = "Init", o[o.Error = 1] = "Error", o[o.Ready = 2] = "Ready", o[o.Panning = 3] = "Panning", o[o.Mousemove = 4] = "Mousemove", o[o.Destroy = 5] = "Destroy" })(O || (O = {}));
-    var ot = ["a", "b", "c", "d", "e", "f"], Ni = { PANUP: "Move up", PANDOWN: "Move down", PANLEFT: "Move left", PANRIGHT: "Move right", ZOOMIN: "Zoom in", ZOOMOUT: "Zoom out", TOGGLEZOOM: "Toggle zoom level", TOGGLE1TO1: "Toggle zoom level", ITERATEZOOM: "Toggle zoom level", ROTATECCW: "Rotate counterclockwise", ROTATECW: "Rotate clockwise", FLIPX: "Flip horizontally", FLIPY: "Flip vertically", FITX: "Fit horizontally", FITY: "Fit vertically", RESET: "Reset", TOGGLEFS: "Toggle fullscreen" }, ha = { content: null, width: "auto", height: "auto", panMode: "drag", touch: !0, dragMinThreshold: 3, lockAxis: !1, mouseMoveFactor: 1, mouseMoveFriction: .12, zoom: !0, pinchToZoom: !0, panOnlyZoomed: "auto", minScale: 1, maxScale: 2, friction: .25, dragFriction: .35, decelFriction: .05, click: "toggleZoom", dblClick: !1, wheel: "zoom", wheelLimit: 7, spinner: !0, bounds: "auto", infinite: !1, rubberband: !0, bounce: !0, maxVelocity: 75, transformParent: !1, classes: { content: "f-panzoom__content", isLoading: "is-loading", canZoomIn: "can-zoom_in", canZoomOut: "can-zoom_out", isDraggable: "is-draggable", isDragging: "is-dragging", inFullscreen: "in-fullscreen", htmlHasFullscreen: "with-panzoom-in-fullscreen" }, l10n: Ni }, fi = '<circle cx="25" cy="25" r="20"></circle>', Rn = '<div class="f-spinner"><svg viewBox="0 0 50 50">' + fi + fi + "</svg></div>", N = o => o && o !== null && o instanceof Element && "nodeType" in o, Z = (o, t) => { o && Vn(t).forEach(e => { o.classList.remove(e) }) }, v = (o, t) => { o && Vn(t).forEach(e => { o.classList.add(e) }) }, oe = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, ua = 1e5, ae = 1e4, z = "mousemove", Qi = "drag", bi = "content", H = "auto", dn = null, hn = null, Qt = class o extends Ot {
+    var ot = ["a", "b", "c", "d", "e", "f"], Ni = { PANUP: "Move up", PANDOWN: "Move down", PANLEFT: "Move left", PANRIGHT: "Move right", ZOOMIN: "Zoom in", ZOOMOUT: "Zoom out", TOGGLEZOOM: "Toggle zoom level", TOGGLE1TO1: "Toggle zoom level", ITERATEZOOM: "Toggle zoom level", ROTATECCW: "Rotate counterclockwise", ROTATECW: "Rotate clockwise", FLIPX: "Flip horizontally", FLIPY: "Flip vertically", FITX: "Fit horizontally", FITY: "Fit vertically", RESET: "Reset", TOGGLEFS: "Toggle fullscreen" }, ha = { content: null, width: "auto", height: "auto", panMode: "drag", touch: true, dragMinThreshold: 3, lockAxis: false, mouseMoveFactor: 1, mouseMoveFriction: .12, zoom: true, pinchToZoom: true, panOnlyZoomed: "auto", minScale: 1, maxScale: 2, friction: .25, dragFriction: .35, decelFriction: .05, click: "toggleZoom", dblClick: false, wheel: "zoom", wheelLimit: 7, spinner: true, bounds: "auto", infinite: false, rubberband: true, bounce: true, maxVelocity: 75, transformParent: false, classes: { content: "f-panzoom__content", isLoading: "is-loading", canZoomIn: "can-zoom_in", canZoomOut: "can-zoom_out", isDraggable: "is-draggable", isDragging: "is-dragging", inFullscreen: "in-fullscreen", htmlHasFullscreen: "with-panzoom-in-fullscreen" }, l10n: Ni }, fi = '<circle cx="25" cy="25" r="20"></circle>', Rn = '<div class="f-spinner"><svg viewBox="0 0 50 50">' + fi + fi + "</svg></div>", N = o => o && o !== null && o instanceof Element && "nodeType" in o, Z = (o, t) => { o && Vn(t).forEach(e => { o.classList.remove(e) }) }, v = (o, t) => { o && Vn(t).forEach(e => { o.classList.add(e) }) }, oe = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, ua = 1e5, ae = 1e4, z = "mousemove", Qi = "drag", bi = "content", H = "auto", dn = null, hn = null, Qt = class o extends Ot {
         get fits() {
             return this.contentRect.width - this.contentRect.fitWidth < 1 && this.contentRect.height - this.contentRect.fitHeight < 1
         }
@@ -2272,33 +2271,33 @@
             let t = this.content; return !!(t && t instanceof HTMLImageElement) && !t.complete
         }
         get isResting() {
-            if (this.isBouncingX || this.isBouncingY) return !1; for (let t of ot) {
-                let e = t == "e" || t === "f" ? 1e-4 : 1e-5; if (Math.abs(this.target[t] - this.current[t]) > e) return !1
+            if (this.isBouncingX || this.isBouncingY) return false; for (let t of ot) {
+                let e = t == "e" || t === "f" ? 1e-4 : 1e-5; if (Math.abs(this.target[t] - this.current[t]) > e) return false
             }
             return !(!this.ignoreBounds && !this.checkBounds().inBounds)
         }
         constructor(t, e = {}, n = {}) {
-            var i; if (super(e), Object.defineProperty(this, "pointerTracker", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "resizeObserver", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "updateTimer", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "clickTimer", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "rAF", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "isTicking", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "ignoreBounds", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "isBouncingX", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "isBouncingY", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "clicks", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "trackingPoints", { enumerable: !0, configurable: !0, writable: !0, value: [] }), Object.defineProperty(this, "pwt", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "cwd", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "pmme", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "friction", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "state", { enumerable: !0, configurable: !0, writable: !0, value: O.Init }), Object.defineProperty(this, "isDragging", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "container", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "content", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "spinner", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "containerRect", {
-                enumerable: !0, configurable: !0, writable: !0, value: {
+            var i; if (super(e), Object.defineProperty(this, "pointerTracker", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "resizeObserver", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "updateTimer", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "clickTimer", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "rAF", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "isTicking", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "ignoreBounds", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "isBouncingX", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "isBouncingY", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "clicks", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "trackingPoints", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "pwt", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "cwd", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "pmme", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "friction", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "state", { enumerable: true, configurable: true, writable: true, value: O.Init }), Object.defineProperty(this, "isDragging", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "container", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "content", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "spinner", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "containerRect", {
+                enumerable: true, configurable: true, writable: true, value: {
                     width: 0, height: 0, innerWidth: 0, innerHeight: 0
                 }
             }), Object.defineProperty(this, "contentRect", {
-                enumerable: !0, configurable: !0, writable: !0, value: {
+                enumerable: true, configurable: true, writable: true, value: {
                     top: 0, right: 0, bottom: 0, left: 0, fullWidth: 0, fullHeight: 0, fitWidth: 0, fitHeight: 0, width: 0, height: 0
                 }
             }), Object.defineProperty(this, "dragStart", {
-                enumerable: !0, configurable: !0, writable: !0, value: {
+                enumerable: true, configurable: true, writable: true, value: {
                     x: 0, y: 0, top: 0, left: 0, time: 0
                 }
             }), Object.defineProperty(this, "dragOffset", {
-                enumerable: !0, configurable: !0, writable: !0, value: {
+                enumerable: true, configurable: true, writable: true, value: {
                     x: 0, y: 0, time: 0
                 }
-            }), Object.defineProperty(this, "current", { enumerable: !0, configurable: !0, writable: !0, value: Object.assign({}, oe) }), Object.defineProperty(this, "target", { enumerable: !0, configurable: !0, writable: !0, value: Object.assign({}, oe) }), Object.defineProperty(this, "velocity", {
-                enumerable: !0, configurable: !0, writable: !0, value: {
+            }), Object.defineProperty(this, "current", { enumerable: true, configurable: true, writable: true, value: Object.assign({}, oe) }), Object.defineProperty(this, "target", { enumerable: true, configurable: true, writable: true, value: Object.assign({}, oe) }), Object.defineProperty(this, "velocity", {
+                enumerable: true, configurable: true, writable: true, value: {
                     a: 0, b: 0, c: 0, d: 0, e: 0, f: 0
                 }
-            }), Object.defineProperty(this, "lockedAxis", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), !t) throw new Error("Container Element Not Found"); this.container = t, this.initContent(), this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), n)), this.emit("attachPlugins"), this.emit("init"); let s = this.content; if (s.addEventListener("load", this.onLoad), s.addEventListener("error", this.onError), this.isContentLoading) {
+            }), Object.defineProperty(this, "lockedAxis", { enumerable: true, configurable: true, writable: true, value: false }), !t) throw new Error("Container Element Not Found"); this.container = t, this.initContent(), this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), n)), this.emit("attachPlugins"), this.emit("init"); let s = this.content; if (s.addEventListener("load", this.onLoad), s.addEventListener("error", this.onError), this.isContentLoading) {
                 if (this.option("spinner")) {
                     t.classList.add(this.cn("isLoading")); let l = tt(Rn); !t.contains(s) || s.parentElement instanceof HTMLPictureElement ? this.spinner = t.appendChild(l) : this.spinner = ((i = s.parentElement) === null || i === void 0 ? void 0 : i.insertBefore(l, s)) || null
                 }
@@ -2337,12 +2336,12 @@
         attachEvents() {
             let { container: t
             }
-                = this; t.addEventListener("click", this.onClick, { passive: !1, capture: !1 }), t.addEventListener("wheel", this.onWheel, { passive: !1 }), this.pointerTracker = new wn(t, { start: this.onPointerDown, move: this.onPointerMove, end: this.onPointerUp }), document.addEventListener(z, this.onMouseMove)
+                = this; t.addEventListener("click", this.onClick, { passive: false, capture: false }), t.addEventListener("wheel", this.onWheel, { passive: false }), this.pointerTracker = new wn(t, { start: this.onPointerDown, move: this.onPointerMove, end: this.onPointerUp }), document.addEventListener(z, this.onMouseMove)
         }
         detachEvents() {
             var t; let { container: e
             }
-                = this; e.removeEventListener("click", this.onClick, { passive: !1, capture: !1 }), e.removeEventListener("wheel", this.onWheel, { passive: !1 }), (t = this.pointerTracker) === null || t === void 0 || t.stop(), this.pointerTracker = null, document.removeEventListener(z, this.onMouseMove), document.removeEventListener("keydown", this.onKeydown, !0), this.clickTimer && (clearTimeout(this.clickTimer), this.clickTimer = null), this.updateTimer && (clearTimeout(this.updateTimer), this.updateTimer = null)
+                = this; e.removeEventListener("click", this.onClick, { passive: false, capture: false }), e.removeEventListener("wheel", this.onWheel, { passive: false }), (t = this.pointerTracker) === null || t === void 0 || t.stop(), this.pointerTracker = null, document.removeEventListener(z, this.onMouseMove), document.removeEventListener("keydown", this.onKeydown, true), this.clickTimer && (clearTimeout(this.clickTimer), this.clickTimer = null), this.updateTimer && (clearTimeout(this.updateTimer), this.updateTimer = null)
         }
         animate() {
             this.setTargetForce(); let t = this.friction, e = this.option("maxVelocity"); for (let n of ot) t ? (this.velocity[n] *= 1 - t, e && !this.isScaling && (this.velocity[n] = Math.max(Math.min(this.velocity[n], e), -1 * e)), this.current[n] += this.velocity[n]) : this.current[n] = this.target[n]; this.setTransform(), this.setEdgeForce(), !this.isResting || this.isDragging ? this.rAF = requestAnimationFrame(() => this.animate()) : this.stop("current")
@@ -2355,32 +2354,32 @@
             }
                 = this, i = n.e + t, s = n.f + e, l = this.getBounds(), { x: c, y: h
                 }
-                = l, m = c.min, a = c.max, r = h.min, d = h.max, u = 0, p = 0; return m !== 1 / 0 && i < m ? u = m - i : a !== 1 / 0 && i > a && (u = a - i), r !== 1 / 0 && s < r ? p = r - s : d !== 1 / 0 && s > d && (p = d - s), Math.abs(u) < 1e-4 && (u = 0), Math.abs(p) < 1e-4 && (p = 0), Object.assign(Object.assign({}, l), { xDiff: u, yDiff: p, inBounds: !u && !p })
+                    = l, m = c.min, a = c.max, r = h.min, d = h.max, u = 0, p = 0; return m !== 1 / 0 && i < m ? u = m - i : a !== 1 / 0 && i > a && (u = a - i), r !== 1 / 0 && s < r ? p = r - s : d !== 1 / 0 && s > d && (p = d - s), Math.abs(u) < 1e-4 && (u = 0), Math.abs(p) < 1e-4 && (p = 0), Object.assign(Object.assign({}, l), { xDiff: u, yDiff: p, inBounds: !u && !p })
         }
         clampTargetBounds() {
             let { target: t
             }
                 = this, { x: e, y: n
                 }
-                = this.getBounds(); e.min !== 1 / 0 && (t.e = Math.max(t.e, e.min)), e.max !== 1 / 0 && (t.e = Math.min(t.e, e.max)), n.min !== 1 / 0 && (t.f = Math.max(t.f, n.min)), n.max !== 1 / 0 && (t.f = Math.min(t.f, n.max))
+                    = this.getBounds(); e.min !== 1 / 0 && (t.e = Math.max(t.e, e.min)), e.max !== 1 / 0 && (t.e = Math.min(t.e, e.max)), n.min !== 1 / 0 && (t.f = Math.max(t.f, n.min)), n.max !== 1 / 0 && (t.f = Math.min(t.f, n.max))
         }
         calculateContentDim(t = this.current) {
             let { content: e, contentRect: n
             }
                 = this, { fitWidth: i, fitHeight: s, fullWidth: l, fullHeight: c
                 }
-                = n, h = l, m = c; if (this.option("zoom") || this.angle !== 0) {
-                    let a = !(e instanceof HTMLImageElement) && (window.getComputedStyle(e).maxWidth === "none" || window.getComputedStyle(e).maxHeight === "none"), r = a ? l : i, d = a ? c : s, u = this.getMatrix(t), p = new DOMPoint(0, 0).matrixTransform(u), f = new DOMPoint(0 + r, 0).matrixTransform(u), Q = new DOMPoint(0 + r, 0 + d).matrixTransform(u), b = new DOMPoint(0, 0 + d).matrixTransform(u), g = Math.abs(Q.x - p.x), B = Math.abs(Q.y - p.y), x = Math.abs(b.x - f.x), E = Math.abs(b.y - f.y); h = Math.max(g, x), m = Math.max(B, E)
-                }
+                    = n, h = l, m = c; if (this.option("zoom") || this.angle !== 0) {
+                        let a = !(e instanceof HTMLImageElement) && (window.getComputedStyle(e).maxWidth === "none" || window.getComputedStyle(e).maxHeight === "none"), r = a ? l : i, d = a ? c : s, u = this.getMatrix(t), p = new DOMPoint(0, 0).matrixTransform(u), f = new DOMPoint(0 + r, 0).matrixTransform(u), Q = new DOMPoint(0 + r, 0 + d).matrixTransform(u), b = new DOMPoint(0, 0 + d).matrixTransform(u), g = Math.abs(Q.x - p.x), B = Math.abs(Q.y - p.y), x = Math.abs(b.x - f.x), E = Math.abs(b.y - f.y); h = Math.max(g, x), m = Math.max(B, E)
+                    }
             return {
                 contentWidth: h, contentHeight: m
             }
         } setEdgeForce() {
-            if (this.ignoreBounds || this.isDragging || this.panMode === z || this.targetScale < this.scale) return this.isBouncingX = !1, void (this.isBouncingY = !1); let { target: t
+            if (this.ignoreBounds || this.isDragging || this.panMode === z || this.targetScale < this.scale) return this.isBouncingX = false, void (this.isBouncingY = false); let { target: t
             }
                 = this, { x: e, y: n, xDiff: i, yDiff: s
                 }
-                    = this.checkBounds(), l = this.option("maxVelocity"), c = this.velocity.e, h = this.velocity.f; i !== 0 ? (this.isBouncingX = !0, i * c <= 0 ? c += .14 * i : (c = .14 * i, e.min !== 1 / 0 && (this.target.e = Math.max(t.e, e.min)), e.max !== 1 / 0 && (this.target.e = Math.min(t.e, e.max))), l && (c = Math.max(Math.min(c, l), -1 * l))) : this.isBouncingX = !1, s !== 0 ? (this.isBouncingY = !0, s * h <= 0 ? h += .14 * s : (h = .14 * s, n.min !== 1 / 0 && (this.target.f = Math.max(t.f, n.min)), n.max !== 1 / 0 && (this.target.f = Math.min(t.f, n.max))), l && (h = Math.max(Math.min(h, l), -1 * l))) : this.isBouncingY = !1, this.isBouncingX && (this.velocity.e = c), this.isBouncingY && (this.velocity.f = h)
+                    = this.checkBounds(), l = this.option("maxVelocity"), c = this.velocity.e, h = this.velocity.f; i !== 0 ? (this.isBouncingX = true, i * c <= 0 ? c += .14 * i : (c = .14 * i, e.min !== 1 / 0 && (this.target.e = Math.max(t.e, e.min)), e.max !== 1 / 0 && (this.target.e = Math.min(t.e, e.max))), l && (c = Math.max(Math.min(c, l), -1 * l))) : this.isBouncingX = false, s !== 0 ? (this.isBouncingY = true, s * h <= 0 ? h += .14 * s : (h = .14 * s, n.min !== 1 / 0 && (this.target.f = Math.max(t.f, n.min)), n.max !== 1 / 0 && (this.target.f = Math.min(t.f, n.max))), l && (h = Math.max(Math.min(h, l), -1 * l))) : this.isBouncingY = false, this.isBouncingX && (this.velocity.e = c), this.isBouncingY && (this.velocity.f = h)
         }
         enable() {
             let { content: t
@@ -2393,9 +2392,9 @@
                     let f = {}; try {
                         f = JSON.parse(u)
                     }
-                        catch {
-                            console && console.warn("The given data was not valid JSON")
-                        }
+                    catch {
+                        console && console.warn("The given data was not valid JSON")
+                    }
                     return void this.applyChange(f)
                 }
                 if (p) return void (this[p] && this[p]())
@@ -2406,13 +2405,13 @@
             let e = this.trackingPoints.filter(n => n.time > Date.now() - 100); e.push(t), this.trackingPoints = e
         }
         onPointerDown(t, e, n) {
-            var i; if (this.option("touch", t) === !1) return !1; this.pwt = 0, this.dragOffset = { x: 0, y: 0, time: 0 }, this.trackingPoints = []; let s = this.content.getBoundingClientRect(); if (this.dragStart = { x: s.x, y: s.y, top: s.top, left: s.left, time: Date.now() }, this.clickTimer) return !1; if (this.panMode === z && this.targetScale > 1) return t.preventDefault(), t.stopPropagation(), !1; let l = t.composedPath()[0]; if (!n.length) {
-                if (["TEXTAREA", "OPTION", "INPUT", "SELECT", "VIDEO", "IFRAME"].includes(l.nodeName) || l.closest("[contenteditable],[data-selectable],[data-draggable],[data-clickable],[data-panzoom-change],[data-panzoom-action]")) return !1; (i = window.getSelection()) === null || i === void 0 || i.removeAllRanges()
+            var i; if (this.option("touch", t) === false) return false; this.pwt = 0, this.dragOffset = { x: 0, y: 0, time: 0 }, this.trackingPoints = []; let s = this.content.getBoundingClientRect(); if (this.dragStart = { x: s.x, y: s.y, top: s.top, left: s.left, time: Date.now() }, this.clickTimer) return false; if (this.panMode === z && this.targetScale > 1) return t.preventDefault(), t.stopPropagation(), false; let l = t.composedPath()[0]; if (!n.length) {
+                if (["TEXTAREA", "OPTION", "INPUT", "SELECT", "VIDEO", "IFRAME"].includes(l.nodeName) || l.closest("[contenteditable],[data-selectable],[data-draggable],[data-clickable],[data-panzoom-change],[data-panzoom-action]")) return false; (i = window.getSelection()) === null || i === void 0 || i.removeAllRanges()
             }
-            if (t.type === "mousedown") ["A", "BUTTON"].includes(l.nodeName) || t.preventDefault(); else if (Math.abs(this.velocity.a) > .3) return !1; return this.target.e = this.current.e, this.target.f = this.current.f, this.stop(), this.isDragging || (this.isDragging = !0, this.addTrackingPoint(e), this.emit("touchStart", t)), !0
+            if (t.type === "mousedown") ["A", "BUTTON"].includes(l.nodeName) || t.preventDefault(); else if (Math.abs(this.velocity.a) > .3) return false; return this.target.e = this.current.e, this.target.f = this.current.f, this.stop(), this.isDragging || (this.isDragging = true, this.addTrackingPoint(e), this.emit("touchStart", t)), true
         }
         onPointerMove(t, e, n) {
-            if (this.option("touch", t) === !1 || !this.isDragging || e.length < 2 && this.panOnlyZoomed && F(this.targetScale) <= F(this.minScale) || (this.emit("touchMove", t), t.defaultPrevented)) return; this.addTrackingPoint(e[0]); let { content: i
+            if (this.option("touch", t) === false || !this.isDragging || e.length < 2 && this.panOnlyZoomed && F(this.targetScale) <= F(this.minScale) || (this.emit("touchMove", t), t.defaultPrevented)) return; this.addTrackingPoint(e[0]); let { content: i
             }
                 = this, s = pi(n[0], n[1]), l = pi(e[0], e[1]), c = 0, h = 0; if (e.length > 1) {
                     let B = i.getBoundingClientRect(); c = s.clientX - B.left - .5 * B.width, h = s.clientY - B.top - .5 * B.height
@@ -2420,13 +2419,13 @@
             let m = mi(n[0], n[1]), a = mi(e[0], e[1]), r = m ? a / m : 1, d = l.clientX - s.clientX, u = l.clientY - s.clientY; this.dragOffset.x += d, this.dragOffset.y += u, this.dragOffset.time = Date.now() - this.dragStart.time; let p = F(this.targetScale) === F(this.minScale) && this.option("lockAxis"); if (p && !this.lockedAxis) if (p === "xy" || p === "y" || t.type === "touchmove") {
                 if (Math.abs(this.dragOffset.x) < 6 && Math.abs(this.dragOffset.y) < 6) return void t.preventDefault(); let B = Math.abs(180 * Math.atan2(this.dragOffset.y, this.dragOffset.x) / Math.PI); this.lockedAxis = B > 45 && B < 135 ? "y" : "x", this.dragOffset.x = 0, this.dragOffset.y = 0, d = 0, u = 0
             }
-            else this.lockedAxis = p; if (Qe(t.target, this.content) && (p = "x", this.dragOffset.y = 0), p && p !== "xy" && this.lockedAxis !== p && F(this.targetScale) === F(this.minScale)) return; t.cancelable && t.preventDefault(), this.container.classList.add(this.cn("isDragging")); let f = this.checkBounds(d, u); this.option("rubberband") ? (this.isInfinite !== "x" && (f.xDiff > 0 && d < 0 || f.xDiff < 0 && d > 0) && (d *= Math.max(0, .5 - Math.abs(.75 / this.contentRect.fitWidth * f.xDiff))), this.isInfinite !== "y" && (f.yDiff > 0 && u < 0 || f.yDiff < 0 && u > 0) && (u *= Math.max(0, .5 - Math.abs(.75 / this.contentRect.fitHeight * f.yDiff)))) : (f.xDiff && (d = 0), f.yDiff && (u = 0)); let Q = this.targetScale, b = this.minScale, g = this.maxScale; Q < .5 * b && (r = Math.max(r, b)), Q > 1.5 * g && (r = Math.min(r, g)), this.lockedAxis === "y" && F(Q) === F(b) && (d = 0), this.lockedAxis === "x" && F(Q) === F(b) && (u = 0), this.applyChange({ originX: c, originY: h, panX: d, panY: u, scale: r, friction: this.option("dragFriction"), ignoreBounds: !0 })
+            else this.lockedAxis = p; if (Qe(t.target, this.content) && (p = "x", this.dragOffset.y = 0), p && p !== "xy" && this.lockedAxis !== p && F(this.targetScale) === F(this.minScale)) return; t.cancelable && t.preventDefault(), this.container.classList.add(this.cn("isDragging")); let f = this.checkBounds(d, u); this.option("rubberband") ? (this.isInfinite !== "x" && (f.xDiff > 0 && d < 0 || f.xDiff < 0 && d > 0) && (d *= Math.max(0, .5 - Math.abs(.75 / this.contentRect.fitWidth * f.xDiff))), this.isInfinite !== "y" && (f.yDiff > 0 && u < 0 || f.yDiff < 0 && u > 0) && (u *= Math.max(0, .5 - Math.abs(.75 / this.contentRect.fitHeight * f.yDiff)))) : (f.xDiff && (d = 0), f.yDiff && (u = 0)); let Q = this.targetScale, b = this.minScale, g = this.maxScale; Q < .5 * b && (r = Math.max(r, b)), Q > 1.5 * g && (r = Math.min(r, g)), this.lockedAxis === "y" && F(Q) === F(b) && (d = 0), this.lockedAxis === "x" && F(Q) === F(b) && (u = 0), this.applyChange({ originX: c, originY: h, panX: d, panY: u, scale: r, friction: this.option("dragFriction"), ignoreBounds: true })
         }
         onPointerUp(t, e, n) {
-            if (n.length) return this.dragOffset.x = 0, this.dragOffset.y = 0, void (this.trackingPoints = []); this.container.classList.remove(this.cn("isDragging")), this.isDragging && (this.addTrackingPoint(e), this.panOnlyZoomed && this.contentRect.width - this.contentRect.fitWidth < 1 && this.contentRect.height - this.contentRect.fitHeight < 1 && (this.trackingPoints = []), Qe(t.target, this.content) && this.lockedAxis === "y" && (this.trackingPoints = []), this.emit("touchEnd", t), this.isDragging = !1, this.lockedAxis = !1, this.state !== O.Destroy && (t.defaultPrevented || this.startDecelAnim()))
+            if (n.length) return this.dragOffset.x = 0, this.dragOffset.y = 0, void (this.trackingPoints = []); this.container.classList.remove(this.cn("isDragging")), this.isDragging && (this.addTrackingPoint(e), this.panOnlyZoomed && this.contentRect.width - this.contentRect.fitWidth < 1 && this.contentRect.height - this.contentRect.fitHeight < 1 && (this.trackingPoints = []), Qe(t.target, this.content) && this.lockedAxis === "y" && (this.trackingPoints = []), this.emit("touchEnd", t), this.isDragging = false, this.lockedAxis = false, this.state !== O.Destroy && (t.defaultPrevented || this.startDecelAnim()))
         }
         startDecelAnim() {
-            var t; let e = this.isScaling; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.isBouncingX = !1, this.isBouncingY = !1; for (let B of ot) this.velocity[B] = 0; this.target.e = this.current.e, this.target.f = this.current.f, Z(this.container, "is-scaling"), Z(this.container, "is-animating"), this.isTicking = !1; let { trackingPoints: n
+            var t; let e = this.isScaling; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.isBouncingX = false, this.isBouncingY = false; for (let B of ot) this.velocity[B] = 0; this.target.e = this.current.e, this.target.f = this.current.f, Z(this.container, "is-scaling"), Z(this.container, "is-animating"), this.isTicking = false; let { trackingPoints: n
             }
                 = this, i = n[0], s = n[n.length - 1], l = 0, c = 0, h = 0; s && i && (l = s.clientX - i.clientX, c = s.clientY - i.clientY, h = s.time - i.time); let m = ((t = window.visualViewport) === null || t === void 0 ? void 0 : t.scale) || 1; m !== 1 && (l *= m, c *= m); let a = 0, r = 0, d = 0, u = 0, p = this.option("decelFriction"), f = this.targetScale; if (h > 0) {
                     d = Math.abs(l) > 3 ? l / (h / 30) : 0, u = Math.abs(c) > 3 ? c / (h / 30) : 0; let B = this.option("maxVelocity"); B && (d = Math.max(Math.min(d, B), -1 * B), u = Math.max(Math.min(u, B), -1 * B))
@@ -2434,7 +2433,7 @@
             d && (a = d / (1 / (1 - p) - 1)), u && (r = u / (1 / (1 - p) - 1)), (this.option("lockAxis") === "y" || this.option("lockAxis") === "xy" && this.lockedAxis === "y" && F(f) === this.minScale) && (a = d = 0), (this.option("lockAxis") === "x" || this.option("lockAxis") === "xy" && this.lockedAxis === "x" && F(f) === this.minScale) && (r = u = 0); let Q = this.dragOffset.x, b = this.dragOffset.y, g = this.option("dragMinThreshold") || 0; Math.abs(Q) < g && Math.abs(b) < g && (a = r = 0, d = u = 0), (this.option("zoom") && (f < this.minScale - 1e-5 || f > this.maxScale + 1e-5) || e && !a && !r) && (p = .35), this.applyChange({ panX: a, panY: r, friction: p }), this.emit("decel", d, u, Q, b)
         }
         onWheel(t) {
-            var e = [-t.deltaX || 0, -t.deltaY || 0, -t.detail || 0].reduce(function (s, l) { return Math.abs(l) > Math.abs(s) ? l : s }); let n = Math.max(-1, Math.min(1, e)); if (this.emit("wheel", t, n), this.panMode === z || t.defaultPrevented) return; let i = this.option("wheel"); i === "pan" ? (t.preventDefault(), this.panOnlyZoomed && !this.canZoomOut() || this.applyChange({ panX: 2 * -t.deltaX, panY: 2 * -t.deltaY, bounce: !1 })) : i === "zoom" && this.option("zoom") !== !1 && this.zoomWithWheel(t)
+            var e = [-t.deltaX || 0, -t.deltaY || 0, -t.detail || 0].reduce(function (s, l) { return Math.abs(l) > Math.abs(s) ? l : s }); let n = Math.max(-1, Math.min(1, e)); if (this.emit("wheel", t, n), this.panMode === z || t.defaultPrevented) return; let i = this.option("wheel"); i === "pan" ? (t.preventDefault(), this.panOnlyZoomed && !this.canZoomOut() || this.applyChange({ panX: 2 * -t.deltaX, panY: 2 * -t.deltaY, bounce: false })) : i === "zoom" && this.option("zoom") !== false && this.zoomWithWheel(t)
         }
         onMouseMove(t) {
             this.panWithMouse(t)
@@ -2457,7 +2456,7 @@
                 }
                     = this.calculateContentDim(); i.width = p, i.height = f, this.emit("afterTransform")
         }
-        updateMetrics(t = !1) {
+        updateMetrics(t = false) {
             var e; if (!this || this.state === O.Destroy || this.isContentLoading) return; let n = Math.max(1, ((e = window.visualViewport) === null || e === void 0 ? void 0 : e.scale) || 1), { container: i, content: s
             }
                 = this, l = s instanceof HTMLImageElement, c = i.getBoundingClientRect(), h = getComputedStyle(this.container), m = c.width * n, a = c.height * n, r = parseFloat(h.paddingTop) + parseFloat(h.paddingBottom), d = m - (parseFloat(h.paddingLeft) + parseFloat(h.paddingRight)), u = a - r; this.containerRect = { width: m, height: a, innerWidth: d, innerHeight: u }; let p = parseFloat(s.dataset.width || "") || (L => { let Y = 0; return Y = L instanceof HTMLImageElement ? L.naturalWidth : L instanceof SVGElement ? L.width.baseVal.value : Math.max(L.offsetWidth, L.scrollWidth), Y || 0 })(s), f = parseFloat(s.dataset.height || "") || (L => { let Y = 0; return Y = L instanceof HTMLImageElement ? L.naturalHeight : L instanceof SVGElement ? L.height.baseVal.value : Math.max(L.offsetHeight, L.scrollHeight), Y || 0 })(s), Q = this.option("width", p) || H, b = this.option("height", f) || H, g = Q === H, B = b === H; typeof Q != "number" && (Q = p), typeof b != "number" && (b = f), g && (Q = p * (b / f)), B && (b = f / (p / Q)); let x = s.parentElement instanceof HTMLPictureElement ? s.parentElement : s; this.option("transformParent") && (x = x.parentElement || x); let E = x.getAttribute("style") || ""; x.style.setProperty("transform", "none", "important"), l && (x.style.width = "", x.style.height = ""), x.offsetHeight; let W = s.getBoundingClientRect(), y = W.width * n, w = W.height * n, k = y, U = w; y = Math.min(y, Q), w = Math.min(w, b), l ? {
@@ -2467,28 +2466,28 @@
                         let zt = ke / L, lt = Jt / Y, Ht = Math.min(zt, lt); return {
                             width: L *= Ht, height: Y *= Ht
                         }
-                    })(Q, b, y, w) : (y = Math.min(y, Q), w = Math.min(w, b)); let S = .5 * (U - w), T = .5 * (k - y); this.contentRect = Object.assign(Object.assign({}, this.contentRect), { top: W.top - c.top + S, bottom: c.bottom - W.bottom + S, left: W.left - c.left + T, right: c.right - W.right + T, fitWidth: y, fitHeight: w, width: y, height: w, fullWidth: Q, fullHeight: b }), x.style.cssText = E, l && (x.style.width = `${y}px`, x.style.height = `${w}px`), this.setTransform(), t !== !0 && this.emit("refresh"), this.ignoreBounds || (F(this.targetScale) < F(this.minScale) ? this.zoomTo(this.minScale, { friction: 0 }) : this.targetScale > this.maxScale ? this.zoomTo(this.maxScale, { friction: 0 }) : this.state === O.Init || this.checkBounds().inBounds || this.requestTick()), this.updateControls()
+                    })(Q, b, y, w) : (y = Math.min(y, Q), w = Math.min(w, b)); let S = .5 * (U - w), T = .5 * (k - y); this.contentRect = Object.assign(Object.assign({}, this.contentRect), { top: W.top - c.top + S, bottom: c.bottom - W.bottom + S, left: W.left - c.left + T, right: c.right - W.right + T, fitWidth: y, fitHeight: w, width: y, height: w, fullWidth: Q, fullHeight: b }), x.style.cssText = E, l && (x.style.width = `${y}px`, x.style.height = `${w}px`), this.setTransform(), t !== true && this.emit("refresh"), this.ignoreBounds || (F(this.targetScale) < F(this.minScale) ? this.zoomTo(this.minScale, { friction: 0 }) : this.targetScale > this.maxScale ? this.zoomTo(this.maxScale, { friction: 0 }) : this.state === O.Init || this.checkBounds().inBounds || this.requestTick()), this.updateControls()
         }
         calculateBounds() {
             let { contentWidth: t, contentHeight: e
             }
                 = this.calculateContentDim(this.target), { targetScale: n, lockedAxis: i
                 }
-                = this, { fitWidth: s, fitHeight: l
-                }
-                = this.contentRect, c = 0, h = 0, m = 0, a = 0, r = this.option("infinite"); if (r === !0 || i && r === i) c = -1 / 0, m = 1 / 0, h = -1 / 0, a = 1 / 0; else {
-                    let { containerRect: d, contentRect: u
+                    = this, { fitWidth: s, fitHeight: l
                     }
-                        = this, p = F(s * n, ae), f = F(l * n, ae), { innerWidth: Q, innerHeight: b
+                    = this.contentRect, c = 0, h = 0, m = 0, a = 0, r = this.option("infinite"); if (r === true || i && r === i) c = -1 / 0, m = 1 / 0, h = -1 / 0, a = 1 / 0; else {
+                        let { containerRect: d, contentRect: u
                         }
-                        = d; if (d.width === p && (Q = d.width), d.width === f && (b = d.height), t > Q) {
-                            m = .5 * (t - Q), c = -1 * m; let g = .5 * (u.right - u.left); c += g, m += g
+                            = this, p = F(s * n, ae), f = F(l * n, ae), { innerWidth: Q, innerHeight: b
+                            }
+                                = d; if (d.width === p && (Q = d.width), d.width === f && (b = d.height), t > Q) {
+                                    m = .5 * (t - Q), c = -1 * m; let g = .5 * (u.right - u.left); c += g, m += g
+                                }
+                        if (s > Q && t < Q && (c -= .5 * (s - Q), m -= .5 * (s - Q)), e > b) {
+                            a = .5 * (e - b), h = -1 * a; let g = .5 * (u.bottom - u.top); h += g, a += g
                         }
-                    if (s > Q && t < Q && (c -= .5 * (s - Q), m -= .5 * (s - Q)), e > b) {
-                        a = .5 * (e - b), h = -1 * a; let g = .5 * (u.bottom - u.top); h += g, a += g
+                        l > b && e < b && (c -= .5 * (l - b), m -= .5 * (l - b))
                     }
-                    l > b && e < b && (c -= .5 * (l - b), m -= .5 * (l - b))
-                }
             return {
                 x: { min: c, max: m }, y: {
                     min: h, max: a
@@ -2501,13 +2500,13 @@
         updateControls() {
             let t = this, e = t.container, { panMode: n, contentRect: i, targetScale: s, minScale: l
             }
-                = t, c = l, h = t.option("click") || !1; h && (c = t.getNextScale(h)); let m = t.canZoomIn(), a = t.canZoomOut(), r = n === Qi && !!this.option("touch"), d = a && r; if (r && (F(s) < F(l) && !this.panOnlyZoomed && (d = !0), (F(i.width, 1) > F(i.fitWidth, 1) || F(i.height, 1) > F(i.fitHeight, 1)) && (d = !0)), F(i.width * s, 1) < F(i.fitWidth, 1) && (d = !1), n === z && (d = !1), et(e, this.cn("isDraggable"), d), !this.option("zoom")) return; let u = m && F(c) > F(s), p = !u && !d && a && F(c) < F(s); et(e, this.cn("canZoomIn"), u), et(e, this.cn("canZoomOut"), p); for (let f of e.querySelectorAll("[data-panzoom-action]")) {
-                    let Q = !1, b = !1; switch (f.dataset.panzoomAction) { case "zoomIn": m ? Q = !0 : b = !0; break; case "zoomOut": a ? Q = !0 : b = !0; break; case "toggleZoom": case "iterateZoom": m || a ? Q = !0 : b = !0; let g = f.querySelector("g"); g && (g.style.display = m ? "" : "none") }Q ? (f.removeAttribute("disabled"), f.removeAttribute("tabindex")) : b && (f.setAttribute("disabled", ""), f.setAttribute("tabindex", "-1"))
+                = t, c = l, h = t.option("click") || false; h && (c = t.getNextScale(h)); let m = t.canZoomIn(), a = t.canZoomOut(), r = n === Qi && !!this.option("touch"), d = a && r; if (r && (F(s) < F(l) && !this.panOnlyZoomed && (d = true), (F(i.width, 1) > F(i.fitWidth, 1) || F(i.height, 1) > F(i.fitHeight, 1)) && (d = true)), F(i.width * s, 1) < F(i.fitWidth, 1) && (d = false), n === z && (d = false), et(e, this.cn("isDraggable"), d), !this.option("zoom")) return; let u = m && F(c) > F(s), p = !u && !d && a && F(c) < F(s); et(e, this.cn("canZoomIn"), u), et(e, this.cn("canZoomOut"), p); for (let f of e.querySelectorAll("[data-panzoom-action]")) {
+                    let Q = false, b = false; switch (f.dataset.panzoomAction) { case "zoomIn": m ? Q = true : b = true; break; case "zoomOut": a ? Q = true : b = true; break; case "toggleZoom": case "iterateZoom": m || a ? Q = true : b = true; let g = f.querySelector("g"); g && (g.style.display = m ? "" : "none") }Q ? (f.removeAttribute("disabled"), f.removeAttribute("tabindex")) : b && (f.setAttribute("disabled", ""), f.setAttribute("tabindex", "-1"))
                 }
-        } panTo({ x: t = this.target.e, y: e = this.target.f, scale: n = this.targetScale, friction: i = this.option("friction"), angle: s = 0, originX: l = 0, originY: c = 0, flipX: h = !1, flipY: m = !1, ignoreBounds: a = !1 }) {
+        } panTo({ x: t = this.target.e, y: e = this.target.f, scale: n = this.targetScale, friction: i = this.option("friction"), angle: s = 0, originX: l = 0, originY: c = 0, flipX: h = false, flipY: m = false, ignoreBounds: a = false }) {
             this.state !== O.Destroy && this.applyChange({ panX: t - this.target.e, panY: e - this.target.f, scale: n / this.targetScale, angle: s, originX: l, originY: c, friction: i, flipX: h, flipY: m, ignoreBounds: a })
         }
-        applyChange({ panX: t = 0, panY: e = 0, scale: n = 1, angle: i = 0, originX: s = -this.current.e, originY: l = -this.current.f, friction: c = this.option("friction"), flipX: h = !1, flipY: m = !1, ignoreBounds: a = !1, bounce: r = this.option("bounce") }) {
+        applyChange({ panX: t = 0, panY: e = 0, scale: n = 1, angle: i = 0, originX: s = -this.current.e, originY: l = -this.current.f, friction: c = this.option("friction"), flipX: h = false, flipY: m = false, ignoreBounds: a = false, bounce: r = this.option("bounce") }) {
             let d = this.state; if (d === O.Destroy) return; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.friction = c || 0, this.ignoreBounds = a; let { current: u
             }
                 = this, p = u.e, f = u.f, Q = this.getMatrix(this.target), b = new DOMMatrix().translate(p, f).translate(s, l).translate(t, e); if (this.option("zoom")) {
@@ -2516,13 +2515,13 @@
                     }
                     b = b.scale(n)
                 }
-            b = b.translate(-s, -l).translate(-p, -f).multiply(Q), i && (b = b.rotate(i)), h && (b = b.scale(-1, 1)), m && (b = b.scale(1, -1)); for (let g of ot) g !== "e" && g !== "f" && (b[g] > this.minScale + 1e-5 || b[g] < this.minScale - 1e-5) ? this.target[g] = b[g] : this.target[g] = F(b[g], ae); (this.targetScale < this.scale || Math.abs(n - 1) > .1 || this.panMode === z || r === !1) && !a && this.clampTargetBounds(), d === O.Init ? this.animate() : this.isResting || (this.state = O.Panning, this.requestTick())
+            b = b.translate(-s, -l).translate(-p, -f).multiply(Q), i && (b = b.rotate(i)), h && (b = b.scale(-1, 1)), m && (b = b.scale(1, -1)); for (let g of ot) g !== "e" && g !== "f" && (b[g] > this.minScale + 1e-5 || b[g] < this.minScale - 1e-5) ? this.target[g] = b[g] : this.target[g] = F(b[g], ae); (this.targetScale < this.scale || Math.abs(n - 1) > .1 || this.panMode === z || r === false) && !a && this.clampTargetBounds(), d === O.Init ? this.animate() : this.isResting || (this.state = O.Panning, this.requestTick())
         }
-        stop(t = !1) {
-            if (this.state === O.Init || this.state === O.Destroy) return; let e = this.isTicking; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.isBouncingX = !1, this.isBouncingY = !1; for (let n of ot) this.velocity[n] = 0, t === "current" ? this.current[n] = this.target[n] : t === "target" && (this.target[n] = this.current[n]); this.setTransform(), Z(this.container, "is-scaling"), Z(this.container, "is-animating"), this.isTicking = !1, this.state = O.Ready, e && (this.emit("endAnimation"), this.updateControls())
+        stop(t = false) {
+            if (this.state === O.Init || this.state === O.Destroy) return; let e = this.isTicking; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.isBouncingX = false, this.isBouncingY = false; for (let n of ot) this.velocity[n] = 0, t === "current" ? this.current[n] = this.target[n] : t === "target" && (this.target[n] = this.current[n]); this.setTransform(), Z(this.container, "is-scaling"), Z(this.container, "is-animating"), this.isTicking = false, this.state = O.Ready, e && (this.emit("endAnimation"), this.updateControls())
         }
         requestTick() {
-            this.isTicking || (this.emit("startAnimation"), this.updateControls(), v(this.container, "is-animating"), this.isScaling && v(this.container, "is-scaling")), this.isTicking = !0, this.rAF || (this.rAF = requestAnimationFrame(() => this.animate()))
+            this.isTicking || (this.emit("startAnimation"), this.updateControls(), v(this.container, "is-animating"), this.isScaling && v(this.container, "is-scaling")), this.isTicking = true, this.rAF || (this.rAF = requestAnimationFrame(() => this.animate()))
         }
         panWithMouse(t, e = this.option("mouseMoveFriction")) {
             if (this.pmme = t, this.panMode !== z || !t || F(this.targetScale) <= F(this.minScale)) return; this.emit("mouseMove", t); let { container: n, containerRect: i, contentRect: s
@@ -2577,11 +2576,11 @@
         zoomTo(t = 1, { friction: e = H, originX: n = H, originY: i = H, event: s
         }
             = {}) {
-                if (this.isContentLoading || this.state === O.Destroy) return; let { targetScale: l, fullScale: c, maxScale: h, coverScale: m
+            if (this.isContentLoading || this.state === O.Destroy) return; let { targetScale: l, fullScale: c, maxScale: h, coverScale: m
+            }
+                = this; if (this.stop(), this.panMode === z && (s = this.pmme || s), s || n === H || i === H) {
+                    let r = this.content.getBoundingClientRect(), d = this.container.getBoundingClientRect(), u = s ? s.clientX : d.left + .5 * d.width, p = s ? s.clientY : d.top + .5 * d.height; n = u - r.left - .5 * r.width, i = p - r.top - .5 * r.height
                 }
-                    = this; if (this.stop(), this.panMode === z && (s = this.pmme || s), s || n === H || i === H) {
-                        let r = this.content.getBoundingClientRect(), d = this.container.getBoundingClientRect(), u = s ? s.clientX : d.left + .5 * d.width, p = s ? s.clientY : d.top + .5 * d.height; n = u - r.left - .5 * r.width, i = p - r.top - .5 * r.height
-                    }
             let a = 1; typeof t == "number" ? a = t : t === "full" ? a = c : t === "cover" ? a = m : t === "max" ? a = h : t === "fit" ? a = 1 : t === "next" && (a = this.getNextScale("iterateZoom")), a = a / l || 1, e = e === H ? a > 1 ? .15 : .25 : e, this.applyChange({ scale: a, originX: n, originY: i, friction: e }), s && this.panMode === z && this.panWithMouse(s, e)
         }
         rotateCCW() {
@@ -2591,25 +2590,25 @@
             this.applyChange({ angle: 90 })
         }
         flipX() {
-            this.applyChange({ flipX: !0 })
+            this.applyChange({ flipX: true })
         }
         flipY() {
-            this.applyChange({ flipY: !0 })
+            this.applyChange({ flipY: true })
         }
         fitX() {
             this.stop("target"); let { containerRect: t, contentRect: e, target: n
             }
-                = this; this.applyChange({ panX: .5 * t.width - (e.left + .5 * e.fitWidth) - n.e, panY: .5 * t.height - (e.top + .5 * e.fitHeight) - n.f, scale: t.width / e.fitWidth / this.targetScale, originX: 0, originY: 0, ignoreBounds: !0 })
+                = this; this.applyChange({ panX: .5 * t.width - (e.left + .5 * e.fitWidth) - n.e, panY: .5 * t.height - (e.top + .5 * e.fitHeight) - n.f, scale: t.width / e.fitWidth / this.targetScale, originX: 0, originY: 0, ignoreBounds: true })
         }
         fitY() {
             this.stop("target"); let { containerRect: t, contentRect: e, target: n
             }
-                = this; this.applyChange({ panX: .5 * t.width - (e.left + .5 * e.fitWidth) - n.e, panY: .5 * t.innerHeight - (e.top + .5 * e.fitHeight) - n.f, scale: t.height / e.fitHeight / this.targetScale, originX: 0, originY: 0, ignoreBounds: !0 })
+                = this; this.applyChange({ panX: .5 * t.width - (e.left + .5 * e.fitWidth) - n.e, panY: .5 * t.innerHeight - (e.top + .5 * e.fitHeight) - n.f, scale: t.height / e.fitHeight / this.targetScale, originX: 0, originY: 0, ignoreBounds: true })
         }
         toggleFS() {
             let { container: t
             }
-                = this, e = this.cn("inFullscreen"), n = this.cn("htmlHasFullscreen"); t.classList.toggle(e); let i = t.classList.contains(e); i ? (document.documentElement.classList.add(n), document.addEventListener("keydown", this.onKeydown, !0)) : (document.documentElement.classList.remove(n), document.removeEventListener("keydown", this.onKeydown, !0)), this.updateMetrics(), this.emit(i ? "enterFS" : "exitFS")
+                = this, e = this.cn("inFullscreen"), n = this.cn("htmlHasFullscreen"); t.classList.toggle(e); let i = t.classList.contains(e); i ? (document.documentElement.classList.add(n), document.addEventListener("keydown", this.onKeydown, true)) : (document.documentElement.classList.remove(n), document.removeEventListener("keydown", this.onKeydown, true)), this.updateMetrics(), this.emit(i ? "enterFS" : "exitFS")
         }
         getMatrix(t = this.current) {
             let { a: e, b: n, c: i, d: s, e: l, f: c
@@ -2625,13 +2624,13 @@
             }
                 = this, n = this.option("classes") || {}; for (let i of Object.values(n)) t.classList.remove(i + ""); e && (e.removeEventListener("load", this.onLoad), e.removeEventListener("error", this.onError)), this.detachPlugins()
         }
-    }; Object.defineProperty(Qt, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: ha }), Object.defineProperty(Qt, "Plugins", { enumerable: !0, configurable: !0, writable: !0, value: {} });
+    }; Object.defineProperty(Qt, "defaults", { enumerable: true, configurable: true, writable: true, value: ha }), Object.defineProperty(Qt, "Plugins", { enumerable: true, configurable: true, writable: true, value: {} });
     var gi = function (o, t) {
-        let e = !0; return (...n) => {
-            e && (e = !1, o(...n), setTimeout(() => { e = !0 }, t))
+        let e = true; return (...n) => {
+            e && (e = false, o(...n), setTimeout(() => { e = true }, t))
         }
     }, Fi = (o, t) => { let e = []; return o.childNodes.forEach(n => { n.nodeType !== Node.ELEMENT_NODE || t && !n.matches(t) || e.push(n) }), e }, ma = {
-        viewport: null, track: null, enabled: !0, slides: [], axis: "x", transition: "fade", preload: 1, slidesPerPage: "auto", initialPage: 0, friction: .12, Panzoom: { decelFriction: .12 }, center: !0, infinite: !0, fill: !0, dragFree: !1, adaptiveHeight: !1, direction: "ltr", classes: { container: "f-carousel", viewport: "f-carousel__viewport", track: "f-carousel__track", slide: "f-carousel__slide", isLTR: "is-ltr", isRTL: "is-rtl", isHorizontal: "is-horizontal", isVertical: "is-vertical", inTransition: "in-transition", isSelected: "is-selected" }, l10n: {
+        viewport: null, track: null, enabled: true, slides: [], axis: "x", transition: "fade", preload: 1, slidesPerPage: "auto", initialPage: 0, friction: .12, Panzoom: { decelFriction: .12 }, center: true, infinite: true, fill: true, dragFree: false, adaptiveHeight: false, direction: "ltr", classes: { container: "f-carousel", viewport: "f-carousel__viewport", track: "f-carousel__track", slide: "f-carousel__slide", isLTR: "is-ltr", isRTL: "is-rtl", isHorizontal: "is-horizontal", isVertical: "is-vertical", inTransition: "in-transition", isSelected: "is-selected" }, l10n: {
             NEXT: "Next slide", PREV: "Previous slide", GOTO: "Go to slide #%d"
         }
     }, D; (function (o) { o[o.Init = 0] = "Init", o[o.Ready = 1] = "Ready", o[o.Destroy = 2] = "Destroy" })(D || (D = {}));
@@ -2639,10 +2638,10 @@
         if (typeof o == "string" || o instanceof HTMLElement) o = { html: o }; else {
             let t = o.thumb; t !== void 0 && (typeof t == "string" && (o.thumbSrc = t), t instanceof HTMLImageElement && (o.thumbEl = t, o.thumbElSrc = t.src, o.thumbSrc = t.src), delete o.thumb)
         }
-        return Object.assign({ html: "", el: null, isDom: !1, class: "", customClass: "", index: -1, dim: 0, gap: 0, pos: 0, transition: !1 }, o)
+        return Object.assign({ html: "", el: null, isDom: false, class: "", customClass: "", index: -1, dim: 0, gap: 0, pos: 0, transition: false }, o)
     }, pa = (o = {}) => Object.assign({ index: -1, slides: [], dim: 0, pos: -1 }, o), A = class extends yt {
         constructor(t, e) {
-            super(e), Object.defineProperty(this, "instance", { enumerable: !0, configurable: !0, writable: !0, value: t })
+            super(e), Object.defineProperty(this, "instance", { enumerable: true, configurable: true, writable: true, value: t })
         }
         attach() {
         }
@@ -2650,7 +2649,7 @@
         }
     }, fa = { classes: { list: "f-carousel__dots", isDynamic: "is-dynamic", hasDots: "has-dots", dot: "f-carousel__dot", isBeforePrev: "is-before-prev", isPrev: "is-prev", isCurrent: "is-current", isNext: "is-next", isAfterNext: "is-after-next" }, dotTpl: '<button type="button" data-carousel-page="%i" aria-label="{{GOTO}}"><span class="f-carousel__dot" aria-hidden="true"></span></button>', dynamicFrom: 11, maxCount: 1 / 0, minCount: 2 }, be = class extends A {
         constructor() {
-            super(...arguments), Object.defineProperty(this, "isDynamic", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "list", { enumerable: !0, configurable: !0, writable: !0, value: null })
+            super(...arguments), Object.defineProperty(this, "isDynamic", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "list", { enumerable: true, configurable: true, writable: true, value: null })
         }
         onRefresh() {
             this.refresh()
@@ -2674,7 +2673,7 @@
             var e; let n = document.createElement("li"); n.setAttribute("role", "presentation"); let i = tt(this.instance.localize(this.option("dotTpl"), [["%d", t + 1]]).replace(/\%i/g, t + "")); return n.appendChild(i), (e = n.children[0]) === null || e === void 0 || e.setAttribute("role", "tab"), n
         }
         cleanup() {
-            this.list && (this.list.remove(), this.list = null), this.isDynamic = !1, Z(this.instance.container, this.cn("hasDots"))
+            this.list && (this.list.remove(), this.list = null), this.isDynamic = false, Z(this.instance.container, this.cn("hasDots"))
         }
         attach() {
             this.instance.on(["refresh", "change"], this.onRefresh)
@@ -2682,10 +2681,10 @@
         detach() {
             this.instance.off(["refresh", "change"], this.onRefresh), this.cleanup()
         }
-    }; Object.defineProperty(be, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: fa });
+    }; Object.defineProperty(be, "defaults", { enumerable: true, configurable: true, writable: true, value: fa });
     var se = "disabled", re = "next", Bi = "prev", ge = class extends A {
         constructor() {
-            super(...arguments), Object.defineProperty(this, "container", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "prev", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "next", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "isDom", { enumerable: !0, configurable: !0, writable: !0, value: !1 })
+            super(...arguments), Object.defineProperty(this, "container", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "prev", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "next", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "isDom", { enumerable: true, configurable: true, writable: true, value: false })
         }
         onRefresh() {
             let t = this.instance, e = t.pages.length, n = t.page; if (e < 2) return void this.cleanup(); this.build(); let i = this.prev, s = this.next; i && s && (i.removeAttribute(se), s.removeAttribute(se), t.isInfinite || (n <= 0 && i.setAttribute(se, ""), n >= e - 1 && s.setAttribute(se, "")))
@@ -2701,20 +2700,20 @@
                 = this; n || (n = t.querySelector("." + e), this.isDom = !!n), n || (n = document.createElement("div"), v(n, e), t.appendChild(n)), this.container = n, s || (s = n.querySelector("[data-carousel-next]")), s || (s = this.addBtn(re)), this.next = s, i || (i = n.querySelector("[data-carousel-prev]")), i || (i = this.addBtn(Bi)), this.prev = i
         }
         cleanup() {
-            this.isDom || (this.prev && this.prev.remove(), this.next && this.next.remove(), this.container && this.container.remove()), this.prev = null, this.next = null, this.container = null, this.isDom = !1
+            this.isDom || (this.prev && this.prev.remove(), this.next && this.next.remove(), this.container && this.container.remove()), this.prev = null, this.next = null, this.container = null, this.isDom = false
         }
         attach() {
             this.instance.on(["refresh", "change"], this.onRefresh)
         }
         detach() { this.instance.off(["refresh", "change"], this.onRefresh), this.cleanup() }
     }; Object.defineProperty(ge, "defaults", {
-        enumerable: !0, configurable: !0, writable: !0, value: {
+        enumerable: true, configurable: true, writable: true, value: {
             classes: { container: "f-carousel__nav", button: "f-button", isNext: "is-next", isPrev: "is-prev" }, nextTpl: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" tabindex="-1"><path d="M9 3l9 9-9 9"/></svg>', prevTpl: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" tabindex="-1"><path d="M15 3l-9 9 9 9"/></svg>'
         }
     });
     var Fe = class extends A {
         constructor() {
-            super(...arguments), Object.defineProperty(this, "selectedIndex", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "target", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "nav", { enumerable: !0, configurable: !0, writable: !0, value: null })
+            super(...arguments), Object.defineProperty(this, "selectedIndex", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "target", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "nav", { enumerable: true, configurable: true, writable: true, value: null })
         }
         addAsTargetFor(t) {
             this.target = this.instance, this.nav = t, this.attachEvents()
@@ -2762,7 +2761,7 @@
             let t = this, e = t.nav, n = t.target; e && (e.off("ready", t.onNavReady), e.off("createSlide", t.onNavCreateSlide), e.off("Panzoom.click", t.onNavClick), e.off("Panzoom.touchEnd", t.onNavTouch)), t.nav = null, n && (n.off("ready", t.onTargetReady), n.off("refresh", t.onTargetChange), n.off("change", t.onTargetChange)), t.target = null
         }
     }; Object.defineProperty(Fe, "defaults", {
-        enumerable: !0, configurable: !0, writable: !0, value: {
+        enumerable: true, configurable: true, writable: true, value: {
             friction: .35
         }
     });
@@ -2774,7 +2773,7 @@
             return this.state === D.Ready
         }
         get isInfinite() {
-            let t = !1, { contentDim: e, viewportDim: n, pages: i, slides: s
+            let t = false, { contentDim: e, viewportDim: n, pages: i, slides: s
             }
                 = this, l = s[0]; return i.length >= 2 && l && e + l.dim >= n && (t = this.option("infinite")), t
         }
@@ -2785,10 +2784,10 @@
             return this.option("axis") === "x"
         }
         constructor(t, e = {}, n = {}) {
-            if (super(), Object.defineProperty(this, "bp", { enumerable: !0, configurable: !0, writable: !0, value: "" }), Object.defineProperty(this, "lp", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "userOptions", { enumerable: !0, configurable: !0, writable: !0, value: {} }), Object.defineProperty(this, "userPlugins", { enumerable: !0, configurable: !0, writable: !0, value: {} }), Object.defineProperty(this, "state", { enumerable: !0, configurable: !0, writable: !0, value: D.Init }), Object.defineProperty(this, "page", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "prevPage", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "container", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), Object.defineProperty(this, "viewport", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "track", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "slides", { enumerable: !0, configurable: !0, writable: !0, value: [] }), Object.defineProperty(this, "pages", { enumerable: !0, configurable: !0, writable: !0, value: [] }), Object.defineProperty(this, "panzoom", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "inTransition", { enumerable: !0, configurable: !0, writable: !0, value: new Set }), Object.defineProperty(this, "contentDim", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "viewportDim", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), typeof t == "string" && (t = document.querySelector(t)), !t || !N(t)) throw new Error("No Element found"); this.container = t, this.slideNext = gi(this.slideNext.bind(this), 150), this.slidePrev = gi(this.slidePrev.bind(this), 150), this.userOptions = e, this.userPlugins = n, queueMicrotask(() => { this.processOptions() })
+            if (super(), Object.defineProperty(this, "bp", { enumerable: true, configurable: true, writable: true, value: "" }), Object.defineProperty(this, "lp", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "userOptions", { enumerable: true, configurable: true, writable: true, value: {} }), Object.defineProperty(this, "userPlugins", { enumerable: true, configurable: true, writable: true, value: {} }), Object.defineProperty(this, "state", { enumerable: true, configurable: true, writable: true, value: D.Init }), Object.defineProperty(this, "page", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "prevPage", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "container", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "viewport", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "track", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "slides", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "pages", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "panzoom", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "inTransition", { enumerable: true, configurable: true, writable: true, value: new Set }), Object.defineProperty(this, "contentDim", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "viewportDim", { enumerable: true, configurable: true, writable: true, value: 0 }), typeof t == "string" && (t = document.querySelector(t)), !t || !N(t)) throw new Error("No Element found"); this.container = t, this.slideNext = gi(this.slideNext.bind(this), 150), this.slidePrev = gi(this.slidePrev.bind(this), 150), this.userOptions = e, this.userPlugins = n, queueMicrotask(() => { this.processOptions() })
         }
         processOptions() {
-            var t, e; let n = X({}, o.defaults, this.userOptions), i = "", s = n.breakpoints; if (s && Wn(s)) for (let [l, c] of Object.entries(s)) window.matchMedia(l).matches && Wn(c) && (i += l, X(n, c)); i === this.bp && this.state !== D.Init || (this.bp = i, this.state === D.Ready && (n.initialSlide = ((e = (t = this.pages[this.page]) === null || t === void 0 ? void 0 : t.slides[0]) === null || e === void 0 ? void 0 : e.index) || 0), this.state !== D.Init && this.destroy(), super.setOptions(n), this.option("enabled") === !1 ? this.attachEvents() : setTimeout(() => { this.init() }, 0))
+            var t, e; let n = X({}, o.defaults, this.userOptions), i = "", s = n.breakpoints; if (s && Wn(s)) for (let [l, c] of Object.entries(s)) window.matchMedia(l).matches && Wn(c) && (i += l, X(n, c)); i === this.bp && this.state !== D.Init || (this.bp = i, this.state === D.Ready && (n.initialSlide = ((e = (t = this.pages[this.page]) === null || t === void 0 ? void 0 : t.slides[0]) === null || e === void 0 ? void 0 : e.index) || 0), this.state !== D.Init && this.destroy(), super.setOptions(n), this.option("enabled") === false ? this.attachEvents() : setTimeout(() => { this.init() }, 0))
         }
         init() {
             this.state = D.Init, this.emit("init"), this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), this.userPlugins)), this.emit("attachPlugins"), this.initLayout(), this.initSlides(), this.updateMetrics(), this.setInitialPosition(), this.initPanzoom(), this.attachEvents(), this.state = D.Ready, this.emit("ready")
@@ -2803,7 +2802,7 @@
             }
                 = this; if (!t) return; let e = [...this.slides], n = [];[...Fi(t, `.${this.cn(ce)}`)].forEach(i => {
                     if (N(i)) {
-                        let s = un({ el: i, isDom: !0, index: this.slides.length }); n.push(s)
+                        let s = un({ el: i, isDom: true, index: this.slides.length }); n.push(s)
                     }
                 }); for (let i of [...this.option("slides", []) || [], ...e]) n.push(un(i)); this.slides = n; for (let i = 0; i < this.slides.length; i++)this.slides[i].index = i; for (let i of n) this.emit("beforeInitSlide", i, i.index), this.emit("initSlide", i, i.index); this.emit("initSlides")
         }
@@ -2816,15 +2815,15 @@
                 = this; if (!t || !e.length) return; let i = this.page; e[i] || (this.page = i = 0); let s = (e[i].pos || 0) * (this.isRTL && n ? 1 : -1), l = n ? `${s}px` : "0", c = n ? "0" : `${s}px`; t.style.transform = `translate3d(${l}, ${c}, 0) scale(1)`, this.option("adaptiveHeight") && this.setViewportHeight()
         }
         initPanzoom() {
-            this.panzoom && (this.panzoom.destroy(), this.panzoom = null); let t = this.option("Panzoom") || {}; this.panzoom = new Qt(this.viewport, X({}, { content: this.track, zoom: !1, panOnlyZoomed: !1, lockAxis: this.isHorizontal ? "x" : "y", infinite: this.isInfinite, click: !1, dblClick: !1, touch: e => !(this.pages.length < 2 && !e.options.infinite), bounds: () => this.getBounds(), maxVelocity: e => Math.abs(e.target[this.axis] - e.current[this.axis]) < 2 * this.viewportDim ? 100 : 0 }, t)), this.panzoom.on("*", (e, n, ...i) => { this.emit(`Panzoom.${n}`, e, ...i) }), this.panzoom.on("decel", this.onDecel), this.panzoom.on("refresh", this.onRefresh), this.panzoom.on("beforeTransform", this.onBeforeTransform), this.panzoom.on("endAnimation", this.onEndAnimation)
+            this.panzoom && (this.panzoom.destroy(), this.panzoom = null); let t = this.option("Panzoom") || {}; this.panzoom = new Qt(this.viewport, X({}, { content: this.track, zoom: false, panOnlyZoomed: false, lockAxis: this.isHorizontal ? "x" : "y", infinite: this.isInfinite, click: false, dblClick: false, touch: e => !(this.pages.length < 2 && !e.options.infinite), bounds: () => this.getBounds(), maxVelocity: e => Math.abs(e.target[this.axis] - e.current[this.axis]) < 2 * this.viewportDim ? 100 : 0 }, t)), this.panzoom.on("*", (e, n, ...i) => { this.emit(`Panzoom.${n}`, e, ...i) }), this.panzoom.on("decel", this.onDecel), this.panzoom.on("refresh", this.onRefresh), this.panzoom.on("beforeTransform", this.onBeforeTransform), this.panzoom.on("endAnimation", this.onEndAnimation)
         }
         attachEvents() {
-            let t = this.container; t && (t.addEventListener("click", this.onClick, { passive: !1, capture: !1 }), t.addEventListener("slideTo", this.onSlideTo)), window.addEventListener("resize", this.onResize)
+            let t = this.container; t && (t.addEventListener("click", this.onClick, { passive: false, capture: false }), t.addEventListener("slideTo", this.onSlideTo)), window.addEventListener("resize", this.onResize)
         }
         createPages() {
             let t = [], { contentDim: e, viewportDim: n
             }
-                = this, i = this.option("slidesPerPage"); i = (i === "auto" || e <= n) && this.option("fill") !== !1 ? 1 / 0 : parseFloat(i + ""); let s = 0, l = 0, c = 0; for (let h of this.slides) (!t.length || l + h.dim - n > .05 || c >= i) && (t.push(pa()), s = t.length - 1, l = 0, c = 0), t[s].slides.push(h), l += h.dim + h.gap, c++; return t
+                = this, i = this.option("slidesPerPage"); i = (i === "auto" || e <= n) && this.option("fill") !== false ? 1 / 0 : parseFloat(i + ""); let s = 0, l = 0, c = 0; for (let h of this.slides) (!t.length || l + h.dim - n > .05 || c >= i) && (t.push(pa()), s = t.length - 1, l = 0, c = 0), t[s].slides.push(h), l += h.dim + h.gap, c++; return t
         }
         processPages() {
             let t = this.pages, { contentDim: e, viewportDim: n, isInfinite: i
@@ -2874,13 +2873,13 @@
             }
                 = this; if (!e || !t || t.el && t.el.parentNode) return; let i = t.el || document.createElement("div"); v(i, this.cn(ce)), v(i, t.class), v(i, t.customClass); let s = t.html; s && (s instanceof HTMLElement ? i.appendChild(s) : i.innerHTML = t.html + ""); let l = []; n.forEach((a, r) => { a.el && l.push(r) }); let c = t.index, h = null; l.length && (h = n[l.reduce((a, r) => Math.abs(r - c) < Math.abs(a - c) ? r : a)]); let m = h && h.el && h.el.parentNode ? h.index < t.index ? h.el.nextSibling : h.el : null; e.insertBefore(i, e.contains(m) ? m : null), t.el = i, this.emit("createSlide", t)
         }
-        removeSlideEl(t, e = !1) {
+        removeSlideEl(t, e = false) {
             let n = t?.el; if (!n || !n.parentNode) return; let i = this.cn(Ui); if (n.classList.contains(i) && (Z(n, i), this.emit("unselectSlide", t)), t.isDom && !e) return n.removeAttribute("aria-hidden"), n.removeAttribute("data-index"), void (n.style.left = ""); this.emit("removeSlide", t); let s = new CustomEvent(le); n.dispatchEvent(s), t.el && (t.el.remove(), t.el = null)
         }
         transitionTo(t = 0, e = this.option("transition")) {
-            var n, i, s, l; if (!e) return !1; let c = this.page, { pages: h, panzoom: m
+            var n, i, s, l; if (!e) return false; let c = this.page, { pages: h, panzoom: m
             }
-                = this; t = parseInt((t || 0).toString()) || 0; let a = this.getPageFromIndex(t); if (!m || !h[a] || h.length < 2 || Math.abs((((i = (n = h[c]) === null || n === void 0 ? void 0 : n.slides[0]) === null || i === void 0 ? void 0 : i.dim) || 0) - this.viewportDim) > 1) return !1; let r = t > c ? 1 : -1; this.isInfinite && (c === 0 && t === h.length - 1 && (r = -1), c === h.length - 1 && t === 0 && (r = 1)); let d = h[a].pos * (this.isRTL ? 1 : -1); if (c === a && Math.abs(d - m.target[this.axis]) < 1) return !1; this.clearTransitions(); let u = m.isResting; v(this.container, this.cn("inTransition")); let p = ((s = h[c]) === null || s === void 0 ? void 0 : s.slides[0]) || null, f = ((l = h[a]) === null || l === void 0 ? void 0 : l.slides[0]) || null; this.inTransition.add(f.index), this.createSlideEl(f); let Q = p.el, b = f.el; u || e === ce || (e = "fadeFast", Q = null); let g = this.isRTL ? "next" : "prev", B = this.isRTL ? "prev" : "next"; return Q && (this.inTransition.add(p.index), p.transition = e, Q.addEventListener(le, this.onAnimationEnd), Q.classList.add(`f-${e}Out`, `to-${r > 0 ? B : g}`)), b && (f.transition = e, b.addEventListener(le, this.onAnimationEnd), b.classList.add(`f-${e}In`, `from-${r > 0 ? g : B}`)), m.current[this.axis] = d, m.target[this.axis] = d, m.requestTick(), this.onChange(a), !0
+                = this; t = parseInt((t || 0).toString()) || 0; let a = this.getPageFromIndex(t); if (!m || !h[a] || h.length < 2 || Math.abs((((i = (n = h[c]) === null || n === void 0 ? void 0 : n.slides[0]) === null || i === void 0 ? void 0 : i.dim) || 0) - this.viewportDim) > 1) return false; let r = t > c ? 1 : -1; this.isInfinite && (c === 0 && t === h.length - 1 && (r = -1), c === h.length - 1 && t === 0 && (r = 1)); let d = h[a].pos * (this.isRTL ? 1 : -1); if (c === a && Math.abs(d - m.target[this.axis]) < 1) return false; this.clearTransitions(); let u = m.isResting; v(this.container, this.cn("inTransition")); let p = ((s = h[c]) === null || s === void 0 ? void 0 : s.slides[0]) || null, f = ((l = h[a]) === null || l === void 0 ? void 0 : l.slides[0]) || null; this.inTransition.add(f.index), this.createSlideEl(f); let Q = p.el, b = f.el; u || e === ce || (e = "fadeFast", Q = null); let g = this.isRTL ? "next" : "prev", B = this.isRTL ? "prev" : "next"; return Q && (this.inTransition.add(p.index), p.transition = e, Q.addEventListener(le, this.onAnimationEnd), Q.classList.add(`f-${e}Out`, `to-${r > 0 ? B : g}`)), b && (f.transition = e, b.addEventListener(le, this.onAnimationEnd), b.classList.add(`f-${e}In`, `from-${r > 0 ? g : B}`)), m.current[this.axis] = d, m.target[this.axis] = d, m.requestTick(), this.onChange(a), true
         }
         manageSlideVisiblity() {
             let t = new Set, e = new Set, n = this.getVisibleSlides(parseFloat(this.option("preload", 0) + "") || 0); for (let i of this.slides) n.has(i) ? t.add(i) : e.add(i); for (let i of this.inTransition) t.add(this.slides[i]); for (let i of t) this.createSlideEl(i), this.lazyLoadSlide(i); for (let i of e) t.has(i) || this.removeSlideEl(i); this.markSelectedSlides(), this.repositionSlides()
@@ -2895,7 +2894,7 @@
                 = this, c = this.panzoom; if (!c || !n) return; let h = c.current[t], m = c.target[t] - h, a = 0, r = .5 * s; i && e ? (h < -r && (a = -1, h += l), h > l - r && (a = 1, h -= l)) : (h > r && (a = 1, h -= l), h < -l + r && (a = -1, h += l)), a && (c.current[t] = h, c.target[t] = h + m)
         }
         lazyLoadImg(t, e) {
-            let n = this, i = "f-fadeIn", s = "is-preloading", l = !1, c = null, h = () => { l || (l = !0, c && (c.remove(), c = null), Z(e, s), e.complete && (v(e, i), setTimeout(() => { Z(e, i) }, 350)), this.option("adaptiveHeight") && t.el && this.pages[this.page].slides.indexOf(t) > -1 && (n.updateMetrics(), n.setViewportHeight()), this.emit("load", t)) }; v(e, s), e.src = e.dataset.lazySrcset || e.dataset.lazySrc || "", delete e.dataset.lazySrc, delete e.dataset.lazySrcset, e.addEventListener("error", () => { h() }), e.addEventListener("load", () => { h() }), setTimeout(() => { let m = e.parentNode; m && t.el && (e.complete ? h() : l || (c = tt(Rn), m.insertBefore(c, e))) }, 300)
+            let n = this, i = "f-fadeIn", s = "is-preloading", l = false, c = null, h = () => { l || (l = true, c && (c.remove(), c = null), Z(e, s), e.complete && (v(e, i), setTimeout(() => { Z(e, i) }, 350)), this.option("adaptiveHeight") && t.el && this.pages[this.page].slides.indexOf(t) > -1 && (n.updateMetrics(), n.setViewportHeight()), this.emit("load", t)) }; v(e, s), e.src = e.dataset.lazySrcset || e.dataset.lazySrc || "", delete e.dataset.lazySrc, delete e.dataset.lazySrcset, e.addEventListener("error", () => { h() }), e.addEventListener("load", () => { h() }), setTimeout(() => { let m = e.parentNode; m && t.el && (e.complete ? h() : l || (c = tt(Rn), m.insertBefore(c, e))) }, 300)
         }
         lazyLoadSlide(t) {
             let e = t && t.el; if (!e) return; let n = new Set, i = Array.from(e.querySelectorAll("[data-lazy-src],[data-lazy-srcset]")); e.dataset.lazySrc && i.push(e), i.map(s => { s instanceof HTMLImageElement ? n.add(s) : s instanceof HTMLElement && s.dataset.lazySrc && (s.style.backgroundImage = `url('${s.dataset.lazySrc}')`, delete s.dataset.lazySrc) }); for (let s of n) this.lazyLoadImg(t, s)
@@ -2908,7 +2907,7 @@
             }
                 = this, a = m.length, r = Math.abs(Math.atan2(n, e) / (Math.PI / 180)), d = 0; if (d = r > 45 && r < 135 ? c ? 0 : n : c ? e : 0, !a) return; let u = this.page, p = l && c ? 1 : -1, f = t.current[h] * p, { pageIndex: Q
                 }
-                    = this.getPageFromPosition(f); Math.abs(d) > 5 ? (m[u].dim < document.documentElement["client" + (this.isHorizontal ? "Width" : "Height")] - 1 && (u = Q), u = l && c ? d < 0 ? u - 1 : u + 1 : d < 0 ? u + 1 : u - 1) : u = i === 0 && s === 0 ? u : Q, this.slideTo(u, { transition: !1, friction: t.option("decelFriction") })
+                    = this.getPageFromPosition(f); Math.abs(d) > 5 ? (m[u].dim < document.documentElement["client" + (this.isHorizontal ? "Width" : "Height")] - 1 && (u = Q), u = l && c ? d < 0 ? u - 1 : u + 1 : d < 0 ? u + 1 : u - 1) : u = i === 0 && s === 0 ? u : Q, this.slideTo(u, { transition: false, friction: t.option("decelFriction") })
         }
         onClick(t) {
             let e = t.target, n = e && N(e) ? e.dataset : null, i, s; n && (n.carouselPage !== void 0 ? (s = "slideTo", i = n.carouselPage) : n.carouselNext !== void 0 ? s = "slideNext" : n.carouselPrev !== void 0 && (s = "slidePrev")), s ? (t.preventDefault(), t.stopPropagation(), e && !e.hasAttribute("disabled") && this[s](i)) : this.emit("click", t)
@@ -2920,7 +2919,7 @@
             let n = this.page; this.prevPage = n, this.page = t, this.option("adaptiveHeight") && this.setViewportHeight(), t !== n && (this.markSelectedSlides(), this.emit("change", t, n, e))
         }
         onRefresh() {
-            let t = this.contentDim, e = this.viewportDim; this.updateMetrics(), this.contentDim === t && this.viewportDim === e || this.slideTo(this.page, { friction: 0, transition: !1 })
+            let t = this.contentDim, e = this.viewportDim; this.updateMetrics(), this.contentDim === t && this.viewportDim === e || this.slideTo(this.page, { friction: 0, transition: false })
         }
         onScroll() {
             var t; (t = this.viewport) === null || t === void 0 || t.scroll(0, 0)
@@ -2940,11 +2939,11 @@
         slideTo(t = 0, { friction: e = this.option("friction"), transition: n = this.option("transition")
         }
             = {}) {
-                if (this.state === D.Destroy) return; t = parseInt((t || 0).toString()) || 0; let i = this.getPageFromIndex(t), { axis: s, isHorizontal: l, isRTL: c, pages: h, panzoom: m
+            if (this.state === D.Destroy) return; t = parseInt((t || 0).toString()) || 0; let i = this.getPageFromIndex(t), { axis: s, isHorizontal: l, isRTL: c, pages: h, panzoom: m
+            }
+                = this, a = h.length, r = c && l ? 1 : -1; if (!m || !a) return; if (this.page !== i) {
+                    let u = new Event("beforeChange", { bubbles: true, cancelable: true }); if (this.emit("beforeChange", u, t), u.defaultPrevented) return
                 }
-                    = this, a = h.length, r = c && l ? 1 : -1; if (!m || !a) return; if (this.page !== i) {
-                        let u = new Event("beforeChange", { bubbles: !0, cancelable: !0 }); if (this.emit("beforeChange", u, t), u.defaultPrevented) return
-                    }
             if (this.transitionTo(t, n)) return; let d = h[i].pos; if (this.isInfinite) {
                 let u = this.contentDim, p = m.target[s] * r; a === 2 ? d += u * Math.floor(parseFloat(t + "") / 2) : d = [d, d - u, d + u].reduce(function (f, Q) { return Math.abs(Q - p) < Math.abs(f - p) ? Q : f })
             }
@@ -2983,7 +2982,7 @@
         }
         removeSlide(t) {
             let e = this.slides.length; t = (t % e + e) % e; let n = this.slides[t]; if (n) {
-                this.removeSlideEl(n, !0), this.slides.splice(t, 1); for (let i = 0; i < this.slides.length; i++)this.slides[i].index = i; this.updateMetrics(), this.slideTo(this.page, { friction: 0, transition: !1 }), this.emit("destroySlide", n)
+                this.removeSlideEl(n, true), this.slides.splice(t, 1); for (let i = 0; i < this.slides.length; i++)this.slides[i].index = i; this.updateMetrics(), this.slideTo(this.page, { friction: 0, transition: false }), this.emit("destroySlide", n)
             }
         } updateMetrics() {
             let { panzoom: t, viewport: e, track: n, slides: i, isHorizontal: s, isInfinite: l
@@ -2999,8 +2998,8 @@
             }
             a = F(a, 1e3), this.contentDim = a, t && (t.contentRect[c] = a, t.contentRect[s ? "fullWidth" : "fullHeight"] = a), this.pages = this.createPages(), this.pages = this.processPages(), this.state === D.Init && this.setInitialPage(), this.page = Math.max(0, Math.min(this.page, this.pages.length - 1)), this.manageSlideVisiblity(), this.emit("refresh")
         }
-        getProgress(t, e = !1, n = !1) {
-            t === void 0 && (t = this.page); let i = this, s = i.panzoom, l = i.contentDim, c = i.pages[t] || 0; if (!c || !s) return t > this.page ? -1 : 1; let h = -1 * s.current.e, m = F((h - c.pos) / (1 * c.dim), 1e3), a = m, r = m; this.isInfinite && n !== !0 && (a = F((h - c.pos + l) / (1 * c.dim), 1e3), r = F((h - c.pos - l) / (1 * c.dim), 1e3)); let d = [m, a, r].reduce(function (u, p) { return Math.abs(p) < Math.abs(u) ? p : u }); return e ? d : d > 1 ? 1 : d < -1 ? -1 : d
+        getProgress(t, e = false, n = false) {
+            t === void 0 && (t = this.page); let i = this, s = i.panzoom, l = i.contentDim, c = i.pages[t] || 0; if (!c || !s) return t > this.page ? -1 : 1; let h = -1 * s.current.e, m = F((h - c.pos) / (1 * c.dim), 1e3), a = m, r = m; this.isInfinite && n !== true && (a = F((h - c.pos + l) / (1 * c.dim), 1e3), r = F((h - c.pos - l) / (1 * c.dim), 1e3)); let d = [m, a, r].reduce(function (u, p) { return Math.abs(p) < Math.abs(u) ? p : u }); return e ? d : d > 1 ? 1 : d < -1 ? -1 : d
         }
         setViewportHeight() {
             let { page: t, pages: e, viewport: n, isHorizontal: i
@@ -3033,17 +3032,17 @@
         destroy() {
             if ([D.Destroy].includes(this.state)) return; this.state = D.Destroy; let { container: t, viewport: e, track: n, slides: i, panzoom: s
             }
-                = this, l = this.option("classes"); t.removeEventListener("click", this.onClick, { passive: !1, capture: !1 }), t.removeEventListener("slideTo", this.onSlideTo), window.removeEventListener("resize", this.onResize), s && (s.destroy(), this.panzoom = null), i && i.forEach(h => { this.removeSlideEl(h) }), this.detachPlugins(), e && (e.removeEventListener("scroll", this.onScroll), e.offsetParent && n && n.offsetParent && e.replaceWith(...n.childNodes)); for (let [h, m] of Object.entries(l)) h !== "container" && m && t.classList.remove(m); this.track = null, this.viewport = null, this.page = 0, this.slides = []; let c = this.events.get("ready"); this.events = new Map, c && this.events.set("ready", c)
+                = this, l = this.option("classes"); t.removeEventListener("click", this.onClick, { passive: false, capture: false }), t.removeEventListener("slideTo", this.onSlideTo), window.removeEventListener("resize", this.onResize), s && (s.destroy(), this.panzoom = null), i && i.forEach(h => { this.removeSlideEl(h) }), this.detachPlugins(), e && (e.removeEventListener("scroll", this.onScroll), e.offsetParent && n && n.offsetParent && e.replaceWith(...n.childNodes)); for (let [h, m] of Object.entries(l)) h !== "container" && m && t.classList.remove(m); this.track = null, this.viewport = null, this.page = 0, this.slides = []; let c = this.events.get("ready"); this.events = new Map, c && this.events.set("ready", c)
         }
-    }; Object.defineProperty(vt, "Panzoom", { enumerable: !0, configurable: !0, writable: !0, value: Qt }), Object.defineProperty(vt, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: ma }), Object.defineProperty(vt, "Plugins", { enumerable: !0, configurable: !0, writable: !0, value: Qa });
+    }; Object.defineProperty(vt, "Panzoom", { enumerable: true, configurable: true, writable: true, value: Qt }), Object.defineProperty(vt, "defaults", { enumerable: true, configurable: true, writable: true, value: ma }), Object.defineProperty(vt, "Plugins", { enumerable: true, configurable: true, writable: true, value: Qa });
     var Xi = function (o) { if (!N(o)) return 0; let t = window.scrollY, e = window.innerHeight, n = t + e, i = o.getBoundingClientRect(), s = i.y + t, l = i.height, c = s + l; if (t > c || n < s) return 0; if (t < s && n > c || s < t && c > n) return 100; let h = l; s < t && (h -= t - s), c > n && (h -= c - n); let m = h / e * 100; return Math.round(m) }, Zt = !(typeof window > "u" || !window.document || !window.document.createElement), mn, pn = ["a[href]", "area[href]", 'input:not([disabled]):not([type="hidden"]):not([aria-hidden])', "select:not([disabled]):not([aria-hidden])", "textarea:not([disabled]):not([aria-hidden])", "button:not([disabled]):not([aria-hidden]):not(.fancybox-focus-guard)", "iframe", "object", "embed", "video", "audio", "[contenteditable]", '[tabindex]:not([tabindex^="-"]):not([disabled]):not([aria-hidden])'].join(","), vi = o => {
         if (o && Zt) {
             mn === void 0 && document.createElement("div").focus({
                 get preventScroll() {
-                    return mn = !0, !1
+                    return mn = true, false
                 }
             }); try {
-                if (mn) o.focus({ preventScroll: !0 }); else {
+                if (mn) o.focus({ preventScroll: true }); else {
                     let t = window.scrollY || document.body.scrollTop, e = window.scrollX || document.body.scrollLeft; o.focus(), document.body.scrollTo({ top: t, left: e, behavior: "auto" })
                 }
             } catch {
@@ -3056,18 +3055,18 @@
             }
         }), t
     }, Ln = {
-        animated: !0, autoFocus: !0, backdropClick: "close", Carousel: {
+        animated: true, autoFocus: true, backdropClick: "close", Carousel: {
             classes: {
                 container: "fancybox__carousel", viewport: "fancybox__viewport", track: "fancybox__track", slide: "fancybox__slide"
             }
-        }, closeButton: "auto", closeExisting: !1, commonCaption: !1, compact: () => window.matchMedia("(max-width: 578px), (max-height: 578px)").matches, contentClick: "toggleZoom", contentDblClick: !1, defaultType: "image", defaultDisplay: "flex", dragToClose: !0, Fullscreen: { autoStart: !1 }, groupAll: !1, groupAttr: "data-fancybox", hideClass: "f-fadeOut", hideScrollbar: !0, idle: 3500, keyboard: { Escape: "close", Delete: "close", Backspace: "close", PageUp: "next", PageDown: "prev", ArrowUp: "prev", ArrowDown: "next", ArrowRight: "next", ArrowLeft: "prev" }, l10n: Object.assign(Object.assign({}, Ni), { CLOSE: "Close", NEXT: "Next", PREV: "Previous", MODAL: "You can close this modal content with the ESC key", ERROR: "Something Went Wrong, Please Try Again Later", IMAGE_ERROR: "Image Not Found", ELEMENT_NOT_FOUND: "HTML Element Not Found", AJAX_NOT_FOUND: "Error Loading AJAX : Not Found", AJAX_FORBIDDEN: "Error Loading AJAX : Forbidden", IFRAME_ERROR: "Error Loading Page", TOGGLE_ZOOM: "Toggle zoom level", TOGGLE_THUMBS: "Toggle thumbnails", TOGGLE_SLIDESHOW: "Toggle slideshow", TOGGLE_FULLSCREEN: "Toggle full-screen mode", DOWNLOAD: "Download" }), parentEl: null, placeFocusBack: !0, showClass: "f-zoomInUp", startIndex: 0, tpl: {
+        }, closeButton: "auto", closeExisting: false, commonCaption: false, compact: () => window.matchMedia("(max-width: 578px), (max-height: 578px)").matches, contentClick: "toggleZoom", contentDblClick: false, defaultType: "image", defaultDisplay: "flex", dragToClose: true, Fullscreen: { autoStart: false }, groupAll: false, groupAttr: "data-fancybox", hideClass: "f-fadeOut", hideScrollbar: true, idle: 3500, keyboard: { Escape: "close", Delete: "close", Backspace: "close", PageUp: "next", PageDown: "prev", ArrowUp: "prev", ArrowDown: "next", ArrowRight: "next", ArrowLeft: "prev" }, l10n: Object.assign(Object.assign({}, Ni), { CLOSE: "Close", NEXT: "Next", PREV: "Previous", MODAL: "You can close this modal content with the ESC key", ERROR: "Something Went Wrong, Please Try Again Later", IMAGE_ERROR: "Image Not Found", ELEMENT_NOT_FOUND: "HTML Element Not Found", AJAX_NOT_FOUND: "Error Loading AJAX : Not Found", AJAX_FORBIDDEN: "Error Loading AJAX : Forbidden", IFRAME_ERROR: "Error Loading Page", TOGGLE_ZOOM: "Toggle zoom level", TOGGLE_THUMBS: "Toggle thumbnails", TOGGLE_SLIDESHOW: "Toggle slideshow", TOGGLE_FULLSCREEN: "Toggle full-screen mode", DOWNLOAD: "Download" }), parentEl: null, placeFocusBack: true, showClass: "f-zoomInUp", startIndex: 0, tpl: {
             closeButton: '<button data-fancybox-close class="f-button is-close-btn" title="{{CLOSE}}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" tabindex="-1"><path d="M20 20L4 4m16 0L4 20"/></svg></button>', main: `<div class="fancybox__container" role="dialog" aria-modal="true" aria-label="{{MODAL}}" tabindex="-1">
     <div class="fancybox__backdrop"></div>
     <div class="fancybox__carousel"></div>
     <div class="fancybox__footer"></div>
-  </div>`}, trapFocus: !0, wheel: "zoom"
+  </div>`}, trapFocus: true, wheel: "zoom"
     }, G, _; (function (o) { o[o.Init = 0] = "Init", o[o.Ready = 1] = "Ready", o[o.Closing = 2] = "Closing", o[o.CustomClosing = 3] = "CustomClosing", o[o.Destroy = 4] = "Destroy" })(G || (G = {})), function (o) { o[o.Loading = 0] = "Loading", o[o.Opening = 1] = "Opening", o[o.Ready = 2] = "Ready", o[o.Closing = 3] = "Closing" }(_ || (_ = {}));
-    var yi = "", Rt = !1, de = !1, pt = null, Yi = () => {
+    var yi = "", Rt = false, de = false, pt = null, Yi = () => {
         let o = "", t = "", e = K.getInstance(); if (e) {
             let n = e.carousel, i = e.getSlide(); if (n && i) {
                 let s = i.slug || void 0, l = i.triggerEl || void 0; t = s || e.option("slug") || "", !t && l && l.dataset && (t = l.dataset.fancybox || ""), t && t !== "true" && (o = "#" + t + (!s && n.slides.length > 1 ? "-" + (i.index + 1) : ""))
@@ -3082,14 +3081,14 @@
     }, Ji = () => {
         let { slug: o, index: t
         }
-            = Be(); if (!o) return; let e = document.querySelector(`[data-slug="${o}"]`); if (e && e.dispatchEvent(new CustomEvent("click", { bubbles: !0, cancelable: !0 })), K.getInstance()) return; let n = document.querySelectorAll(`[data-fancybox="${o}"]`); n.length && (e = n[t - 1], e && e.dispatchEvent(new CustomEvent("click", { bubbles: !0, cancelable: !0 })))
+            = Be(); if (!o) return; let e = document.querySelector(`[data-slug="${o}"]`); if (e && e.dispatchEvent(new CustomEvent("click", { bubbles: true, cancelable: true })), K.getInstance()) return; let n = document.querySelectorAll(`[data-fancybox="${o}"]`); n.length && (e = n[t - 1], e && e.dispatchEvent(new CustomEvent("click", { bubbles: true, cancelable: true })))
     }, zi = () => {
-        if (K.defaults.Hash === !1) return; let o = K.getInstance(); if (o?.options.Hash === !1) return; let { slug: t, index: e
+        if (K.defaults.Hash === false) return; let o = K.getInstance(); if (o?.options.Hash === false) return; let { slug: t, index: e
         }
             = Be(), { slug: n
             }
-                = Yi(); o && (t === n ? o.jumpTo(e - 1) : (Rt = !0, o.close())), Ji()
-    }, Hi = () => { pt && clearTimeout(pt), queueMicrotask(() => { zi() }) }, Ei = () => { window.addEventListener("hashchange", Hi, !1), setTimeout(() => { zi() }, 500) }; Zt && (/complete|interactive|loaded/.test(document.readyState) ? Ei() : document.addEventListener("DOMContentLoaded", Ei));
+                = Yi(); o && (t === n ? o.jumpTo(e - 1) : (Rt = true, o.close())), Ji()
+    }, Hi = () => { pt && clearTimeout(pt), queueMicrotask(() => { zi() }) }, Ei = () => { window.addEventListener("hashchange", Hi, false), setTimeout(() => { zi() }, 500) }; Zt && (/complete|interactive|loaded/.test(document.readyState) ? Ei() : document.addEventListener("DOMContentLoaded", Ei));
     var he = "is-zooming-in", Ue = class extends A {
         onCreateSlide(t, e, n) {
             let i = this.instance.optionFor(n, "src") || ""; n.el && n.type === "image" && typeof i == "string" && this.setImage(n, i)
@@ -3109,7 +3108,7 @@
                     = m; if (p) {
                         let f = ((Q, b, g, B) => { let x = b - Q, E = B - g; return W => g + ((W - Q) / x * E || 0) })(c.scale, u, 1, 0); c.on("afterTransform", () => { l.style.opacity = f(c.scale) + "" })
                     }
-            c.on("endAnimation", () => { e.destroy() }), c.target.a = u, c.target.b = 0, c.target.c = 0, c.target.d = u, c.panTo({ x: r, y: d, scale: u, friction: p ? .2 : .33, ignoreBounds: !0 }), c.isResting && e.destroy()
+            c.on("endAnimation", () => { e.destroy() }), c.target.a = u, c.target.b = 0, c.target.c = 0, c.target.d = u, c.panTo({ x: r, y: d, scale: u, friction: p ? .2 : .33, ignoreBounds: true }), c.isResting && e.destroy()
         }
         setImage(t, e) {
             let n = this.instance; t.src = e, this.process(t, e).then(i => {
@@ -3122,7 +3121,7 @@
                     let r = i.contentRect, d = Math.max(r.fullWidth, r.fullHeight), u = null; !m.opacity && d > 1200 && (u = document.createElement("img"), v(u, "fancybox-ghost"), u.src = c, s.appendChild(u)); let p = () => { u && (v(u, "f-fadeFastOut"), setTimeout(() => { u && (u.remove(), u = null) }, 200)) }; (a = c, new Promise((f, Q) => { let b = new Image; b.onload = f, b.onerror = Q, b.src = a })).then(() => { n.hideLoading(t), t.state = _.Opening, this.instance.emit("reveal", t), this.zoomIn(t).then(() => { p(), this.instance.done(t) }, () => { }), u && setTimeout(() => { p() }, d > 2500 ? 800 : 200) }, () => { n.hideLoading(t), n.revealContent(t) })
                 }
                 else {
-                    let r = this.optionFor(t, "initialSize"), d = this.optionFor(t, "zoom"), u = { event: n.prevMouseMoveEvent || n.options.event, friction: d ? .12 : 0 }, p = n.optionFor(t, "showClass") || void 0, f = !0; n.isOpeningSlide(t) && (r === "full" ? i.zoomToFull(u) : r === "cover" ? i.zoomToCover(u) : r === "max" ? i.zoomToMax(u) : f = !1, i.stop("current")), f && p && (p = i.isDragging ? "f-fadeIn" : ""), n.hideLoading(t), n.revealContent(t, p)
+                    let r = this.optionFor(t, "initialSize"), d = this.optionFor(t, "zoom"), u = { event: n.prevMouseMoveEvent || n.options.event, friction: d ? .12 : 0 }, p = n.optionFor(t, "showClass") || void 0, f = true; n.isOpeningSlide(t) && (r === "full" ? i.zoomToFull(u) : r === "cover" ? i.zoomToCover(u) : r === "max" ? i.zoomToMax(u) : f = false, i.stop("current")), f && p && (p = i.isDragging ? "f-fadeIn" : ""), n.hideLoading(t), n.revealContent(t, p)
                 }
                 var a
             }, () => { n.setError(t, "{{IMAGE_ERROR}}") })
@@ -3131,17 +3130,17 @@
             return new Promise((n, i) => {
                 var s; let l = this.instance, c = t.el; l.clearContent(t), l.showLoading(t); let h = this.optionFor(t, "content"); if (typeof h == "string" && (h = tt(h)), !h || !N(h)) {
                     if (h = document.createElement("img"), h instanceof HTMLImageElement) {
-                        let m = "", a = t.caption; m = typeof a == "string" && a ? a.replace(/<[^>]+>/gi, "").substring(0, 1e3) : `Image ${t.index + 1} of ${((s = l.carousel) === null || s === void 0 ? void 0 : s.pages.length) || 1}`, h.src = e || "", h.alt = m, h.draggable = !1, t.srcset && h.setAttribute("srcset", t.srcset), this.instance.isOpeningSlide(t) && (h.fetchPriority = "high")
+                        let m = "", a = t.caption; m = typeof a == "string" && a ? a.replace(/<[^>]+>/gi, "").substring(0, 1e3) : `Image ${t.index + 1} of ${((s = l.carousel) === null || s === void 0 ? void 0 : s.pages.length) || 1}`, h.src = e || "", h.alt = m, h.draggable = false, t.srcset && h.setAttribute("srcset", t.srcset), this.instance.isOpeningSlide(t) && (h.fetchPriority = "high")
                     }
                     t.sizes && h.setAttribute("sizes", t.sizes)
                 }
-                v(h, "fancybox-image"), t.imageEl = h, l.setContent(t, h, !1), t.panzoom = new Qt(c, X({ transformParent: !0 }, this.option("Panzoom") || {}, {
+                v(h, "fancybox-image"), t.imageEl = h, l.setContent(t, h, false), t.panzoom = new Qt(c, X({ transformParent: true }, this.option("Panzoom") || {}, {
                     content: h, width: (m, a) => l.optionFor(t, "width", "auto", a) || "auto", height: (m, a) => l.optionFor(t, "height", "auto", a) || "auto", wheel: () => { let m = l.option("wheel"); return (m === "zoom" || m == "pan") && m }, click: (m, a) => {
-                        var r, d; if (l.isCompact || l.isClosing() || t.index !== ((r = l.getSlide()) === null || r === void 0 ? void 0 : r.index)) return !1; if (a) {
-                            let p = a.composedPath()[0]; if (["A", "BUTTON", "TEXTAREA", "OPTION", "INPUT", "SELECT", "VIDEO"].includes(p.nodeName)) return !1
+                        var r, d; if (l.isCompact || l.isClosing() || t.index !== ((r = l.getSlide()) === null || r === void 0 ? void 0 : r.index)) return false; if (a) {
+                            let p = a.composedPath()[0]; if (["A", "BUTTON", "TEXTAREA", "OPTION", "INPUT", "SELECT", "VIDEO"].includes(p.nodeName)) return false
                         }
-                        let u = !a || a.target && ((d = t.contentEl) === null || d === void 0 ? void 0 : d.contains(a.target)); return l.option(u ? "contentClick" : "backdropClick") || !1
-                    }, dblClick: () => l.isCompact ? "toggleZoom" : l.option("contentDblClick") || !1, spinner: !1, panOnlyZoomed: !0, wheelLimit: 1 / 0, on: {
+                        let u = !a || a.target && ((d = t.contentEl) === null || d === void 0 ? void 0 : d.contains(a.target)); return l.option(u ? "contentClick" : "backdropClick") || false
+                    }, dblClick: () => l.isCompact ? "toggleZoom" : l.option("contentDblClick") || false, spinner: false, panOnlyZoomed: true, wheelLimit: 1 / 0, on: {
                         ready: m => { n(m) }, error: () => { i() }, destroy: () => {
                             i()
                         }
@@ -3155,17 +3154,17 @@
                 }
                     = t; l && l.updateMetrics(); let m = this.getZoomInfo(t); if (!(m && h && c && l && s)) return void n(); let { x: a, y: r, scale: d, opacity: u
                     }
-                        = m, p = () => { t.state !== _.Closing && (u && (c.style.opacity = Math.max(Math.min(1, 1 - (1 - l.scale) / (1 - d)), 0) + ""), l.scale >= 1 && l.scale > l.targetScale - .1 && e(l)) }, f = g => { (g.scale < .99 || g.scale > 1.01) && !g.isDragging || (Z(s, he), c.style.opacity = "", g.off("endAnimation", f), g.off("touchStart", f), g.off("afterTransform", p), e(g)) }; l.on("endAnimation", f), l.on("touchStart", f), l.on("afterTransform", p), l.on(["error", "destroy"], () => { n() }), l.panTo({ x: a, y: r, scale: d, friction: 0, ignoreBounds: !0 }), l.stop("current"); let Q = { event: l.panMode === "mousemove" ? i.prevMouseMoveEvent || i.options.event : void 0 }, b = this.optionFor(t, "initialSize"); v(s, he), i.hideLoading(t), b === "full" ? l.zoomToFull(Q) : b === "cover" ? l.zoomToCover(Q) : b === "max" ? l.zoomToMax(Q) : l.reset(.172)
+                        = m, p = () => { t.state !== _.Closing && (u && (c.style.opacity = Math.max(Math.min(1, 1 - (1 - l.scale) / (1 - d)), 0) + ""), l.scale >= 1 && l.scale > l.targetScale - .1 && e(l)) }, f = g => { (g.scale < .99 || g.scale > 1.01) && !g.isDragging || (Z(s, he), c.style.opacity = "", g.off("endAnimation", f), g.off("touchStart", f), g.off("afterTransform", p), e(g)) }; l.on("endAnimation", f), l.on("touchStart", f), l.on("afterTransform", p), l.on(["error", "destroy"], () => { n() }), l.panTo({ x: a, y: r, scale: d, friction: 0, ignoreBounds: true }), l.stop("current"); let Q = { event: l.panMode === "mousemove" ? i.prevMouseMoveEvent || i.options.event : void 0 }, b = this.optionFor(t, "initialSize"); v(s, he), i.hideLoading(t), b === "full" ? l.zoomToFull(Q) : b === "cover" ? l.zoomToCover(Q) : b === "max" ? l.zoomToMax(Q) : l.reset(.172)
             })
         }
         getZoomInfo(t) {
             let { el: e, imageEl: n, thumbEl: i, panzoom: s
             }
-                = t, l = this.instance, c = l.container; if (!e || !n || !i || !s || Xi(i) < 3 || !this.optionFor(t, "zoom") || !c || l.state === G.Destroy || getComputedStyle(c).getPropertyValue("--f-images-zoom") === "0") return !1; let h = window.visualViewport || null; if ((h ? h.scale : 1) !== 1) return !1; let { top: m, left: a, width: r, height: d
+                = t, l = this.instance, c = l.container; if (!e || !n || !i || !s || Xi(i) < 3 || !this.optionFor(t, "zoom") || !c || l.state === G.Destroy || getComputedStyle(c).getPropertyValue("--f-images-zoom") === "0") return false; let h = window.visualViewport || null; if ((h ? h.scale : 1) !== 1) return false; let { top: m, left: a, width: r, height: d
                 }
                     = i.getBoundingClientRect(), { top: u, left: p, fitWidth: f, fitHeight: Q
                     }
-                        = s.contentRect; if (!(r && d && f && Q)) return !1; let b = s.container.getBoundingClientRect(); p += b.left, u += b.top; let g = -1 * (p + .5 * f - (a + .5 * r)), B = -1 * (u + .5 * Q - (m + .5 * d)), x = r / f, E = this.option("zoomOpacity") || !1; return E === "auto" && (E = Math.abs(r / d - f / Q) > .1), {
+                        = s.contentRect; if (!(r && d && f && Q)) return false; let b = s.container.getBoundingClientRect(); p += b.left, u += b.top; let g = -1 * (p + .5 * f - (a + .5 * r)), B = -1 * (u + .5 * Q - (m + .5 * d)), x = r / f, E = this.option("zoomOpacity") || false; return E === "auto" && (E = Math.abs(r / d - f / Q) > .1), {
                             x: g, y: B, scale: x, opacity: E
                         }
         } attach() {
@@ -3175,8 +3174,8 @@
             let t = this, e = t.instance; e.off("Carousel.change", t.onChange), e.off("Carousel.createSlide", t.onCreateSlide), e.off("Carousel.removeSlide", t.onRemoveSlide), e.off("close", t.onClose)
         }
     }; Object.defineProperty(Ue, "defaults", {
-        enumerable: !0, configurable: !0, writable: !0, value: {
-            initialSize: "fit", Panzoom: { maxScale: 1 }, protected: !1, zoom: !0, zoomOpacity: "auto"
+        enumerable: true, configurable: true, writable: true, value: {
+            initialSize: "fit", Panzoom: { maxScale: 1 }, protected: false, zoom: true, zoomOpacity: "auto"
         }
     }), typeof SuppressedError == "function" && SuppressedError;
     var fn = "html", xi = "image", Qn = "map", at = "youtube", ht = "vimeo", Lt = "html5video", wi = (o, t = {}) => {
@@ -3188,7 +3187,7 @@
         }
         let s = i + "", l = o.match(/#t=((.*)?\d+s)/); return l && (s += `#t=${l[1]}`), s
     }, ba = {
-        ajax: null, autoSize: !0, iframeAttr: { allow: "autoplay; fullscreen", scrolling: "auto" }, preload: !0, videoAutoplay: !0, videoRatio: 16 / 9, videoTpl: `<video class="fancybox__html5video" playsinline controls controlsList="nodownload" poster="{{poster}}">
+        ajax: null, autoSize: true, iframeAttr: { allow: "autoplay; fullscreen", scrolling: "auto" }, preload: true, videoAutoplay: true, videoRatio: 16 / 9, videoTpl: `<video class="fancybox__html5video" playsinline controls controlsList="nodownload" poster="{{poster}}">
   <source src="{{src}}" type="{{format}}" />Sorry, your browser doesn't support embedded videos.</video>`, videoFormat: "", vimeo: { byline: 1, color: "00adef", controls: 1, dnt: 1, muted: 0 }, youtube: { controls: 1, enablejsapi: 1, nocookie: 1, rel: 0, fs: 1 }
     }, ga = ["image", "html", "ajax", "inline", "clone", "iframe", "map", "pdf", "html5video", "youtube", "vimeo"], ve = class extends A {
         onBeforeInitSlide(t, e, n) {
@@ -3254,12 +3253,12 @@
         setIframeContent(t) {
             let { src: e, el: n
             }
-                = t; if (!e || typeof e != "string" || !n) return; n.classList.add("is-loading"); let i = this.instance, s = document.createElement("iframe"); s.className = "fancybox__iframe", s.setAttribute("id", `fancybox__iframe_${i.id}_${t.index}`); for (let [c, h] of Object.entries(this.optionFor(t, "iframeAttr") || {})) s.setAttribute(c, h); s.onerror = () => { i.setError(t, "{{IFRAME_ERROR}}") }, t.iframeEl = s; let l = this.optionFor(t, "preload"); if (t.type !== "iframe" || l === !1) return s.setAttribute("src", t.src + ""), i.setContent(t, s, !1), this.resizeIframe(t), void i.revealContent(t); i.showLoading(t), s.onload = () => { if (!s.src.length) return; let c = s.dataset.ready !== "true"; s.dataset.ready = "true", this.resizeIframe(t), c ? i.revealContent(t) : i.hideLoading(t) }, s.setAttribute("src", e), i.setContent(t, s, !1)
+                = t; if (!e || typeof e != "string" || !n) return; n.classList.add("is-loading"); let i = this.instance, s = document.createElement("iframe"); s.className = "fancybox__iframe", s.setAttribute("id", `fancybox__iframe_${i.id}_${t.index}`); for (let [c, h] of Object.entries(this.optionFor(t, "iframeAttr") || {})) s.setAttribute(c, h); s.onerror = () => { i.setError(t, "{{IFRAME_ERROR}}") }, t.iframeEl = s; let l = this.optionFor(t, "preload"); if (t.type !== "iframe" || l === false) return s.setAttribute("src", t.src + ""), i.setContent(t, s, false), this.resizeIframe(t), void i.revealContent(t); i.showLoading(t), s.onload = () => { if (!s.src.length) return; let c = s.dataset.ready !== "true"; s.dataset.ready = "true", this.resizeIframe(t), c ? i.revealContent(t) : i.hideLoading(t) }, s.setAttribute("src", e), i.setContent(t, s, false)
         }
         resizeIframe(t) {
             let { type: e, iframeEl: n
             }
-                = t; if (e === at || e === ht) return; let i = n?.parentElement; if (!n || !i) return; let s = t.autoSize; s === void 0 && (s = this.optionFor(t, "autoSize")); let l = t.width || 0, c = t.height || 0; l && c && (s = !1); let h = i && i.style; if (t.preload !== !1 && s !== !1 && h) try {
+                = t; if (e === at || e === ht) return; let i = n?.parentElement; if (!n || !i) return; let s = t.autoSize; s === void 0 && (s = this.optionFor(t, "autoSize")); let l = t.width || 0, c = t.height || 0; l && c && (s = false); let h = i && i.style; if (t.preload !== false && s !== false && h) try {
                     let m = window.getComputedStyle(i), a = parseFloat(m.paddingLeft) + parseFloat(m.paddingRight), r = parseFloat(m.paddingTop) + parseFloat(m.paddingBottom), d = n.contentWindow; if (d) {
                         let u = d.document, p = u.getElementsByTagName(fn)[0], f = u.body; h.width = "", f.style.overflow = "hidden", l = l || p.scrollWidth + a, h.width = `${l}px`, f.style.overflow = "", h.flex = "0 0 auto", h.height = `${f.scrollHeight}px`, c = p.scrollHeight + r
                     }
@@ -3273,7 +3272,7 @@
             }
                 = t; if (!e || !e.offsetParent || !this.optionFor(t, "videoAutoplay")) return; if (t.type === Lt) try {
                     let i = e.querySelector("video"); if (i) {
-                        let s = i.play(); s !== void 0 && s.then(() => { }).catch(l => { i.muted = !0, i.play() })
+                        let s = i.play(); s !== void 0 && s.then(() => { }).catch(l => { i.muted = true, i.play() })
                     }
                 } catch {
                 }
@@ -3308,7 +3307,7 @@
         }
         setContent(t) {
             let e = this.instance.optionFor(t, "src") || ""; if (t && t.type && e) {
-                switch (t.type) { case fn: this.instance.setContent(t, e); break; case Lt: let n = this.option("videoTpl"); n && this.instance.setContent(t, n.replace(/\{\{src\}\}/gi, e + "").replace(/\{\{format\}\}/gi, this.optionFor(t, "videoFormat") || "").replace(/\{\{poster\}\}/gi, t.poster || t.thumbSrc || "")); break; case "inline": case "clone": this.setInlineContent(t); break; case "ajax": this.loadAjaxContent(t); break; case "pdf": case Qn: case at: case ht: t.preload = !1; case "iframe": this.setIframeContent(t) }this.setAspectRatio(t)
+                switch (t.type) { case fn: this.instance.setContent(t, e); break; case Lt: let n = this.option("videoTpl"); n && this.instance.setContent(t, n.replace(/\{\{src\}\}/gi, e + "").replace(/\{\{format\}\}/gi, this.optionFor(t, "videoFormat") || "").replace(/\{\{poster\}\}/gi, t.poster || t.thumbSrc || "")); break; case "inline": case "clone": this.setInlineContent(t); break; case "ajax": this.loadAjaxContent(t); break; case "pdf": case Qn: case at: case ht: t.preload = false; case "iframe": this.setIframeContent(t) }this.setAspectRatio(t)
             }
         } setAspectRatio(t) {
             let e = t.contentEl; if (!(t.el && e && t.type && [at, ht, Lt].includes(t.type))) return; let n, i = t.width || "auto", s = t.height || "auto"; if (i === "auto" || s === "auto") {
@@ -3322,10 +3321,10 @@
         detach() {
             let t = this, e = t.instance; e.off("Carousel.beforeInitSlide", t.onBeforeInitSlide), e.off("Carousel.createSlide", t.onCreateSlide), e.off("Carousel.selectSlide", t.onSelectSlide), e.off("Carousel.unselectSlide", t.onUnselectSlide), e.off("Carousel.Panzoom.refresh", t.onRefresh), e.off("done", t.onDone), e.off("clearContent", t.onClearContent), window.removeEventListener("message", t.onMessage)
         }
-    }; Object.defineProperty(ve, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: ba });
+    }; Object.defineProperty(ve, "defaults", { enumerable: true, configurable: true, writable: true, value: ba });
     var ue = "play", me = "pause", Vt = "ready", ye = class extends A {
         constructor() {
-            super(...arguments), Object.defineProperty(this, "state", { enumerable: !0, configurable: !0, writable: !0, value: Vt }), Object.defineProperty(this, "inHover", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "timer", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "progressBar", { enumerable: !0, configurable: !0, writable: !0, value: null })
+            super(...arguments), Object.defineProperty(this, "state", { enumerable: true, configurable: true, writable: true, value: Vt }), Object.defineProperty(this, "inHover", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "timer", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "progressBar", { enumerable: true, configurable: true, writable: true, value: null })
         }
         get isActive() {
             return this.state !== Vt
@@ -3343,10 +3342,10 @@
             document.visibilityState === "visible" ? this.resume() : this.pause()
         }
         onMouseEnter() {
-            this.inHover = !0, this.pause()
+            this.inHover = true, this.pause()
         }
         onMouseLeave() {
-            var t; this.inHover = !1, !((t = this.instance.panzoom) === null || t === void 0) && t.isResting && this.resume()
+            var t; this.inHover = false, !((t = this.instance.panzoom) === null || t === void 0) && t.isResting && this.resume()
         }
         onTimerEnd() {
             let t = this.instance; this.state === "play" && (t.isInfinite || t.page !== t.pages.length - 1 ? t.slideNext() : t.slideTo(0))
@@ -3366,12 +3365,12 @@
         start() {
             let t = this; if (t.set(), t.state !== Vt) {
                 if (t.option("pauseOnHover")) {
-                    let e = t.instance.container; e.addEventListener("mouseenter", t.onMouseEnter, !1), e.addEventListener("mouseleave", t.onMouseLeave, !1)
+                    let e = t.instance.container; e.addEventListener("mouseenter", t.onMouseEnter, false), e.addEventListener("mouseleave", t.onMouseLeave, false)
                 }
-                document.addEventListener("visibilitychange", t.onVisibilityChange, !1), t.emit("start")
+                document.addEventListener("visibilitychange", t.onVisibilityChange, false), t.emit("start")
             }
         } stop() {
-            let t = this, e = t.state, n = t.instance.container; t.clear(), t.state = Vt, n.removeEventListener("mouseenter", t.onMouseEnter, !1), n.removeEventListener("mouseleave", t.onMouseLeave, !1), document.removeEventListener("visibilitychange", t.onVisibilityChange, !1), Z(n, "has-autoplay"), e !== Vt && t.emit("stop")
+            let t = this, e = t.state, n = t.instance.container; t.clear(), t.state = Vt, n.removeEventListener("mouseenter", t.onMouseEnter, false), n.removeEventListener("mouseleave", t.onMouseLeave, false), document.removeEventListener("visibilitychange", t.onVisibilityChange, false), Z(n, "has-autoplay"), e !== Vt && t.emit("stop")
         }
         pause() {
             let t = this; t.state === ue && (t.state = me, t.clear(), t.emit(me))
@@ -3379,7 +3378,7 @@
         resume() {
             let t = this, e = t.instance; if (e.isInfinite || e.page !== e.pages.length - 1) if (t.state !== ue) {
                 if (t.state === me && !t.inHover) {
-                    let n = new Event("resume", { bubbles: !0, cancelable: !0 }); t.emit("resume", n), n.defaultPrevented || t.set()
+                    let n = new Event("resume", { bubbles: true, cancelable: true }); t.emit("resume", n), n.defaultPrevented || t.set()
                 }
             } else t.set(); else t.stop()
         }
@@ -3393,17 +3392,17 @@
             let t = this, e = t.instance; e.off("ready", t.onReady), e.off("Panzoom.startAnimation", t.onChange), e.off("Panzoom.endAnimation", t.onSettle), e.off("Panzoom.touchMove", t.onChange), t.stop()
         }
     }; Object.defineProperty(ye, "defaults", {
-        enumerable: !0, configurable: !0, writable: !0, value: {
-            autoStart: !0, pauseOnHover: !0, progressParentEl: null, showProgress: !0, timeout: 3e3
+        enumerable: true, configurable: true, writable: true, value: {
+            autoStart: true, pauseOnHover: true, progressParentEl: null, showProgress: true, timeout: 3e3
         }
     });
     var Ee = class extends A {
         constructor() {
-            super(...arguments), Object.defineProperty(this, "ref", { enumerable: !0, configurable: !0, writable: !0, value: null })
+            super(...arguments), Object.defineProperty(this, "ref", { enumerable: true, configurable: true, writable: true, value: null })
         }
         onPrepare(t) {
-            let e = t.carousel; if (!e) return; let n = t.container; n && (e.options.Autoplay = X({ autoStart: !1 }, this.option("Autoplay") || {}, {
-                pauseOnHover: !1, timeout: this.option("timeout"), progressParentEl: () => this.option("progressParentEl") || null, on: {
+            let e = t.carousel; if (!e) return; let n = t.container; n && (e.options.Autoplay = X({ autoStart: false }, this.option("Autoplay") || {}, {
+                pauseOnHover: false, timeout: this.option("timeout"), progressParentEl: () => this.option("progressParentEl") || null, on: {
                     start: () => { t.emit("startSlideshow") }, set: i => { var s; n.classList.add("has-slideshow"), ((s = t.getSlide()) === null || s === void 0 ? void 0 : s.state) !== _.Ready && i.pause() }, stop: () => { n.classList.remove("has-slideshow"), t.isCompact || t.endIdle(), t.emit("endSlideshow") }, resume: (i, s) => {
                         var l, c, h; !s || !s.cancelable || ((l = t.getSlide()) === null || l === void 0 ? void 0 : l.state) === _.Ready && (!((h = (c = t.carousel) === null || c === void 0 ? void 0 : c.panzoom) === null || h === void 0) && h.isResting) || s.preventDefault()
                     }
@@ -3426,14 +3425,14 @@
             let t = this, e = t.instance; e.off("Carousel.init", t.onPrepare), e.off("Carousel.ready", t.onReady), e.off("done", t.onDone), e.off("keydown", t.onKeydown)
         }
     }; Object.defineProperty(Ee, "defaults", {
-        enumerable: !0, configurable: !0, writable: !0, value: {
-            key: " ", playOnStart: !1, progressParentEl: o => { var t; return ((t = o.instance.container) === null || t === void 0 ? void 0 : t.querySelector(".fancybox__toolbar [data-fancybox-toggle-slideshow]")) || o.instance.container }, timeout: 3e3
+        enumerable: true, configurable: true, writable: true, value: {
+            key: " ", playOnStart: false, progressParentEl: o => { var t; return ((t = o.instance.container) === null || t === void 0 ? void 0 : t.querySelector(".fancybox__toolbar [data-fancybox-toggle-slideshow]")) || o.instance.container }, timeout: 3e3
         }
     });
     var ji = { classes: { container: "f-thumbs f-carousel__thumbs", viewport: "f-thumbs__viewport", track: "f-thumbs__track", slide: "f-thumbs__slide", isResting: "is-resting", isSelected: "is-selected", isLoading: "is-loading", hasThumbs: "has-thumbs" }, minCount: 2, parentEl: null, thumbTpl: '<button class="f-thumbs__slide__button" tabindex="0" type="button" aria-label="{{GOTO}}" data-carousel-index="%i"><img class="f-thumbs__slide__img" data-lazy-src="{{%s}}" alt="" /></button>', type: "modern" }, st; (function (o) { o[o.Init = 0] = "Init", o[o.Ready = 1] = "Ready", o[o.Hidden = 2] = "Hidden" })(st || (st = {}));
     var Wi = "isResting", pe = "thumbWidth", gt = "thumbHeight", q = "thumbClipWidth", Pi = class extends A {
         constructor() {
-            super(...arguments), Object.defineProperty(this, "type", { enumerable: !0, configurable: !0, writable: !0, value: "modern" }), Object.defineProperty(this, "container", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "track", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "carousel", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "thumbWidth", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "thumbClipWidth", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "thumbHeight", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "thumbGap", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "thumbExtraGap", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "state", { enumerable: !0, configurable: !0, writable: !0, value: st.Init })
+            super(...arguments), Object.defineProperty(this, "type", { enumerable: true, configurable: true, writable: true, value: "modern" }), Object.defineProperty(this, "container", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "track", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "carousel", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "thumbWidth", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "thumbClipWidth", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "thumbHeight", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "thumbGap", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "thumbExtraGap", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "state", { enumerable: true, configurable: true, writable: true, value: st.Init })
         }
         get isModern() {
             return this.type === "modern"
@@ -3456,7 +3455,7 @@
         }
         isDisabled() {
             let o = this.option("minCount") || 0; if (o) {
-                let e = this.instance, n = 0; for (let i of e.slides || []) i.thumbSrc && n++; if (n < o) return !0
+                let e = this.instance, n = 0; for (let i of e.slides || []) i.thumbSrc && n++; if (n < o) return true
             }
             let t = this.option("type"); return ["modern", "classic"].indexOf(t) < 0
         }
@@ -3478,7 +3477,7 @@
         }
         build() {
             let o = this; if (o.state !== st.Init) return; if (o.isDisabled()) return void o.emit("disabled"); let t = o.instance, e = t.container, n = o.getSlides(), i = o.option("type"); o.type = i; let s = o.option("parentEl"), l = o.cn("container"), c = o.cn("track"), h = s?.querySelector("." + l); h || (h = document.createElement("div"), v(h, l), s ? s.appendChild(h) : e.after(h)), v(h, `is-${i}`), v(e, o.cn("hasThumbs")), o.container = h, o.updateProps(); let m = h.querySelector("." + c); m || (m = document.createElement("div"), v(m, o.cn("track")), h.appendChild(m)), o.track = m; let a = X({}, {
-                track: m, infinite: !1, center: !0, fill: i === "classic", dragFree: !0, slidesPerPage: 1, transition: !1, preload: .25, friction: .12, Panzoom: { maxVelocity: 0 }, Dots: !1, Navigation: !1, classes: {
+                track: m, infinite: false, center: true, fill: i === "classic", dragFree: true, slidesPerPage: 1, transition: false, preload: .25, friction: .12, Panzoom: { maxVelocity: 0 }, Dots: false, Navigation: false, classes: {
                     container: "f-thumbs", viewport: "f-thumbs__viewport", track: "f-thumbs__track", slide: "f-thumbs__slide"
                 }
             }, o.option("Carousel") || {}, { Sync: { target: t }, slides: n }), r = new t.constructor(h, a); r.on("createSlide", (d, u) => { o.setProps(u.index), o.emit("createSlide", u, u.el) }), r.on("ready", () => { o.shiftModern(), o.emit("ready") }), r.on("refresh", () => { o.shiftModern() }), r.on("Panzoom.click", (d, u, p) => { o.onClick(p) }), o.carousel = r, o.state = st.Ready
@@ -3496,7 +3495,7 @@
         getShift(o) {
             var t; let e = this, { instance: n
             }
-                = e, i = e.carousel; if (!n || !i) return 0; let s = e[pe], l = e[q], c = e.thumbGap, h = e.thumbExtraGap; if (!(!((t = i.slides[o]) === null || t === void 0) && t.el)) return 0; let m = .5 * (s - l), a = n.pages.length - 1, r = n.getProgress(0), d = n.getProgress(a), u = n.getProgress(o, !1, !0), p = 0, f = m + h + c, Q = r < 0 && r > -1, b = d > 0 && d < 1; return o === 0 ? (p = f * Math.abs(r), b && r === 1 && (p -= f * Math.abs(d))) : o === a ? (p = f * Math.abs(d) * -1, Q && d === -1 && (p += f * Math.abs(r))) : Q || b ? (p = -1 * f, p += f * Math.abs(r), p += f * (1 - Math.abs(d))) : p = f * u, p
+                = e, i = e.carousel; if (!n || !i) return 0; let s = e[pe], l = e[q], c = e.thumbGap, h = e.thumbExtraGap; if (!(!((t = i.slides[o]) === null || t === void 0) && t.el)) return 0; let m = .5 * (s - l), a = n.pages.length - 1, r = n.getProgress(0), d = n.getProgress(a), u = n.getProgress(o, false, true), p = 0, f = m + h + c, Q = r < 0 && r > -1, b = d > 0 && d < 1; return o === 0 ? (p = f * Math.abs(r), b && r === 1 && (p -= f * Math.abs(d))) : o === a ? (p = f * Math.abs(d) * -1, Q && d === -1 && (p += f * Math.abs(r))) : Q || b ? (p = -1 * f, p += f * Math.abs(r), p += f * (1 - Math.abs(d))) : p = f * u, p
         }
         setProps(o) {
             var t; let e = this; if (!e.isModern) return; let { instance: n
@@ -3521,10 +3520,10 @@
         detach() {
             let o = this, t = o.instance; t.off("initSlide", o.onInitSlide), t.off("initSlides", o.onInitSlides), t.off(["change", "Panzoom.afterTransform"], o.onChange), t.off("Panzoom.refresh", o.onRefresh), o.cleanup()
         }
-    }; Object.defineProperty(Pi, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: ji });
-    var Fa = Object.assign(Object.assign({}, ji), { key: "t", showOnStart: !0, parentEl: null }), Li = "is-masked", Vi = "aria-hidden", xe = class extends A {
+    }; Object.defineProperty(Pi, "defaults", { enumerable: true, configurable: true, writable: true, value: ji });
+    var Fa = Object.assign(Object.assign({}, ji), { key: "t", showOnStart: true, parentEl: null }), Li = "is-masked", Vi = "aria-hidden", xe = class extends A {
         constructor() {
-            super(...arguments), Object.defineProperty(this, "ref", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "hidden", { enumerable: !0, configurable: !0, writable: !0, value: !1 })
+            super(...arguments), Object.defineProperty(this, "ref", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "hidden", { enumerable: true, configurable: true, writable: true, value: false })
         }
         get isEnabled() {
             let t = this.ref; return t && !t.isDisabled()
@@ -3550,7 +3549,7 @@
                         let h = c.container; h && this.hidden && (e.refresh(), h.style.transition = "none", e.hide(), h.offsetHeight, queueMicrotask(() => { h.style.transition = "", e.show() }))
                     }
                 }
-            }); l.Carousel = l.Carousel || {}, l.Carousel.on = X(((t = e.options.Carousel) === null || t === void 0 ? void 0 : t.on) || {}, { click: this.onClick, createSlide: this.onCreateSlide }), i.options.Thumbs = l, i.attachPlugins({ Thumbs: Pi }), e.ref = i.plugins.Thumbs, e.option("showOnStart") || (e.ref.state = st.Hidden, e.hidden = !0)
+            }); l.Carousel = l.Carousel || {}, l.Carousel.on = X(((t = e.options.Carousel) === null || t === void 0 ? void 0 : t.on) || {}, { click: this.onClick, createSlide: this.onCreateSlide }), i.options.Thumbs = l, i.attachPlugins({ Thumbs: Pi }), e.ref = i.plugins.Thumbs, e.option("showOnStart") || (e.ref.state = st.Hidden, e.hidden = true)
         }
         onResize() {
             var t; let e = (t = this.ref) === null || t === void 0 ? void 0 : t.container; e && (e.style.maxHeight = "")
@@ -3562,10 +3561,10 @@
             let t = this.ref; if (t && !t.isDisabled()) return t.state === st.Hidden ? (t.state = st.Init, void t.build()) : void (this.hidden ? this.show() : this.hide())
         }
         show() {
-            let t = this.ref; if (!t || t.isDisabled()) return; let e = t.container; e && (this.refresh(), e.offsetHeight, e.removeAttribute(Vi), e.classList.remove(Li), this.hidden = !1)
+            let t = this.ref; if (!t || t.isDisabled()) return; let e = t.container; e && (this.refresh(), e.offsetHeight, e.removeAttribute(Vi), e.classList.remove(Li), this.hidden = false)
         }
         hide() {
-            let t = this.ref, e = t && t.container; e && (this.refresh(), e.offsetHeight, e.classList.add(Li), e.setAttribute(Vi, "true")), this.hidden = !0
+            let t = this.ref, e = t && t.container; e && (this.refresh(), e.offsetHeight, e.classList.add(Li), e.setAttribute(Vi, "true")), this.hidden = true
         }
         refresh() {
             let t = this.ref; if (!t || !t.state) return; let e = t.container, n = e?.firstChild || null; e && n && n.childNodes.length && (e.style.maxHeight = `${n.getBoundingClientRect().height}px`)
@@ -3576,7 +3575,7 @@
         detach() {
             var t; let e = this, n = e.instance; n.off("Carousel.init", e.onInit), n.off("resize", e.onResize), n.off("keydown", e.onKeydown), (t = n.carousel) === null || t === void 0 || t.detachPlugins(["Thumbs"]), e.ref = null
         }
-    }; Object.defineProperty(xe, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: Fa });
+    }; Object.defineProperty(xe, "defaults", { enumerable: true, configurable: true, writable: true, value: Fa });
     var bn = {
         panLeft: {
             icon: '<svg><path d="M5 12h14M5 12l6 6M5 12l6-6"/></svg>', change: {
@@ -3606,20 +3605,20 @@
         }, parentEl: null
     }, Ua = { tabindex: "-1", width: "24", height: "24", viewBox: "0 0 24 24", xmlns: "http://www.w3.org/2000/svg" }, Ri = "has-toolbar", gn = "fancybox__toolbar", we = class extends A {
         constructor() {
-            super(...arguments), Object.defineProperty(this, "state", { enumerable: !0, configurable: !0, writable: !0, value: ft.Init }), Object.defineProperty(this, "container", { enumerable: !0, configurable: !0, writable: !0, value: null })
+            super(...arguments), Object.defineProperty(this, "state", { enumerable: true, configurable: true, writable: true, value: ft.Init }), Object.defineProperty(this, "container", { enumerable: true, configurable: true, writable: true, value: null })
         }
         onReady(t) {
             var e; if (!t.carousel) return; let n = this.option("display"), i = this.option("absolute"), s = this.option("enabled"); if (s === "auto") {
-                let m = this.instance.carousel, a = 0; if (m) for (let r of m.slides) (r.panzoom || r.type === "image") && a++; a || (s = !1)
+                let m = this.instance.carousel, a = 0; if (m) for (let r of m.slides) (r.panzoom || r.type === "image") && a++; a || (s = false)
             }
             s || (n = void 0); let l = 0, c = { left: [], middle: [], right: [] }; if (n) for (let m of ["left", "middle", "right"]) for (let a of n[m]) {
                 let r = this.createEl(a); r && ((e = c[m]) === null || e === void 0 || e.push(r), l++)
             }
             let h = null; if (l && (h = this.createContainer()), h) {
                 for (let [m, a] of Object.entries(c)) {
-                    let r = document.createElement("div"); v(r, gn + "__column is-" + m); for (let d of a) r.appendChild(d); i !== "auto" || m !== "middle" || a.length || (i = !0), h.appendChild(r)
+                    let r = document.createElement("div"); v(r, gn + "__column is-" + m); for (let d of a) r.appendChild(d); i !== "auto" || m !== "middle" || a.length || (i = true), h.appendChild(r)
                 }
-                i === !0 && v(h, "is-absolute"), this.state = ft.Ready, this.onRefresh()
+                i === true && v(h, "is-absolute"), this.state = ft.Ready, this.onRefresh()
             }
             else this.state = ft.Disabled
         }
@@ -3631,8 +3630,8 @@
                 let r = {}; try {
                     r = JSON.parse(a)
                 }
-                    catch {
-                    }
+                catch {
+                }
                 l && l.applyChange(r)
             }
             else m && l && l[m] && l[m]()
@@ -3648,7 +3647,7 @@
             var n; (n = e.panzoom) === null || n === void 0 || n.on("afterTransform", () => { this.instance.isCurrentSlide(e) && this.onRefresh() }), this.instance.isCurrentSlide(e) && this.onRefresh()
         }
         createContainer() {
-            let t = this.instance.container; if (!t) return null; let e = this.option("parentEl") || t, n = e.querySelector("." + gn); return n || (n = document.createElement("div"), v(n, gn), e.prepend(n)), n.addEventListener("click", this.onClick, { passive: !1, capture: !0 }), t && v(t, Ri), this.container = n, n
+            let t = this.instance.container; if (!t) return null; let e = this.option("parentEl") || t, n = e.querySelector("." + gn); return n || (n = document.createElement("div"), v(n, gn), e.prepend(n)), n.addEventListener("click", this.onClick, { passive: false, capture: true }), t && v(t, Ri), this.container = n, n
         }
         createEl(t) {
             let e = this.instance, n = e.carousel; if (!n || t === "toggleFS" || t === "fullscreen" && !Ai()) return null; let i = null, s = n.slides.length || 0, l = 0, c = 0; for (let m of n.slides) (m.panzoom || m.type === "image") && l++, (m.type === "image" || m.downloadSrc) && c++; if (s < 2 && ["infobar", "prev", "next"].includes(t)) return i; if (bn[t] !== void 0 && !l || t === "download" && !c) return null; if (t === "thumbs") {
@@ -3671,11 +3670,11 @@
         detach() {
             let t = this, e = t.instance; e.off("Carousel.initSlides", t.onReady), e.off("done", t.onDone), e.off(["reveal", "Carousel.change"], t.onChange), t.removeContainer()
         }
-    }; Object.defineProperty(we, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: Ba });
+    }; Object.defineProperty(we, "defaults", { enumerable: true, configurable: true, writable: true, value: Ba });
     var va = {
         Hash: class extends A {
             onReady() {
-                Rt = !1
+                Rt = false
             }
             onChange(o) {
                 pt && clearTimeout(pt); let { hash: t
@@ -3685,14 +3684,14 @@
                         = Be(), n = o.isOpeningSlide(o.getSlide()); n && (yi = e === t ? "" : e), t && t !== e && (pt = setTimeout(() => {
                             try {
                                 if (o.state === G.Ready) {
-                                    let i = "replaceState"; n && !de && (i = "pushState", de = !0), window.history[i]({}, document.title, window.location.pathname + window.location.search + t)
+                                    let i = "replaceState"; n && !de && (i = "pushState", de = true), window.history[i]({}, document.title, window.location.pathname + window.location.search + t)
                                 }
                             } catch {
                             }
                         }, 300))
             }
             onClose(o) {
-                if (pt && clearTimeout(pt), !Rt && de) return de = !1, Rt = !1, void window.history.back(); if (!Rt) try {
+                if (pt && clearTimeout(pt), !Rt && de) return de = false, Rt = false, void window.history.back(); if (!Rt) try {
                     window.history.replaceState({}, document.title, window.location.pathname + window.location.search + (yi || ""))
                 }
                     catch {
@@ -3710,7 +3709,7 @@
                 Ji()
             }
             static destroy() {
-                window.removeEventListener("hashchange", Hi, !1)
+                window.removeEventListener("hashchange", Hi, false)
             }
         }, Html: ve, Images: Ue, Slideshow: Ee, Thumbs: xe, Toolbar: we
     }, Zi = "with-fancybox", Fn = "hide-scrollbar", Oi = "--fancybox-scrollbar-compensate", Ti = "--fancybox-body-margin", Bn = "aria-hidden", Un = "is-using-tab", vn = "is-animated", Ci = "is-compact", Mi = "is-loading", yn = "is-opening", fe = "has-caption", Ft = "disabled", ut = "tabindex", Si = "download", En = "href", Bt = "src", ct = o => typeof o == "string", ki = function () { var o = window.getSelection(); return !!o && o.type === "Range" }, j, P = null, mt = null, Di = 0, Gi = 0, Ii = 0, _i = 0, Ut = new Map, ya = 0, K = class o extends Ot {
@@ -3721,10 +3720,10 @@
             return this.option("compact")
         }
         constructor(t = [], e = {}, n = {}) {
-            super(e), Object.defineProperty(this, "userSlides", { enumerable: !0, configurable: !0, writable: !0, value: [] }), Object.defineProperty(this, "userPlugins", { enumerable: !0, configurable: !0, writable: !0, value: {} }), Object.defineProperty(this, "idle", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "idleTimer", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "clickTimer", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "pwt", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "ignoreFocusChange", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "startedFs", { enumerable: !0, configurable: !0, writable: !0, value: !1 }), Object.defineProperty(this, "state", { enumerable: !0, configurable: !0, writable: !0, value: G.Init }), Object.defineProperty(this, "id", { enumerable: !0, configurable: !0, writable: !0, value: 0 }), Object.defineProperty(this, "container", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "caption", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "footer", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "carousel", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "lastFocus", { enumerable: !0, configurable: !0, writable: !0, value: null }), Object.defineProperty(this, "prevMouseMoveEvent", { enumerable: !0, configurable: !0, writable: !0, value: void 0 }), j || (j = Ai()), this.id = e.id || ++ya, Ut.set(this.id, this), this.userSlides = t, this.userPlugins = n, queueMicrotask(() => { this.init() })
+            super(e), Object.defineProperty(this, "userSlides", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "userPlugins", { enumerable: true, configurable: true, writable: true, value: {} }), Object.defineProperty(this, "idle", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "idleTimer", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "clickTimer", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "pwt", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "ignoreFocusChange", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "startedFs", { enumerable: true, configurable: true, writable: true, value: false }), Object.defineProperty(this, "state", { enumerable: true, configurable: true, writable: true, value: G.Init }), Object.defineProperty(this, "id", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "container", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "caption", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "footer", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "carousel", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "lastFocus", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "prevMouseMoveEvent", { enumerable: true, configurable: true, writable: true, value: void 0 }), j || (j = Ai()), this.id = e.id || ++ya, Ut.set(this.id, this), this.userSlides = t, this.userPlugins = n, queueMicrotask(() => { this.init() })
         }
         init() {
-            if (this.state === G.Destroy) return; this.state = G.Init, this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), this.userPlugins)), this.emit("init"), this.emit("attachPlugins"), this.option("hideScrollbar") === !0 && (() => { if (!Zt) return; let e = document, n = e.body, i = e.documentElement; if (n.classList.contains(Fn)) return; let s = window.innerWidth - i.getBoundingClientRect().width, l = parseFloat(window.getComputedStyle(n).marginRight); s < 0 && (s = 0), i.style.setProperty(Oi, `${s}px`), l && n.style.setProperty(Ti, `${l}px`), n.classList.add(Fn) })(), this.initLayout(), this.scale(); let t = () => { this.initCarousel(this.userSlides), this.state = G.Ready, this.attachEvents(), this.emit("ready"), setTimeout(() => { this.container && this.container.setAttribute(Bn, "false") }, 16) }; this.option("Fullscreen.autoStart") && j && !j.isFullscreen() ? j.request().then(() => { this.startedFs = !0, t() }).catch(() => t()) : t()
+            if (this.state === G.Destroy) return; this.state = G.Init, this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), this.userPlugins)), this.emit("init"), this.emit("attachPlugins"), this.option("hideScrollbar") === true && (() => { if (!Zt) return; let e = document, n = e.body, i = e.documentElement; if (n.classList.contains(Fn)) return; let s = window.innerWidth - i.getBoundingClientRect().width, l = parseFloat(window.getComputedStyle(n).marginRight); s < 0 && (s = 0), i.style.setProperty(Oi, `${s}px`), l && n.style.setProperty(Ti, `${l}px`), n.classList.add(Fn) })(), this.initLayout(), this.scale(); let t = () => { this.initCarousel(this.userSlides), this.state = G.Ready, this.attachEvents(), this.emit("ready"), setTimeout(() => { this.container && this.container.setAttribute(Bn, "false") }, 16) }; this.option("Fullscreen.autoStart") && j && !j.isFullscreen() ? j.request().then(() => { this.startedFs = true, t() }).catch(() => t()) : t()
         }
         initLayout() {
             var t, e; let n = this.option("parentEl") || document.body, i = tt(this.localize(this.option("tpl.main") || "")); if (i) {
@@ -3732,7 +3731,7 @@
             }
         } initCarousel(t) {
             let e = this.container; if (!e) return; let n = e.querySelector(".fancybox__carousel"); if (!n) return; let i = this.carousel = new vt(n, X({}, {
-                slides: t, transition: "fade", Panzoom: { lockAxis: this.option("dragToClose") ? "xy" : "x", infinite: !!this.option("dragToClose") && "y" }, Dots: !1, Navigation: {
+                slides: t, transition: "fade", Panzoom: { lockAxis: this.option("dragToClose") ? "xy" : "x", infinite: !!this.option("dragToClose") && "y" }, Dots: false, Navigation: {
                     classes: {
                         container: "fancybox__nav", button: "f-button", isNext: "is-next", isPrev: "is-prev"
                     }
@@ -3743,7 +3742,7 @@
                 }
             }), i.on("Panzoom.touchEnd", (s, l, c) => { var h; let m = this.getSlide(); if (m && xn(m.el) || l.isMobile && document.activeElement && ["TEXTAREA", "INPUT"].indexOf((h = document.activeElement) === null || h === void 0 ? void 0 : h.nodeName) !== -1) return; let a = Math.abs(l.dragOffset.y); l.lockedAxis === "y" && (a >= 200 || a >= 50 && l.dragOffset.time < 300) && (c && c.cancelable && c.preventDefault(), this.close(c, "f-throwOut" + (l.current.f < 0 ? "Up" : "Down"))) })), i.on("change", s => {
                 var l; let c = (l = this.getSlide()) === null || l === void 0 ? void 0 : l.triggerEl; if (c) {
-                    let h = new CustomEvent("slideTo", { bubbles: !0, cancelable: !0, detail: s.page }); c.dispatchEvent(h)
+                    let h = new CustomEvent("slideTo", { bubbles: true, cancelable: true, detail: s.page }); c.dispatchEvent(h)
                 }
             }), i.on(["refresh", "change"], s => {
                 let l = this.container; if (!l) return; for (let m of l.querySelectorAll("[data-fancybox-current-index]")) m.innerHTML = s.page + 1; for (let m of l.querySelectorAll("[data-fancybox-count]")) m.innerHTML = s.pages.length; if (!s.isInfinite) {
@@ -3755,10 +3754,10 @@
             }), this.emit("initCarousel")
         }
         attachEvents() {
-            let t = this, e = t.container; if (!e) return; e.addEventListener("click", t.onClick, { passive: !1, capture: !1 }), e.addEventListener("wheel", t.onWheel, { passive: !1, capture: !1 }), document.addEventListener("keydown", t.onKeydown, { passive: !1, capture: !0 }), document.addEventListener("visibilitychange", t.onVisibilityChange, !1), document.addEventListener("mousemove", t.onMousemove), t.option("trapFocus") && document.addEventListener("focus", t.onFocus, !0), window.addEventListener("resize", t.onResize); let n = window.visualViewport; n && (n.addEventListener("scroll", t.onResize), n.addEventListener("resize", t.onResize))
+            let t = this, e = t.container; if (!e) return; e.addEventListener("click", t.onClick, { passive: false, capture: false }), e.addEventListener("wheel", t.onWheel, { passive: false, capture: false }), document.addEventListener("keydown", t.onKeydown, { passive: false, capture: true }), document.addEventListener("visibilitychange", t.onVisibilityChange, false), document.addEventListener("mousemove", t.onMousemove), t.option("trapFocus") && document.addEventListener("focus", t.onFocus, true), window.addEventListener("resize", t.onResize); let n = window.visualViewport; n && (n.addEventListener("scroll", t.onResize), n.addEventListener("resize", t.onResize))
         }
         detachEvents() {
-            let t = this, e = t.container; if (!e) return; document.removeEventListener("keydown", t.onKeydown, { passive: !1, capture: !0 }), e.removeEventListener("wheel", t.onWheel, { passive: !1, capture: !1 }), e.removeEventListener("click", t.onClick, { passive: !1, capture: !1 }), document.removeEventListener("mousemove", t.onMousemove), window.removeEventListener("resize", t.onResize); let n = window.visualViewport; n && (n.removeEventListener("resize", t.onResize), n.removeEventListener("scroll", t.onResize)), document.removeEventListener("visibilitychange", t.onVisibilityChange, !1), document.removeEventListener("focus", t.onFocus, !0)
+            let t = this, e = t.container; if (!e) return; document.removeEventListener("keydown", t.onKeydown, { passive: false, capture: true }), e.removeEventListener("wheel", t.onWheel, { passive: false, capture: false }), e.removeEventListener("click", t.onClick, { passive: false, capture: false }), document.removeEventListener("mousemove", t.onMousemove), window.removeEventListener("resize", t.onResize); let n = window.visualViewport; n && (n.removeEventListener("resize", t.onResize), n.removeEventListener("scroll", t.onResize)), document.removeEventListener("visibilitychange", t.onVisibilityChange, false), document.removeEventListener("focus", t.onFocus, true)
         }
         scale() {
             let t = this.container; if (!t) return; let e = window.visualViewport, n = Math.max(1, e?.scale || 1), i = "", s = "", l = ""; if (e && n > 1) {
@@ -3769,7 +3768,7 @@
         onClick(t) {
             var e; let { container: n, isCompact: i
             }
-                = this; if (!n || this.isClosing()) return; !i && this.option("idle") && this.resetIdle(); let s = t.composedPath()[0]; if (s.closest(".fancybox-spinner") || s.closest("[data-fancybox-close]")) return t.preventDefault(), void this.close(t); if (s.closest("[data-fancybox-prev]")) return t.preventDefault(), void this.prev(); if (s.closest("[data-fancybox-next]")) return t.preventDefault(), void this.next(); if (t.type === "click" && t.detail === 0 || Math.abs(t.pageX - Di) > 30 || Math.abs(t.pageY - Gi) > 30) return; let l = document.activeElement; if (ki() && l && n.contains(l)) return; if (i && ((e = this.getSlide()) === null || e === void 0 ? void 0 : e.type) === "image") return void (this.clickTimer ? (clearTimeout(this.clickTimer), this.clickTimer = null) : this.clickTimer = setTimeout(() => { this.toggleIdle(), this.clickTimer = null }, 350)); if (this.emit("click", t), t.defaultPrevented) return; let c = !1; if (s.closest(".fancybox__content")) {
+                = this; if (!n || this.isClosing()) return; !i && this.option("idle") && this.resetIdle(); let s = t.composedPath()[0]; if (s.closest(".fancybox-spinner") || s.closest("[data-fancybox-close]")) return t.preventDefault(), void this.close(t); if (s.closest("[data-fancybox-prev]")) return t.preventDefault(), void this.prev(); if (s.closest("[data-fancybox-next]")) return t.preventDefault(), void this.next(); if (t.type === "click" && t.detail === 0 || Math.abs(t.pageX - Di) > 30 || Math.abs(t.pageY - Gi) > 30) return; let l = document.activeElement; if (ki() && l && n.contains(l)) return; if (i && ((e = this.getSlide()) === null || e === void 0 ? void 0 : e.type) === "image") return void (this.clickTimer ? (clearTimeout(this.clickTimer), this.clickTimer = null) : this.clickTimer = setTimeout(() => { this.toggleIdle(), this.clickTimer = null }, 350)); if (this.emit("click", t), t.defaultPrevented) return; let c = false; if (s.closest(".fancybox__content")) {
                     if (l) {
                         if (l.closest("[contenteditable]")) return; s.matches(pn) || l.blur()
                     }
@@ -3799,7 +3798,7 @@
             document.visibilityState === "visible" ? this.checkFocus() : this.endIdle()
         }
         manageCloseBtn(t) {
-            let e = this.optionFor(t, "closeButton") || !1; if (e === "auto") {
+            let e = this.optionFor(t, "closeButton") || false; if (e === "auto") {
                 let i = this.plugins.Toolbar; if (i && i.state === ft.Ready) return
             }
             if (!e || !t.contentEl || t.closeBtnEl) return; let n = this.option("tpl.closeButton"); if (n) {
@@ -3816,14 +3815,14 @@
             this.focus(t)
         }
         focus(t) {
-            var e; if (this.ignoreFocusChange) return; let n = document.activeElement || null, i = t?.target || null, s = this.container, l = (e = this.carousel) === null || e === void 0 ? void 0 : e.viewport; if (!s || !l || !t && n && s.contains(n)) return; let c = this.getSlide(), h = c && c.state === _.Ready ? c.el : null; if (!h || h.contains(n) || s === n) return; t && t.cancelable && t.preventDefault(), this.ignoreFocusChange = !0; let m = Array.from(s.querySelectorAll(pn)), a = [], r = null; for (let u of m) {
+            var e; if (this.ignoreFocusChange) return; let n = document.activeElement || null, i = t?.target || null, s = this.container, l = (e = this.carousel) === null || e === void 0 ? void 0 : e.viewport; if (!s || !l || !t && n && s.contains(n)) return; let c = this.getSlide(), h = c && c.state === _.Ready ? c.el : null; if (!h || h.contains(n) || s === n) return; t && t.cancelable && t.preventDefault(), this.ignoreFocusChange = true; let m = Array.from(s.querySelectorAll(pn)), a = [], r = null; for (let u of m) {
                 let p = !u.offsetParent || !!u.closest('[aria-hidden="true"]'), f = h && h.contains(u), Q = !l.contains(u); if (u === s || (f || Q) && !p) {
                     a.push(u); let b = u.dataset.origTabindex; b !== void 0 && b && (u.tabIndex = parseFloat(b)), u.removeAttribute("data-orig-tabindex"), !u.hasAttribute("autoFocus") && r || (r = u)
                 }
                 else {
                     let b = u.dataset.origTabindex === void 0 ? u.getAttribute("tabindex") || "" : u.dataset.origTabindex; b && (u.dataset.origTabindex = b), u.tabIndex = -1
                 }
-            } let d = null; t ? (!i || a.indexOf(i) < 0) && (d = r || s, a.length && (n === mt ? d = a[0] : this.lastFocus !== s && n !== P || (d = a[a.length - 1]))) : d = c && c.type === "image" ? s : r || s, d && vi(d), this.lastFocus = document.activeElement, this.ignoreFocusChange = !1
+            } let d = null; t ? (!i || a.indexOf(i) < 0) && (d = r || s, a.length && (n === mt ? d = a[0] : this.lastFocus !== s && n !== P || (d = a[a.length - 1]))) : d = c && c.type === "image" ? s : r || s, d && vi(d), this.lastFocus = document.activeElement, this.ignoreFocusChange = false
         }
         next() {
             let t = this.carousel; t && t.pages.length > 1 && t.slideNext()
@@ -3841,9 +3840,9 @@
             if (!t || !e) return void (n && n()); this.stop(t); let i = s => { s.target === t && t.dataset.animationName && (t.removeEventListener("animationend", i), delete t.dataset.animationName, n && n(), Z(t, e)) }; t.dataset.animationName = e, t.addEventListener("animationend", i), v(t, e)
         }
         stop(t) {
-            t && t.dispatchEvent(new CustomEvent("animationend", { bubbles: !1, cancelable: !0, currentTarget: t }))
+            t && t.dispatchEvent(new CustomEvent("animationend", { bubbles: false, cancelable: true, currentTarget: t }))
         }
-        setContent(t, e = "", n = !0) {
+        setContent(t, e = "", n = true) {
             if (this.isClosing()) return; let i = t.el; if (!i) return; let s = null; if (N(e) ? s = e : (s = tt(e + ""), N(s) || (s = document.createElement("div"), s.innerHTML = e + "")), ["img", "picture", "iframe", "video", "audio"].includes(s.nodeName.toLowerCase())) {
                 let l = document.createElement("div"); l.appendChild(s), s = l
             }
@@ -3872,7 +3871,7 @@
             let e = t.el; if (!e) return; let n = t.spinnerEl; this.isClosing() ? n?.remove() : (Z(e, Mi), n && this.animate(n, "f-fadeOut", () => { n.remove() }), t.state === _.Loading && (this.emit("loaded", t), t.state = _.Ready))
         }
         setError(t, e) {
-            if (this.isClosing()) return; let n = new Event("error", { bubbles: !0, cancelable: !0 }); if (this.emit("error", n, t), n.defaultPrevented) return; t.error = e, this.hideLoading(t), this.clearContent(t); let i = document.createElement("div"); i.classList.add("fancybox-error"), i.innerHTML = this.localize(e || "<p>{{ERROR}}</p>"), this.setContent(t, i)
+            if (this.isClosing()) return; let n = new Event("error", { bubbles: true, cancelable: true }); if (this.emit("error", n, t), n.defaultPrevented) return; t.error = e, this.hideLoading(t), this.clearContent(t); let i = document.createElement("div"); i.classList.add("fancybox-error"), i.innerHTML = this.localize(e || "<p>{{ERROR}}</p>"), this.setContent(t, i)
         }
         clearContent(t) {
             if (t.state === void 0) return; this.emit("clearContent", t), t.contentEl && (t.contentEl.remove(), t.contentEl = void 0); let e = t.el; e && (Z(e, "has-error"), Z(e, "has-unknown"), Z(e, `has-${t.type || "unknown"}`)), t.closeBtnEl && t.closeBtnEl.remove(), t.closeBtnEl = void 0, t.captionEl && t.captionEl.remove(), t.captionEl = void 0, t.spinnerEl && t.spinnerEl.remove(), t.spinnerEl = void 0
@@ -3881,17 +3880,17 @@
             var t; let e = this.carousel; return ((t = e?.pages[e?.page]) === null || t === void 0 ? void 0 : t.slides[0]) || void 0
         }
         close(t, e) {
-            if (this.isClosing()) return; let n = new Event("shouldClose", { bubbles: !0, cancelable: !0 }); if (this.emit("shouldClose", n, t), n.defaultPrevented) return; t && t.cancelable && (t.preventDefault(), t.stopPropagation()); let i = () => { this.proceedClose(t, e) }; this.startedFs && j && j.isFullscreen() ? Promise.resolve(j.exit()).then(() => i()) : i()
+            if (this.isClosing()) return; let n = new Event("shouldClose", { bubbles: true, cancelable: true }); if (this.emit("shouldClose", n, t), n.defaultPrevented) return; t && t.cancelable && (t.preventDefault(), t.stopPropagation()); let i = () => { this.proceedClose(t, e) }; this.startedFs && j && j.isFullscreen() ? Promise.resolve(j.exit()).then(() => i()) : i()
         }
         clearIdle() {
             this.idleTimer && clearTimeout(this.idleTimer), this.idleTimer = null
         }
-        setIdle(t = !1) {
-            let e = () => { this.clearIdle(), this.idle = !0, v(this.container, "is-idle"), this.emit("setIdle") }; if (this.clearIdle(), !this.isClosing()) if (t) e(); else {
+        setIdle(t = false) {
+            let e = () => { this.clearIdle(), this.idle = true, v(this.container, "is-idle"), this.emit("setIdle") }; if (this.clearIdle(), !this.isClosing()) if (t) e(); else {
                 let n = this.option("idle"); n && (this.idleTimer = setTimeout(e, n))
             }
         } endIdle() {
-            this.clearIdle(), this.idle && !this.isClosing() && (this.idle = !1, Z(this.container, "is-idle"), this.emit("endIdle"))
+            this.clearIdle(), this.idle && !this.isClosing() && (this.idle = false, Z(this.container, "is-idle"), this.emit("endIdle"))
         }
         resetIdle() {
             this.endIdle(), this.setIdle()
@@ -3900,7 +3899,7 @@
             this.idle ? this.endIdle() : this.setIdle(!0)
         }
         toggleFullscreen() {
-            j && (j.isFullscreen() ? j.exit() : j.request().then(() => { this.startedFs = !0 }))
+            j && (j.isFullscreen() ? j.exit() : j.request().then(() => { this.startedFs = true }))
         }
         isClosing() {
             return [G.Closing, G.CustomClosing, G.Destroy].includes(this.state)
@@ -3928,10 +3927,10 @@
             if (t.defaultPrevented || t.button && t.button !== 0 || t.ctrlKey || t.metaKey || t.shiftKey) return; let e = t.composedPath()[0], n = e.closest("[data-fancybox-trigger]"); if (n) {
                 let p = n.dataset.fancyboxTrigger || "", f = document.querySelectorAll(`[data-fancybox="${p}"]`), Q = parseInt(n.dataset.fancyboxIndex || "", 10) || 0; e = f[Q] || e
             }
-            if (!(e && e instanceof Element)) return; let i, s, l, c; if ([...o.openers].reverse().find(([p, f]) => !(!p.contains(e) || ![...f].reverse().find(([Q, b]) => { let g = e.closest(Q); return !!g && (i = p, s = Q, l = g, c = b, !0) }))), !i || !s || !l) return; c = c || {}, t.preventDefault(), e = l; let h = [], m = X({}, Ln, c); m.event = t, m.triggerEl = e, m.delegate = n; let a = m.groupAll, r = m.groupAttr, d = r && e ? e.getAttribute(`${r}`) : ""; if ((!e || d || a) && (h = [].slice.call(i.querySelectorAll(s))), e && !a && (h = d ? h.filter(p => p.getAttribute(`${r}`) === d) : [e]), !h.length) return; let u = o.getInstance(); return u && u.options.triggerEl && h.indexOf(u.options.triggerEl) > -1 ? void 0 : (e && (m.startIndex = h.indexOf(e)), o.fromNodes(h, m))
+            if (!(e && e instanceof Element)) return; let i, s, l, c; if ([...o.openers].reverse().find(([p, f]) => !(!p.contains(e) || ![...f].reverse().find(([Q, b]) => { let g = e.closest(Q); return !!g && (i = p, s = Q, l = g, c = b, true) }))), !i || !s || !l) return; c = c || {}, t.preventDefault(), e = l; let h = [], m = X({}, Ln, c); m.event = t, m.triggerEl = e, m.delegate = n; let a = m.groupAll, r = m.groupAttr, d = r && e ? e.getAttribute(`${r}`) : ""; if ((!e || d || a) && (h = [].slice.call(i.querySelectorAll(s))), e && !a && (h = d ? h.filter(p => p.getAttribute(`${r}`) === d) : [e]), !h.length) return; let u = o.getInstance(); return u && u.options.triggerEl && h.indexOf(u.options.triggerEl) > -1 ? void 0 : (e && (m.startIndex = h.indexOf(e)), o.fromNodes(h, m))
         }
         static fromSelector(t, e, n) {
-            let i = null, s = "", l = {}; if (ct(t) ? (i = document.body, s = t, typeof e == "object" && (l = e || {})) : t instanceof HTMLElement && ct(e) && (i = t, s = e, typeof n == "object" && (l = n || {})), !i || !s) return !1; let c = o.openers.get(i); return !!c && (l = X({}, c.get(s) || {}, l), !!l && o.fromNodes(Array.from(i.querySelectorAll(s)), l))
+            let i = null, s = "", l = {}; if (ct(t) ? (i = document.body, s = t, typeof e == "object" && (l = e || {})) : t instanceof HTMLElement && ct(e) && (i = t, s = e, typeof n == "object" && (l = n || {})), !i || !s) return false; let c = o.openers.get(i); return !!c && (l = X({}, c.get(s) || {}, l), !!l && o.fromNodes(Array.from(i.querySelectorAll(s)), l))
         }
         static fromNodes(t, e) {
             e = X({}, Ln, e || {}); let n = []; for (let i of t) {
@@ -3957,12 +3956,12 @@
         static prev() {
             let t = o.getInstance(); t && t.prev()
         }
-        static close(t = !0, ...e) {
+        static close(t = true, ...e) {
             if (t) for (let n of Ut.values()) n.close(...e); else {
                 let n = o.getInstance(); n && n.close(...e)
             }
         }
-    }; Object.defineProperty(K, "version", { enumerable: !0, configurable: !0, writable: !0, value: "5.0.36" }), Object.defineProperty(K, "defaults", { enumerable: !0, configurable: !0, writable: !0, value: Ln }), Object.defineProperty(K, "Plugins", { enumerable: !0, configurable: !0, writable: !0, value: va }), Object.defineProperty(K, "openers", { enumerable: !0, configurable: !0, writable: !0, value: new Map });
+    }; Object.defineProperty(K, "version", { enumerable: true, configurable: true, writable: true, value: "5.0.36" }), Object.defineProperty(K, "defaults", { enumerable: true, configurable: true, writable: true, value: Ln }), Object.defineProperty(K, "Plugins", { enumerable: true, configurable: true, writable: true, value: va }), Object.defineProperty(K, "openers", { enumerable: true, configurable: true, writable: true, value: new Map });
     var Zn = class extends V {
         initialize() {
             this.forceClose = this.forceClose.bind(this)
@@ -3987,14 +3986,14 @@
         }
     }; Zn.targets = ["dialog"], Zn.values = {
         open: {
-            type: Boolean, default: !1
+            type: Boolean, default: false
         }
     };
     var Ki = Zn;
     var On = {}; J(On, { default: () => Tt });
     var Tt = class extends V {
         connect() {
-            this.nextNote = !1
+            this.nextNote = false
         }
         audioPlayerTargetConnected(o) {
             let t = o.querySelector("audio"); t.volume = this.volumeValue
@@ -4020,22 +4019,22 @@
                 }
             }
         } updateVolume(o) {
-            o.target.muted ? (this.mutedValue = !0, this.volumeValue = 0) : (this.mutedValue = !1, this.volumeValue = o.target.volume); for (let t of this.audioPlayerTargets) {
+            o.target.muted ? (this.mutedValue = true, this.volumeValue = 0) : (this.mutedValue = false, this.volumeValue = o.target.volume); for (let t of this.audioPlayerTargets) {
                 let e = t.querySelector("audio"); e.volume = this.volumeValue
             }
         } stopNotes() {
-            this.nextNote && (clearTimeout(this.nextNote), this.nextNote = !1)
+            this.nextNote && (clearTimeout(this.nextNote), this.nextNote = false)
         }
         syncNotes() {
             this.stopNotes(), this.spawnNote()
         }
     }; R(Tt, "targets", ["audioPlayer"]), R(Tt, "values", {
         playing: { type: String }, bpm: { type: Number, default: 90 }, volume: { type: Number, default: .5 }, muted: {
-            type: Boolean, default: !1
+            type: Boolean, default: false
         }
     });
     var In = {}; J(In, { default: () => Gt });
-    var Tn = typeof navigator < "u" ? navigator.userAgent.toLowerCase().indexOf("firefox") > 0 : !1; function Cn(o, t, e, n) {
+    var Tn = typeof navigator < "u" ? navigator.userAgent.toLowerCase().indexOf("firefox") > 0 : false; function Cn(o, t, e, n) {
         o.addEventListener ? o.addEventListener(t, e, n) : o.attachEvent && o.attachEvent("on".concat(t), e)
     }
     function Ct(o, t, e, n) {
@@ -4048,9 +4047,9 @@
         typeof o != "string" && (o = ""), o = o.replace(/\s/g, ""); let t = o.split(","), e = t.lastIndexOf(""); for (; e >= 0;)t[e - 1] += ",", t.splice(e, 1), e = t.lastIndexOf(""); return t
     }
     function Ea(o, t) {
-        let e = o.length >= t.length ? o : t, n = o.length >= t.length ? t : o, i = !0; for (let s = 0; s < e.length; s++)n.indexOf(e[s]) === -1 && (i = !1); return i
+        let e = o.length >= t.length ? o : t, n = o.length >= t.length ? t : o, i = true; for (let s = 0; s < e.length; s++)n.indexOf(e[s]) === -1 && (i = false); return i
     }
-    var St = { backspace: 8, "\u232B": 8, tab: 9, clear: 12, enter: 13, "\u21A9": 13, return: 13, esc: 27, escape: 27, space: 32, left: 37, up: 38, right: 39, down: 40, del: 46, delete: 46, ins: 45, insert: 45, home: 36, end: 35, pageup: 33, pagedown: 34, capslock: 20, num_0: 96, num_1: 97, num_2: 98, num_3: 99, num_4: 100, num_5: 101, num_6: 102, num_7: 103, num_8: 104, num_9: 105, num_multiply: 106, num_add: 107, num_enter: 108, num_subtract: 109, num_decimal: 110, num_divide: 111, "\u21EA": 20, ",": 188, ".": 190, "/": 191, "`": 192, "-": Tn ? 173 : 189, "=": Tn ? 61 : 187, ";": Tn ? 59 : 186, "'": 222, "[": 219, "]": 221, "\\": 220 }, nt = { "\u21E7": 16, shift: 16, "\u2325": 18, alt: 18, option: 18, "\u2303": 17, ctrl: 17, control: 17, "\u2318": 91, cmd: 91, command: 91 }, Le = { 16: "shiftKey", 18: "altKey", 17: "ctrlKey", 91: "metaKey", shiftKey: 16, ctrlKey: 17, altKey: 18, metaKey: 91 }, I = { 16: !1, 18: !1, 17: !1, 91: !1 }, M = {}; for (let o = 1; o < 20; o++)St["f".concat(o)] = 111 + o;
+    var St = { backspace: 8, "\u232B": 8, tab: 9, clear: 12, enter: 13, "\u21A9": 13, return: 13, esc: 27, escape: 27, space: 32, left: 37, up: 38, right: 39, down: 40, del: 46, delete: 46, ins: 45, insert: 45, home: 36, end: 35, pageup: 33, pagedown: 34, capslock: 20, num_0: 96, num_1: 97, num_2: 98, num_3: 99, num_4: 100, num_5: 101, num_6: 102, num_7: 103, num_8: 104, num_9: 105, num_multiply: 106, num_add: 107, num_enter: 108, num_subtract: 109, num_decimal: 110, num_divide: 111, "\u21EA": 20, ",": 188, ".": 190, "/": 191, "`": 192, "-": Tn ? 173 : 189, "=": Tn ? 61 : 187, ";": Tn ? 59 : 186, "'": 222, "[": 219, "]": 221, "\\": 220 }, nt = { "\u21E7": 16, shift: 16, "\u2325": 18, alt: 18, option: 18, "\u2303": 17, ctrl: 17, control: 17, "\u2318": 91, cmd: 91, command: 91 }, Le = { 16: "shiftKey", 18: "altKey", 17: "ctrlKey", 91: "metaKey", shiftKey: 16, ctrlKey: 17, altKey: 18, metaKey: 91 }, I = { 16: false, 18: false, 17: false, 91: false }, M = {}; for (let o = 1; o < 20; o++)St["f".concat(o)] = 111 + o;
     var C = [], Mt = null, no = "all", rt = new Map, Dt = o => St[o.toLowerCase()] || nt[o.toLowerCase()] || o.toUpperCase().charCodeAt(0), xa = o => Object.keys(St).find(t => St[t] === o), wa = o => Object.keys(nt).find(t => nt[t] === o); function io(o) {
         no = o || "all"
     }
@@ -4075,7 +4074,7 @@
     function Ra(o) {
         let t = o.target || o.srcElement, { tagName: e
         }
-            = t, n = !0, i = e === "INPUT" && !["checkbox", "radio", "range", "button", "file", "reset", "submit", "color"].includes(t.type); return (t.isContentEditable || (i || e === "TEXTAREA" || e === "SELECT") && !t.readOnly) && (n = !1), n
+            = t, n = true, i = e === "INPUT" && !["checkbox", "radio", "range", "button", "file", "reset", "submit", "color"].includes(t.type); return (t.isContentEditable || (i || e === "TEXTAREA" || e === "SELECT") && !t.readOnly) && (n = false), n
     }
     function Za(o) {
         return typeof o == "string" && (o = Dt(o)), C.indexOf(o) !== -1
@@ -4089,7 +4088,7 @@
     }
     function Ta(o) {
         let t = o.keyCode || o.which || o.charCode, e = C.indexOf(t); if (e >= 0 && C.splice(e, 1), o.key && o.key.toLowerCase() === "meta" && C.splice(0, C.length), (t === 93 || t === 224) && (t = 91), t in I) {
-            I[t] = !1; for (let n in nt) nt[n] === t && ($[n] = !1)
+            I[t] = false; for (let n in nt) nt[n] === t && ($[n] = false)
         }
     } function oo(o) {
         if (typeof o > "u") Object.keys(M).forEach(i => { Array.isArray(M[i]) && M[i].forEach(s => We(s)), delete M[i] }), Sn(null); else if (Array.isArray(o)) o.forEach(i => { i.key && We(i) }); else if (typeof o == "object") o.key && We(o); else if (typeof o == "string") {
@@ -4098,22 +4097,22 @@
     } var We = o => {
         let { key: t, scope: e, method: n, splitKey: i = "+"
         }
-            = o; eo(t).forEach(l => { let c = l.split(i), h = c.length, m = c[h - 1], a = m === "*" ? "*" : Dt(m); if (!M[a]) return; e || (e = kt()); let r = h > 1 ? to(nt, c) : [], d = []; M[a] = M[a].filter(u => { let f = (n ? u.method === n : !0) && u.scope === e && Ea(u.mods, r); return f && d.push(u.element), !f }), d.forEach(u => Sn(u)) })
+            = o; eo(t).forEach(l => { let c = l.split(i), h = c.length, m = c[h - 1], a = m === "*" ? "*" : Dt(m); if (!M[a]) return; e || (e = kt()); let r = h > 1 ? to(nt, c) : [], d = []; M[a] = M[a].filter(u => { let f = (n ? u.method === n : true) && u.scope === e && Ea(u.mods, r); return f && d.push(u.element), !f }), d.forEach(u => Sn(u)) })
     }; function $i(o, t, e, n) {
         if (t.element !== n) return; let i; if (t.scope === e || t.scope === "all") {
-            i = t.mods.length > 0; for (let s in I) Object.prototype.hasOwnProperty.call(I, s) && (!I[s] && t.mods.indexOf(+s) > -1 || I[s] && t.mods.indexOf(+s) === -1) && (i = !1); (t.mods.length === 0 && !I[16] && !I[18] && !I[17] && !I[91] || i || t.shortcut === "*") && (t.keys = [], t.keys = t.keys.concat(C), t.method(o, t) === !1 && (o.preventDefault ? o.preventDefault() : o.returnValue = !1, o.stopPropagation && o.stopPropagation(), o.cancelBubble && (o.cancelBubble = !0)))
+            i = t.mods.length > 0; for (let s in I) Object.prototype.hasOwnProperty.call(I, s) && (!I[s] && t.mods.indexOf(+s) > -1 || I[s] && t.mods.indexOf(+s) === -1) && (i = false); (t.mods.length === 0 && !I[16] && !I[18] && !I[17] && !I[91] || i || t.shortcut === "*") && (t.keys = [], t.keys = t.keys.concat(C), t.method(o, t) === false && (o.preventDefault ? o.preventDefault() : o.returnValue = false, o.stopPropagation && o.stopPropagation(), o.cancelBubble && (o.cancelBubble = true)))
         }
     } function qi(o, t) {
         let e = M["*"], n = o.keyCode || o.which || o.charCode; if (!$.filter.call(this, o)) return; if ((n === 93 || n === 224) && (n = 91), C.indexOf(n) === -1 && n !== 229 && C.push(n), ["metaKey", "ctrlKey", "altKey", "shiftKey"].forEach(c => { let h = Le[c]; o[c] && C.indexOf(h) === -1 ? C.push(h) : !o[c] && C.indexOf(h) > -1 ? C.splice(C.indexOf(h), 1) : c === "metaKey" && o[c] && (C = C.filter(m => m in Le || m === n)) }), n in I) {
-            I[n] = !0; for (let c in nt) nt[c] === n && ($[c] = !0); if (!e) return
+            I[n] = true; for (let c in nt) nt[c] === n && ($[c] = true); if (!e) return
         }
-        for (let c in I) Object.prototype.hasOwnProperty.call(I, c) && (I[c] = o[Le[c]]); o.getModifierState && !(o.altKey && !o.ctrlKey) && o.getModifierState("AltGraph") && (C.indexOf(17) === -1 && C.push(17), C.indexOf(18) === -1 && C.push(18), I[17] = !0, I[18] = !0); let i = kt(); if (e) for (let c = 0; c < e.length; c++)e[c].scope === i && (o.type === "keydown" && e[c].keydown || o.type === "keyup" && e[c].keyup) && $i(o, e[c], i, t); if (!(n in M)) return; let s = M[n], l = s.length; for (let c = 0; c < l; c++)if ((o.type === "keydown" && s[c].keydown || o.type === "keyup" && s[c].keyup) && s[c].key) {
+        for (let c in I) Object.prototype.hasOwnProperty.call(I, c) && (I[c] = o[Le[c]]); o.getModifierState && !(o.altKey && !o.ctrlKey) && o.getModifierState("AltGraph") && (C.indexOf(17) === -1 && C.push(17), C.indexOf(18) === -1 && C.push(18), I[17] = true, I[18] = true); let i = kt(); if (e) for (let c = 0; c < e.length; c++)e[c].scope === i && (o.type === "keydown" && e[c].keydown || o.type === "keyup" && e[c].keyup) && $i(o, e[c], i, t); if (!(n in M)) return; let s = M[n], l = s.length; for (let c = 0; c < l; c++)if ((o.type === "keydown" && s[c].keydown || o.type === "keyup" && s[c].keyup) && s[c].key) {
             let h = s[c], { splitKey: m
             }
                 = h, a = h.key.split(m), r = []; for (let d = 0; d < a.length; d++)r.push(Dt(a[d])); r.sort().join("") === C.sort().join("") && $i(o, h, i, t)
         }
     } function $(o, t, e) {
-        C = []; let n = eo(o), i = [], s = "all", l = document, c = 0, h = !1, m = !0, a = "+", r = !1, d = !1; for (e === void 0 && typeof t == "function" && (e = t), Object.prototype.toString.call(t) === "[object Object]" && (t.scope && (s = t.scope), t.element && (l = t.element), t.keyup && (h = t.keyup), t.keydown !== void 0 && (m = t.keydown), t.capture !== void 0 && (r = t.capture), typeof t.splitKey == "string" && (a = t.splitKey), t.single === !0 && (d = !0)), typeof t == "string" && (s = t), d && oo(o, s); c < n.length; c++)o = n[c].split(a), i = [], o.length > 1 && (i = to(nt, o)), o = o[o.length - 1], o = o === "*" ? "*" : Dt(o), o in M || (M[o] = []), M[o].push({ keyup: h, keydown: m, scope: s, mods: i, shortcut: n[c], method: e, key: n[c], splitKey: a, element: l }); if (typeof l < "u" && window) {
+        C = []; let n = eo(o), i = [], s = "all", l = document, c = 0, h = false, m = true, a = "+", r = false, d = false; for (e === void 0 && typeof t == "function" && (e = t), Object.prototype.toString.call(t) === "[object Object]" && (t.scope && (s = t.scope), t.element && (l = t.element), t.keyup && (h = t.keyup), t.keydown !== void 0 && (m = t.keydown), t.capture !== void 0 && (r = t.capture), typeof t.splitKey == "string" && (a = t.splitKey), t.single === true && (d = true)), typeof t == "string" && (s = t), d && oo(o, s); c < n.length; c++)o = n[c].split(a), i = [], o.length > 1 && (i = to(nt, o)), o = o[o.length - 1], o = o === "*" ? "*" : Dt(o), o in M || (M[o] = []), M[o].push({ keyup: h, keydown: m, scope: s, mods: i, shortcut: n[c], method: e, key: n[c], splitKey: a, element: l }); if (typeof l < "u" && window) {
             if (!rt.has(l)) {
                 let u = function () { let f = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : window.event; return qi(f, l) }, p = function () { let f = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : window.event; qi(f, l), Ta(f) }; rt.set(l, { keydownListener: u, keyupListenr: p, capture: r }), Cn(l, "keydown", u, r), Cn(l, "keyup", p, r)
             }
@@ -4150,7 +4149,7 @@
     function Ma(o, t) {
         var e = {}; for (var n in o) Object.prototype.hasOwnProperty.call(o, n) && t.indexOf(n) < 0 && (e[n] = o[n]); if (o != null && typeof Object.getOwnPropertySymbols == "function") for (var i = 0, n = Object.getOwnPropertySymbols(o); i < n.length; i++)t.indexOf(n[i]) < 0 && Object.prototype.propertyIsEnumerable.call(o, n[i]) && (e[n[i]] = o[n[i]]); return e
     }
-    var kn = { debug: !1, logger: console, dispatchEvent: !0, eventPrefix: !0 }, Dn = class {
+    var kn = { debug: false, logger: console, dispatchEvent: true, eventPrefix: true }, Dn = class {
         constructor(t, e = {}) {
             var n, i, s; this.log = (h, m) => { this.debug && (this.logger.groupCollapsed(`%c${this.controller.identifier} %c#${h}`, "color: #3B82F6", "color: unset"), this.logger.log(Object.assign({ controllerId: this.controllerId }, m)), this.logger.groupEnd()) }, this.warn = h => { this.logger.warn(`%c${this.controller.identifier} %c${h}`, "color: #3B82F6; font-weight: bold", "color: unset") }, this.dispatch = (h, m = {}) => {
                 if (this.dispatchEvent) {
@@ -4161,8 +4160,8 @@
             }, this.call = (h, m = {}) => { let a = this.controller[h]; if (typeof a == "function") return a.call(this.controller, m) }, this.extendedEvent = (h, m, a) => {
                 let { bubbles: r, cancelable: d, composed: u
                 }
-                    = m || { bubbles: !0, cancelable: !0, composed: !0 }; return m && Object.assign(a, { originalEvent: m }), new CustomEvent(this.composeEventName(h), { bubbles: r, cancelable: d, composed: u, detail: a })
-            }, this.composeEventName = h => { let m = h; return this.eventPrefix === !0 ? m = `${this.controller.identifier}:${h}` : typeof this.eventPrefix == "string" && (m = `${this.eventPrefix}:${h}`), m }, this.debug = (i = (n = e?.debug) !== null && n !== void 0 ? n : t.application.stimulusUseDebug) !== null && i !== void 0 ? i : kn.debug, this.logger = (s = e?.logger) !== null && s !== void 0 ? s : kn.logger, this.controller = t, this.controllerId = t.element.id || t.element.dataset.id, this.targetElement = e?.element || t.element; let { dispatchEvent: l, eventPrefix: c
+                    = m || { bubbles: true, cancelable: true, composed: true }; return m && Object.assign(a, { originalEvent: m }), new CustomEvent(this.composeEventName(h), { bubbles: r, cancelable: d, composed: u, detail: a })
+            }, this.composeEventName = h => { let m = h; return this.eventPrefix === true ? m = `${this.controller.identifier}:${h}` : typeof this.eventPrefix == "string" && (m = `${this.eventPrefix}:${h}`), m }, this.debug = (i = (n = e?.debug) !== null && n !== void 0 ? n : t.application.stimulusUseDebug) !== null && i !== void 0 ? i : kn.debug, this.logger = (s = e?.logger) !== null && s !== void 0 ? s : kn.logger, this.controller = t, this.controllerId = t.element.id || t.element.dataset.id, this.targetElement = e?.element || t.element; let { dispatchEvent: l, eventPrefix: c
             }
                 = Object.assign({}, kn, e); Object.assign(this, { dispatchEvent: l, eventPrefix: c }), this.controllerInitialize = t.initialize.bind(t), this.controllerConnect = t.connect.bind(t), this.controllerDisconnect = t.disconnect.bind(t)
         }
@@ -4183,7 +4182,7 @@
         }
     }), ka = o => {
         if (!o.hotkeys) {
-            let t = {}; Object.entries(o).forEach(([e, n]) => { Object.defineProperty(t, e, { value: Sa(n), writable: !1, enumerable: !0 }) }), o = {
+            let t = {}; Object.entries(o).forEach(([e, n]) => { Object.defineProperty(t, e, { value: Sa(n), writable: false, enumerable: true }) }), o = {
                 hotkeys: t
             }
         } return o
@@ -4194,14 +4193,14 @@
                 hotkeys: {
                     left: {
                         handler: this.startMove, options: {
-                            keydown: !0, keyup: !0
+                            keydown: true, keyup: true
                         }
                     }
                 }
             }), window.requestAnimationFrame(this.moveLeft.bind(this))
         }
         startMove(o) {
-            o.type == "keydown" ? this.movingValue = !0 : this.movingValue = !1
+            o.type == "keydown" ? this.movingValue = true : this.movingValue = false
         }
         moveLeft() {
             if (this.movingValue) {
@@ -4211,7 +4210,7 @@
         }
     }; R(Gt, "targets", ["but"]), R(Gt, "values", {
         moving: {
-            type: Boolean, default: !1
+            type: Boolean, default: false
         }
     });
     var _n = {}; J(_n, { default: () => It });
@@ -4245,11 +4244,11 @@
                 .catch(o => { this.timeValue = "2025-06-05T00:00:00+09:00", this.startCountdown() })
         }
         startCountdown() {
-            this.updateCountdown(), this.startedValue || (setInterval(this.updateCountdown.bind(this), 1e3), this.startedValue = !0)
+            this.updateCountdown(), this.startedValue || (setInterval(this.updateCountdown.bind(this), 1e3), this.startedValue = true)
         }
     };
     R(It, "targets", ["date", "countdown", "info"]), R(It, "values", {
-        time: { type: String, default: "" }, cooldown: { type: Number, default: 0 }, started: { type: Boolean, default: !1 }, locale: { type: String, default: "en_US" }, source: { type: String, default: "/is-it-ready-yet.txt" }, timeSinceRefresh: {
+        time: { type: String, default: "" }, cooldown: { type: Number, default: 0 }, started: { type: Boolean, default: false }, locale: { type: String, default: "en_US" }, source: { type: String, default: "/is-it-ready-yet.txt" }, timeSinceRefresh: {
             type: Number, default: 0
         }
     });
@@ -4263,7 +4262,7 @@
                 for (var i = Math.floor(Math.random() * 4) + 8, t = 0; t < i; t++) {
                     var e = Math.floor(Math.random() * 600) + 800 + t * 10, n = Math.floor(Math.random() * 450) + 20 + t * 10; t % 2 == 0 && (e = 0 - e - 20), this.appendPixel(e, n, this.containerTarget)
                 }
-            } if (this.hasMobileTarget && !1) {
+            } if (this.hasMobileTarget && false) {
                 var o; for (var t; t < o; t++)var e, n;
                 var i; for (var t; t < i; t++)var e, n
             }
@@ -4284,16 +4283,16 @@
     var _t = Pt(Ze(), 1);
     var Nt = class extends V {
         connect() {
-            let o = new _t.Howl({ src: ["/assets/audio/sprinkle.ogg", "/assets/audio/sprinkle.mp3"], volume: .5 }); this.sprinkle = o; let t = new _t.Howl({ src: ["/assets/audio/bagel_ralsei.ogg", "/assets/audio/bagel_ralsei.mp3"], volume: .5 }); this.ralsei = t; let e = new _t.Howl({ src: ["/assets/audio/bagel_susie.ogg", "/assets/audio/bagel_susie.mp3"], volume: .5 }); this.susie = e; let n = new _t.Howl({ src: ["/assets/audio/face.ogg", "/assets/audio/face.mp3"], volume: .5 }); this.face = n, localStorage.getItem("rarecats-points") !== null && (this.pointsValue = localStorage.getItem("rarecats-points")), this.summonCat(), setTimeout(() => { this.catTarget.classList.remove("hidden"), this.initializedValue = !0, window.requestAnimationFrame(this.catTick.bind(this)) }, 100)
+            let o = new _t.Howl({ src: ["/assets/audio/sprinkle.ogg", "/assets/audio/sprinkle.mp3"], volume: .5 }); this.sprinkle = o; let t = new _t.Howl({ src: ["/assets/audio/bagel_ralsei.ogg", "/assets/audio/bagel_ralsei.mp3"], volume: .5 }); this.ralsei = t; let e = new _t.Howl({ src: ["/assets/audio/bagel_susie.ogg", "/assets/audio/bagel_susie.mp3"], volume: .5 }); this.susie = e; let n = new _t.Howl({ src: ["/assets/audio/face.ogg", "/assets/audio/face.mp3"], volume: .5 }); this.face = n, localStorage.getItem("rarecats-points") !== null && (this.pointsValue = localStorage.getItem("rarecats-points")), this.summonCat(), setTimeout(() => { this.catTarget.classList.remove("hidden"), this.initializedValue = true, window.requestAnimationFrame(this.catTick.bind(this)) }, 100)
         }
         summonCat() {
-            let o = Math.floor(Math.random() * 1e3) + 1; this.pullsValue >= 100 ? this.hardReset() : o <= 700 ? (this.catTarget.setAttribute("src", "/assets/images/cat-001.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 10)) : o <= 879 ? (this.catTarget.setAttribute("src", "/assets/images/cat-002.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 50)) : o <= 959 ? (this.catTarget.setAttribute("src", "/assets/images/cat-005.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 250)) : o <= 989 ? (this.catTarget.setAttribute("src", "/assets/images/cat-006.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 1e3)) : o <= 999 ? (this.catTarget.setAttribute("src", "/assets/images/cat-007.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 3e3)) : this.initializedValue == !1 ? this.summonCat() : this.hardReset(), this.xValue = Math.floor(Math.random() * (document.body.clientWidth - 200)), this.yValue = Math.floor(Math.random() * (document.body.clientHeight - 200)), this.horizontalValue = Math.round(Math.random()) ? 1 : -1, this.verticalValue = Math.round(Math.random()) ? 1 : -1, this.updateCat()
+            let o = Math.floor(Math.random() * 1e3) + 1; this.pullsValue >= 100 ? this.hardReset() : o <= 700 ? (this.catTarget.setAttribute("src", "/assets/images/cat-001.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 10)) : o <= 879 ? (this.catTarget.setAttribute("src", "/assets/images/cat-002.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 50)) : o <= 959 ? (this.catTarget.setAttribute("src", "/assets/images/cat-005.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 250)) : o <= 989 ? (this.catTarget.setAttribute("src", "/assets/images/cat-006.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 1e3)) : o <= 999 ? (this.catTarget.setAttribute("src", "/assets/images/cat-007.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 3e3)) : this.initializedValue == false ? this.summonCat() : this.hardReset(), this.xValue = Math.floor(Math.random() * (document.body.clientWidth - 200)), this.yValue = Math.floor(Math.random() * (document.body.clientHeight - 200)), this.horizontalValue = Math.round(Math.random()) ? 1 : -1, this.verticalValue = Math.round(Math.random()) ? 1 : -1, this.updateCat()
         }
         clickCat(o) {
-            this.catTarget.classList.contains("animate-caught") == !1 && (this.pullsValue += 1, this.catTarget.classList.add("animate-caught"), this.catTarget.classList.remove("cursor-pointer"), this.caughtValue = !0, "points" in o.params && o.params.points == parseInt(o.params.points) ? this.pointsValue += o.params.points : this.hardReset(), setTimeout(() => { this.catTarget.classList.remove("animate-caught"), this.catTarget.classList.add("cursor-pointer"), this.caughtValue = !1, this.catTarget.removeAttribute("disabled"), this.summonCat() }, 1e3))
+            this.catTarget.classList.contains("animate-caught") == false && (this.pullsValue += 1, this.catTarget.classList.add("animate-caught"), this.catTarget.classList.remove("cursor-pointer"), this.caughtValue = true, "points" in o.params && o.params.points == parseInt(o.params.points) ? this.pointsValue += o.params.points : this.hardReset(), setTimeout(() => { this.catTarget.classList.remove("animate-caught"), this.catTarget.classList.add("cursor-pointer"), this.caughtValue = false, this.catTarget.removeAttribute("disabled"), this.summonCat() }, 1e3))
         }
         pointsValueChanged(o, t) {
-            if (document.title = `${this.pointsValue} points`, this.initializedValue == !0 && (localStorage.setItem("rarecats-points", this.pointsValue), o > t)) {
+            if (document.title = `${this.pointsValue} points`, this.initializedValue == true && (localStorage.setItem("rarecats-points", this.pointsValue), o > t)) {
                 let e = o - t, n = document.createElement("span"); if (n.classList.add("absolute", "w-24", "h-12", "pointer-events-none", "text-2xl", "text-white", "text-center", "font-pixel", "text-center", "z-5"), this.yValue > 80 ? (n.classList.add("animate-toast"), n.setAttribute("style", `left: ${this.xValue + 40}px; top: ${this.yValue + 20}px`)) : (n.classList.add("animate-toast-down"), n.setAttribute("style", `left: ${this.xValue + 40}px; top: ${this.yValue + 160}px`)), n.innerHTML = `+${e}`, this.containerTarget.append(n), setTimeout(() => { n.remove() }, 1e3), e >= 3e3 ? (this.ralsei.rate(.8), this.ralsei.play(), this.ralsei.rate(.81), this.ralsei.play(), this.sprinkle.rate(.25), this.sprinkle.play()) : e >= 1e3 ? (this.ralsei.rate(1), this.ralsei.play(), this.sprinkle.rate(.5), this.sprinkle.play()) : e >= 250 ? (this.susie.rate(1.3), this.susie.play()) : e >= 50 ? (this.sprinkle.rate(.95), this.sprinkle.play()) : e >= 10 && (this.sprinkle.rate(1), this.sprinkle.play()), e > 3e3) this.hardReset(); else if (e >= 1e3) {
                     let i = Math.floor(Math.random() * (document.body.clientWidth - 200)), s = Math.floor(Math.random() * (document.body.clientHeight - 200)); this.windowTarget.setAttribute("style", `left: ${i}px; top: ${s}px`), this.windowTarget.classList.add("animate-fade-in"), this.windowTarget.classList.remove("hidden", "animate-fade-out"), setTimeout(() => { this.windowTarget.classList.remove("animate-fade-in"), this.windowTarget.classList.add("animate-fade-out") }, 3e3), setTimeout(() => { this.windowTarget.classList.add("hidden"), this.windowTarget.classList.remove("animate-fade-out", "animate-fade-in") }, 5e3)
                 }
@@ -4303,7 +4302,7 @@
             let o = Math.max(document.body.clientWidth - 130, 130), t = Math.max(document.body.clientHeight - 150, 150); (this.xValue >= o || this.xValue <= -60) && (this.horizontalValue = -this.horizontalValue), this.xValue >= o && (this.xValue = o), (this.yValue >= t || this.yValue <= -65) && (this.verticalValue = -this.verticalValue), this.yValue >= t && (this.yValue = t), this.xValue += this.horizontalValue, this.yValue += this.verticalValue, this.updateCat(), window.requestAnimationFrame(this.catTick.bind(this))
         }
         updateCat() {
-            this.caughtValue == !1 && this.catTarget.setAttribute("style", `left: ${this.xValue}px; top: ${this.yValue}px`)
+            this.caughtValue == false && this.catTarget.setAttribute("style", `left: ${this.xValue}px; top: ${this.yValue}px`)
         }
         reset() {
             this.pointsValue = 0, this.summonCat()
@@ -4315,8 +4314,8 @@
             this.catTarget.classList.remove("animate-megazoom"), this.summonCat(), window.location.href = "/sweepstakes/"
         }
     }; R(Nt, "targets", ["cat", "container", "window"]), R(Nt, "values", {
-        initialized: { type: Boolean, default: !1 }, points: { type: Number, default: 0 }, pulls: { type: Number, default: 0 }, horizontal: { type: Number, default: 1 }, vertical: { type: Number, default: 1 }, x: { type: Number, default: 0 }, y: { type: Number, default: 0 }, caught: {
-            type: Boolean, default: !1
+        initialized: { type: Boolean, default: false }, points: { type: Number, default: 0 }, pulls: { type: Number, default: 0 }, horizontal: { type: Number, default: 1 }, vertical: { type: Number, default: 1 }, x: { type: Number, default: 0 }, y: { type: Number, default: 0 }, caught: {
+            type: Boolean, default: false
         }
     });
     var Yn = {}; J(Yn, { default: () => Xt });
@@ -4330,20 +4329,20 @@
             }; let o = new An.Howl({ src: ["/assets/audio/slam.ogg", "/assets/audio/slam.mp3"], volume: .5 }); this.slam = o; let t = new An.Howl({ src: ["/assets/audio/ma.ogg", "/assets/audio/ma.mp3"], volume: .5 }); this.ma = t
         }
         start() {
-            this.startedValue == !1 && (this.slam.play(), this.doorTarget.classList.add("hidden"), this.squareTarget.classList.remove("hidden"), window.requestAnimationFrame(this.moveTick.bind(this)), setTimeout(() => { this.clickedValue == !1 && (this.escapedTarget.classList.remove("hidden"), this.escapedValue = !0, this.squareTarget.classList.add("hidden"), window.getSelection().removeAllRanges()) }, 5e3))
+            this.startedValue == false && (this.slam.play(), this.doorTarget.classList.add("hidden"), this.squareTarget.classList.remove("hidden"), window.requestAnimationFrame(this.moveTick.bind(this)), setTimeout(() => { this.clickedValue == false && (this.escapedTarget.classList.remove("hidden"), this.escapedValue = true, this.squareTarget.classList.add("hidden"), window.getSelection().removeAllRanges()) }, 5e3))
         }
         moveTick() {
-            if (this.escapedValue == !1 && this.clickedValue == !1) {
+            if (this.escapedValue == false && this.clickedValue == false) {
                 let o = this.containerTarget.clientWidth / 2, t = this.containerTarget.clientHeight / 2, e = 250, n = e * Math.cos(this.angleValue), i = e * Math.sin(this.angleValue) * Math.cos(this.angleValue); this.angleValue += .02, this.squareTarget.setAttribute("style", `left: ${o + n - this.squareTarget.clientWidth / 2}px; top: ${t + i - this.squareTarget.clientHeight / 2}px`), window.requestAnimationFrame(this.moveTick.bind(this))
             }
         } click() {
-            this.clickedValue == !1 && (this.clickedValue = !0, this.squareTarget.classList.add("animate-fly-off"), this.squareTarget.classList.remove("cursor-pointer"), this.ma.play(), document.title = this.locale[this.localeValue].rumble, setTimeout(() => { window.location.href = "/chapter3" }, 3e3))
+            this.clickedValue == false && (this.clickedValue = true, this.squareTarget.classList.add("animate-fly-off"), this.squareTarget.classList.remove("cursor-pointer"), this.ma.play(), document.title = this.locale[this.localeValue].rumble, setTimeout(() => { window.location.href = "/chapter3" }, 3e3))
         }
         playMa() {
             this.ma.play()
         }
     }; R(Xt, "targets", ["container", "door", "square", "escaped"]), R(Xt, "values", {
-        clicked: { type: Boolean, default: !1 }, escaped: { type: Boolean, default: !1 }, started: { type: Boolean, default: !1 }, angle: { type: Number, default: 0 }, locale: {
+        clicked: { type: Boolean, default: false }, escaped: { type: Boolean, default: false }, started: { type: Boolean, default: false }, angle: { type: Number, default: 0 }, locale: {
             type: String, default: "en"
         }
     });
@@ -4366,7 +4365,7 @@
     var Ce = class extends V {
         parallaxTargetConnected(o) {
             o.classList.add("parallax"); let t = 10; "distance" in o.dataset && (t = o.dataset.distance); let e = window.innerHeight / 200; Te.create({
-                elem: o, from: 0, to: "bottom-top", direct: !0, props: {
+                elem: o, from: 0, to: "bottom-top", direct: true, props: {
                     "--tw-translate-y": {
                         from: 0, to: `-${e * t}px`
                     }
@@ -4375,7 +4374,7 @@
         }
         parafadeTargetConnected(o) {
             o.classList.add("parafade"), Te.create({
-                elem: o, from: "top-bottom", to: "top-middle", direct: !0, props: {
+                elem: o, from: "top-bottom", to: "top-middle", direct: true, props: {
                     opacity: {
                         from: 0, to: 1
                     }
@@ -4384,7 +4383,7 @@
         }
         parashadowTargetConnected(o) {
             o.classList.add("parafade"), Te.create({
-                elem: o, from: "top-bottom", to: "middle-middle", direct: !0, props: {
+                elem: o, from: "top-bottom", to: "middle-middle", direct: true, props: {
                     "--shadow-length": { from: "100px", to: "10px" }, "--shadow-y": { from: "100px", to: "10px" }, "--shadow-z": {
                         from: "-100px", to: "-10px"
                     }
@@ -4398,8 +4397,8 @@
     var jn = {}; J(jn, { default: () => Me });
     var Me = class extends V {
         connect() {
-            this.appendStar(Math.floor(Math.random() * 10) + 450, Math.floor(Math.random() * 10) + 100, !1), this.appendStar(Math.floor(Math.random() * 10) + 320, Math.floor(Math.random() * 5) + 105, !1), this.appendStar(Math.floor(Math.random() * 10) + 480, Math.floor(Math.random() * 10) + 150, !1), this.appendStar(Math.floor(Math.random() * 10) + 500, Math.floor(Math.random() * 10) + 350, !1), this.appendStar(0 - (Math.floor(Math.random() * 10) + 450), Math.floor(Math.random() * 10) + 100, !1), this.appendStar(0 - (Math.floor(Math.random() * 10) + 320), Math.floor(Math.random() * 5) + 105, !1), this.appendStar(0 - (Math.floor(Math.random() * 10) + 480), Math.floor(Math.random() * 10) + 150, !1), this.appendStar(0 - (Math.floor(Math.random() * 10) + 500), Math.floor(Math.random() * 10) + 325, !1); for (var o = Math.floor(Math.random() * 6) + 4, t = 0; t < o; t++) {
-                var e = Math.floor(Math.random() * 300) + 600 + t * 10, n = Math.floor(Math.random() * 200) + 200 + t * 10, i = !1; t < 2 && (i = !0), t % 2 == 0 && (e = 0 - e - 20), this.appendStar(e, n, i)
+            this.appendStar(Math.floor(Math.random() * 10) + 450, Math.floor(Math.random() * 10) + 100, false), this.appendStar(Math.floor(Math.random() * 10) + 320, Math.floor(Math.random() * 5) + 105, false), this.appendStar(Math.floor(Math.random() * 10) + 480, Math.floor(Math.random() * 10) + 150, false), this.appendStar(Math.floor(Math.random() * 10) + 500, Math.floor(Math.random() * 10) + 350, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 450), Math.floor(Math.random() * 10) + 100, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 320), Math.floor(Math.random() * 5) + 105, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 480), Math.floor(Math.random() * 10) + 150, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 500), Math.floor(Math.random() * 10) + 325, false); for (var o = Math.floor(Math.random() * 6) + 4, t = 0; t < o; t++) {
+                var e = Math.floor(Math.random() * 300) + 600 + t * 10, n = Math.floor(Math.random() * 200) + 200 + t * 10, i = false; t < 2 && (i = true), t % 2 == 0 && (e = 0 - e - 20), this.appendStar(e, n, i)
             }
         } appendStar(o, t, e) {
             var n = 6; e || (n = Math.floor(Math.random() * 5) + 1);
@@ -4433,10 +4432,10 @@
     var Kn = {}; J(Kn, { default: () => Yt });
     var Yt = class extends V {
         startDrawing(o) {
-            this.drawingValue = !0
+            this.drawingValue = true
         }
         stopDrawing(o) {
-            this.drawingValue = !1
+            this.drawingValue = false
         }
         draw(o) {
             if (this.drawingValue) {
@@ -4447,12 +4446,12 @@
                 } let e = document.createElement("span"); if (e.classList.add("absolute", "w-[8px]", "h-[8px]", "bg-white", "pointer-events-none", "select-none"), this.revealingValue ? e.classList.add("z-1") : e.classList.add("z-4"), e.setAttribute("data-therapy-target", "dot"), e.setAttribute("style", `left: ${o.clientX}px; top: ${o.clientY}px`), this.containerTarget.append(e), this.dotTargets.length > 500) {
                     let n = this.dotTargets.length - 500; for (let i of this.dotTargets) if (i.remove(), n -= 1, n <= 0) break
                 }
-                this.dotsDrawnValue += 1, this.revealingValue == !1 && this.dotsDrawnValue > 2500 && (this.revealingValue = !0, this.treeTarget.classList.remove("hidden"), this.coverboxTarget.classList.remove("hidden"), this.treeTarget.setAttribute("style", "opacity: 0"))
+                this.dotsDrawnValue += 1, this.revealingValue == false && this.dotsDrawnValue > 2500 && (this.revealingValue = true, this.treeTarget.classList.remove("hidden"), this.coverboxTarget.classList.remove("hidden"), this.treeTarget.setAttribute("style", "opacity: 0"))
             }
         }
     }; R(Yt, "targets", ["container", "coverbox", "cover", "dot", "tree"]), R(Yt, "values", {
-        drawing: { type: Boolean, default: !1 }, dotsDrawn: { type: Number, default: 0 }, revealing: {
-            type: Boolean, default: !1
+        drawing: { type: Boolean, default: false }, dotsDrawn: { type: Number, default: 0 }, revealing: {
+            type: Boolean, default: false
         }
     });
     var $n = {}; J($n, { default: () => Se });
@@ -4461,7 +4460,7 @@
             for (let o of this.element.querySelectorAll("video")) o.setAttribute("data-video-target", "video")
         }
         playVideo(o) {
-            this.hasVideoTarget && this.hasPlayButtonTarget && (this.videoTarget.play(), this.videoTarget.setAttribute("controls", !0), this.playButtonTarget.classList.add("hidden"), this.videoTarget.focus())
+            this.hasVideoTarget && this.hasPlayButtonTarget && (this.videoTarget.play(), this.videoTarget.setAttribute("controls", true), this.playButtonTarget.classList.add("hidden"), this.videoTarget.focus())
         }
         playExternalVideo(o) {
             this.hasContainerTarget && (o.preventDefault(), this.containerTarget.innerHTML = `<iframe class="w-full aspect-video" src="https://www.youtube-nocookie.com/embed/${o.params.ytid}?autoplay=1" credentialless allowfullscreen referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin" csp="sandbox allow-scripts allow-same-origin;" frameborder="0" allow="accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'none'; battery 'none'; browsing-topics 'none'; camera 'none'; display-capture 'none'; domain-agent 'none'; document-domain 'none'; encrypted-media 'none'; execution-while-not-rendered 'none'; execution-while-out-of-viewport ''; gamepad 'none'; geolocation 'none'; gyroscope 'none'; hid 'none'; identity-credentials-get 'none'; idle-detection 'none'; local-fonts 'none'; magnetometer 'none'; microphone 'none'; midi 'none'; otp-credentials 'none'; payment 'none'; picture-in-picture 'none'; publickey-credentials-create 'none'; publickey-credentials-get 'none'; screen-wake-lock 'none'; serial 'none'; speaker-selection 'none'; usb 'none'; window-management 'none'; xr-spatial-tracking 'none'"></iframe>`)
@@ -4472,7 +4471,7 @@
             display: {
                 left: [], middle: [], right: ["close"]
             }
-        }, Thumbs: { type: "classic" }, Hash: !1
+        }, Thumbs: { type: "classic" }, Hash: false
     }); window.Stimulus = ne.start(); Stimulus.register("dialog", Ki); Object.entries(co).forEach(([o, t]) => {
         if (o.includes("_controller.") || o.includes("-controller.")) {
             let e = o.replace("./controllers/", "").replace(/[_-]controller\..*$/, "").replace(/_/g, "-").replace(/\//g, "--"); Stimulus.register(e, t.default)
