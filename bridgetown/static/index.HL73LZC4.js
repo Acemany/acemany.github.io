@@ -27,14 +27,16 @@
                 }, volume: function (a) {
                     var r = this || t;
                     if (a = parseFloat(a), r.ctx || m(), typeof a < "u" && a >= 0 && a <= 1) {
-                        if (r._volume = a, r._muted) return r; r.usingWebAudio && r.masterGain.gain.setValueAtTime(a, t.ctx.currentTime); for (var d = 0; d < r._howls.length; d++)if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
+                        if (r._volume = a, r._muted) return r; r.usingWebAudio && r.masterGain.gain.setValueAtTime(a, t.ctx.currentTime);
+                        for (var d = 0; d < r._howls.length; d++)if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
                             var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.volume = f._volume * a)
                         }
                         return r
                     }
                     return r._volume
                 }, mute: function (a) {
-                    var r = this || t; r.ctx || m(), r._muted = a, r.usingWebAudio && r.masterGain.gain.setValueAtTime(a ? 0 : r._volume, t.ctx.currentTime); for (var d = 0; d < r._howls.length; d++)if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
+                    var r = this || t; r.ctx || m(), r._muted = a, r.usingWebAudio && r.masterGain.gain.setValueAtTime(a ? 0 : r._volume, t.ctx.currentTime);
+                    for (var d = 0; d < r._howls.length; d++)if (!r._howls[d]._webAudio) for (var u = r._howls[d]._getSoundIds(), p = 0; p < u.length; p++) {
                         var f = r._howls[d]._soundById(u[p]); f && f._node && (f._node.muted = a ? true : f._muted)
                     }
                     return r
@@ -56,8 +58,7 @@
                     try {
                         var r = new Audio; r.muted && (a.noAudio = true)
                     }
-                    catch {
-                    }
+                    catch { }
                     return a.noAudio || a._setupCodecs(), a
                 }, _setupCodecs: function () {
                     var a = this || t, r = null;
@@ -85,7 +86,10 @@
                                 var b = a._howls[p]._soundById(f[Q]); b && b._node && !b._node._unlocked && (b._node._unlocked = true, b._node.load())
                             }
                             a._autoResume();
-                            var g = a.ctx.createBufferSource(); g.buffer = a._scratchBuffer, g.connect(a.ctx.destination), typeof g.start > "u" ? g.noteOn(0) : g.start(0), typeof a.ctx.resume == "function" && a.ctx.resume(), g.onended = function () { g.disconnect(0), a._audioUnlocked = true, document.removeEventListener("touchstart", r, true), document.removeEventListener("touchend", r, true), document.removeEventListener("click", r, true), document.removeEventListener("keydown", r, true); for (var B = 0; B < a._howls.length; B++)a._howls[B]._emit("unlock") }
+                            var g = a.ctx.createBufferSource(); g.buffer = a._scratchBuffer, g.connect(a.ctx.destination), typeof g.start > "u" ? g.noteOn(0) : g.start(0), typeof a.ctx.resume == "function" && a.ctx.resume(), g.onended = function () {
+                                g.disconnect(0), a._audioUnlocked = true, document.removeEventListener("touchstart", r, true), document.removeEventListener("touchend", r, true), document.removeEventListener("click", r, true), document.removeEventListener("keydown", r, true);
+                                for (var B = 0; B < a._howls.length; B++)a._howls[B]._emit("unlock")
+                            }
                         };
                         return document.addEventListener("touchstart", r, true), document.addEventListener("touchend", r, true), document.addEventListener("click", r, true), document.addEventListener("keydown", r, true), a
                     }
@@ -112,7 +116,10 @@
                     }
                 }, _autoResume: function () {
                     var a = this;
-                    if (!(!a.ctx || typeof a.ctx.resume > "u" || !t.usingWebAudio)) return a.state === "running" && a.ctx.state !== "interrupted" && a._suspendTimer ? (clearTimeout(a._suspendTimer), a._suspendTimer = null) : a.state === "suspended" || a.state === "running" && a.ctx.state === "interrupted" ? (a.ctx.resume().then(function () { a.state = "running"; for (var r = 0; r < a._howls.length; r++)a._howls[r]._emit("resume") }), a._suspendTimer && (clearTimeout(a._suspendTimer), a._suspendTimer = null)) : a.state === "suspending" && (a._resumeAfterSuspend = true), a
+                    if (!(!a.ctx || typeof a.ctx.resume > "u" || !t.usingWebAudio)) return a.state === "running" && a.ctx.state !== "interrupted" && a._suspendTimer ? (clearTimeout(a._suspendTimer), a._suspendTimer = null) : a.state === "suspended" || a.state === "running" && a.ctx.state === "interrupted" ? (a.ctx.resume().then(function () {
+                        a.state = "running";
+                        for (var r = 0; r < a._howls.length; r++)a._howls[r]._emit("resume")
+                    }), a._suspendTimer && (clearTimeout(a._suspendTimer), a._suspendTimer = null)) : a.state === "suspending" && (a._resumeAfterSuspend = true), a
                 }
             };
             var t = new o, e = function (a) {
@@ -136,7 +143,8 @@
                         a._emit("loaderror", null, "No audio support.");
                         return
                     }
-                    typeof a._src == "string" && (a._src = [a._src]); for (var d = 0; d < a._src.length; d++) {
+                    typeof a._src == "string" && (a._src = [a._src]);
+                    for (var d = 0; d < a._src.length; d++) {
                         var u, p;
                         if (a._format && a._format[d]) u = a._format[d]; else {
                             if (p = a._src[d], typeof p != "string") {
@@ -215,7 +223,8 @@
                         event: "pause", action: function () {
                             r.pause(a)
                         }
-                    }), r; for (var d = r._getSoundIds(a), u = 0; u < d.length; u++) {
+                    }), r;
+                    for (var d = r._getSoundIds(a), u = 0; u < d.length; u++) {
                         r._clearTimer(d[u]);
                         var p = r._soundById(d[u]);
                         if (p && !p._paused && (p._seek = r.seek(d[u]), p._rateSeek = 0, p._paused = true, r._stopFade(d[u]), p._node)) if (r._webAudio) {
@@ -231,7 +240,8 @@
                         event: "stop", action: function () {
                             d.stop(a)
                         }
-                    }), d; for (var u = d._getSoundIds(a), p = 0; p < u.length; p++) {
+                    }), d;
+                    for (var u = d._getSoundIds(a), p = 0; p < u.length; p++) {
                         d._clearTimer(u[p]);
                         var f = d._soundById(u[p]); f && (f._seek = f._start || 0, f._rateSeek = 0, f._paused = true, f._ended = true, d._stopFade(u[p]), f._node && (d._webAudio ? f._node.bufferSource && (typeof f._node.bufferSource.stop > "u" ? f._node.bufferSource.noteOff(0) : f._node.bufferSource.stop(0), d._cleanBuffer(f._node)) : (!isNaN(f._node.duration) || f._node.duration === 1 / 0) && (f._node.currentTime = f._start || 0, f._node.pause(), f._node.duration === 1 / 0 && d._clearSound(f._node))), r || d._emit("stop", f._id))
 
@@ -244,7 +254,8 @@
                             d.mute(a, r)
                         }
                     }), d;
-                    if (typeof r > "u") if (typeof a == "boolean") d._muted = a; else return d._muted; for (var u = d._getSoundIds(r), p = 0; p < u.length; p++) {
+                    if (typeof r > "u") if (typeof a == "boolean") d._muted = a; else return d._muted;
+                    for (var u = d._getSoundIds(r), p = 0; p < u.length; p++) {
                         var f = d._soundById(u[p]); f && (f._muted = a, f._interval && d._stopFade(f._id), d._webAudio && f._node ? f._node.gain.setValueAtTime(a ? 0 : f._volume, t.ctx.currentTime) : f._node && (f._node.muted = t._muted ? true : a), d._emit("mute", f._id))
                     }
                     return d
@@ -261,7 +272,8 @@
                             event: "volume", action: function () {
                                 a.volume.apply(a, r)
                             }
-                        }), a; typeof u > "u" && (a._volume = d), u = a._getSoundIds(u); for (var b = 0; b < u.length; b++)Q = a._soundById(u[b]), Q && (Q._volume = d, r[2] || a._stopFade(u[b]), a._webAudio && Q._node && !Q._muted ? Q._node.gain.setValueAtTime(d, t.ctx.currentTime) : Q._node && !Q._muted && (Q._node.volume = d * t.volume()), a._emit("volume", Q._id))
+                        }), a; typeof u > "u" && (a._volume = d), u = a._getSoundIds(u);
+                        for (var b = 0; b < u.length; b++)Q = a._soundById(u[b]), Q && (Q._volume = d, r[2] || a._stopFade(u[b]), a._webAudio && Q._node && !Q._muted ? Q._node.gain.setValueAtTime(d, t.ctx.currentTime) : Q._node && !Q._muted && (Q._node.volume = d * t.volume()), a._emit("volume", Q._id))
                     }
                     else return Q = u ? a._soundById(u) : a._sounds[0], Q ? Q._volume : 0;
                     return a
@@ -271,7 +283,8 @@
                         event: "fade", action: function () {
                             p.fade(a, r, d, u)
                         }
-                    }), p; a = Math.min(Math.max(0, parseFloat(a)), 1), r = Math.min(Math.max(0, parseFloat(r)), 1), d = parseFloat(d), p.volume(a, u); for (var f = p._getSoundIds(u), Q = 0; Q < f.length; Q++) {
+                    }), p; a = Math.min(Math.max(0, parseFloat(a)), 1), r = Math.min(Math.max(0, parseFloat(r)), 1), d = parseFloat(d), p.volume(a, u);
+                    for (var f = p._getSoundIds(u), Q = 0; Q < f.length; Q++) {
                         var b = p._soundById(f[Q]);
                         if (b) {
                             if (u || p._stopFade(f[Q]), p._webAudio && !b._muted) {
@@ -286,7 +299,8 @@
                 }, loop: function () {
                     var a = this, r = arguments, d, u, p;
                     if (r.length === 0) return a._loop;
-                    if (r.length === 1) if (typeof r[0] == "boolean") d = r[0], a._loop = d; else return p = a._soundById(parseInt(r[0], 10)), p ? p._loop : false; else r.length === 2 && (d = r[0], u = parseInt(r[1], 10)); for (var f = a._getSoundIds(u), Q = 0; Q < f.length; Q++)p = a._soundById(f[Q]), p && (p._loop = d, a._webAudio && p._node && p._node.bufferSource && (p._node.bufferSource.loop = d, d && (p._node.bufferSource.loopStart = p._start || 0, p._node.bufferSource.loopEnd = p._stop, a.playing(f[Q]) && (a.pause(f[Q], true), a.play(f[Q], true)))));
+                    if (r.length === 1) if (typeof r[0] == "boolean") d = r[0], a._loop = d; else return p = a._soundById(parseInt(r[0], 10)), p ? p._loop : false; else r.length === 2 && (d = r[0], u = parseInt(r[1], 10));
+                    for (var f = a._getSoundIds(u), Q = 0; Q < f.length; Q++)p = a._soundById(f[Q]), p && (p._loop = d, a._webAudio && p._node && p._node.bufferSource && (p._node.bufferSource.loop = d, d && (p._node.bufferSource.loopStart = p._start || 0, p._node.bufferSource.loopEnd = p._stop, a.playing(f[Q]) && (a.pause(f[Q], true), a.play(f[Q], true)))));
                     return a
                 }, rate: function () {
                     var a = this, r = arguments, d, u;
@@ -300,7 +314,8 @@
                             event: "rate", action: function () {
                                 a.rate.apply(a, r)
                             }
-                        }), a; typeof u > "u" && (a._rate = d), u = a._getSoundIds(u); for (var b = 0; b < u.length; b++)if (Q = a._soundById(u[b]), Q) {
+                        }), a; typeof u > "u" && (a._rate = d), u = a._getSoundIds(u);
+                        for (var b = 0; b < u.length; b++)if (Q = a._soundById(u[b]), Q) {
                             a.playing(u[b]) && (Q._rateSeek = a.seek(u[b]), Q._playStart = a._webAudio ? t.ctx.currentTime : Q._playStart), Q._rate = d, a._webAudio && Q._node && Q._node.bufferSource ? Q._node.bufferSource.playbackRate.setValueAtTime(d, t.ctx.currentTime) : Q._node && (Q._node.playbackRate = d);
                             var g = a.seek(u[b]), B = (a._sprite[Q._sprite][0] + a._sprite[Q._sprite][1]) / 1e3 - g, x = B * 1e3 / Math.abs(Q._rate); (a._endTimers[u[b]] || !Q._paused) && (a._clearTimer(u[b]), a._endTimers[u[b]] = setTimeout(a._ended.bind(a, Q), x)), a._emit("rate", Q._id)
                         }
@@ -350,7 +365,8 @@
                 }, state: function () { return this._state }, unload: function () {
                     for (var a = this, r = a._sounds, d = 0; d < r.length; d++)r[d]._paused || a.stop(r[d]._id), a._webAudio || (a._clearSound(r[d]._node), r[d]._node.removeEventListener("error", r[d]._errorFn, false), r[d]._node.removeEventListener(t._canPlayEvent, r[d]._loadFn, false), r[d]._node.removeEventListener("ended", r[d]._endFn, false), t._releaseHtml5Audio(r[d]._node)), delete r[d]._node, a._clearTimer(r[d]._id);
                     var u = t._howls.indexOf(a); u >= 0 && t._howls.splice(u, 1);
-                    var p = true; for (d = 0; d < t._howls.length; d++)if (t._howls[d]._src === a._src || a._src.indexOf(t._howls[d]._src) >= 0) {
+                    var p = true;
+                    for (d = 0; d < t._howls.length; d++)if (t._howls[d]._src === a._src || a._src.indexOf(t._howls[d]._src) >= 0) {
                         p = false; break
                     }
                     return i && p && delete i[a._src], t.noAudio = false, a._state = "unloaded", a._sounds = [], a = null, null
@@ -368,7 +384,8 @@
                             p.splice(f, 1); break
                         }
                     } else if (a) u["_on" + a] = []; else {
-                        var b = Object.keys(u); for (f = 0; f < b.length; f++)b[f].indexOf("_on") === 0 && Array.isArray(u[b[f]]) && (u[b[f]] = [])
+                        var b = Object.keys(u);
+                        for (f = 0; f < b.length; f++)b[f].indexOf("_on") === 0 && Array.isArray(u[b[f]]) && (u[b[f]] = [])
                     }
                     return u
                 }, once: function (a, r, d) {
@@ -406,12 +423,14 @@
                     for (var r = this, d = 0; d < r._sounds.length; d++)if (a === r._sounds[d]._id) return r._sounds[d];
                     return null
                 }, _inactiveSound: function () {
-                    var a = this; a._drain(); for (var r = 0; r < a._sounds.length; r++)if (a._sounds[r]._ended) return a._sounds[r].reset();
+                    var a = this; a._drain();
+                    for (var r = 0; r < a._sounds.length; r++)if (a._sounds[r]._ended) return a._sounds[r].reset();
                     return new n(a)
                 }, _drain: function () {
                     var a = this, r = a._pool, d = 0, u = 0;
                     if (!(a._sounds.length < r)) {
-                        for (u = 0; u < a._sounds.length; u++)a._sounds[u]._ended && d++; for (u = a._sounds.length - 1; u >= 0; u--) {
+                        for (u = 0; u < a._sounds.length; u++)a._sounds[u]._ended && d++;
+                        for (u = a._sounds.length - 1; u >= 0; u--) {
                             if (d <= r) return; a._sounds[u]._ended && (a._webAudio && a._sounds[u]._node && a._sounds[u]._node.disconnect(0), a._sounds.splice(u, 1), d--)
                         }
                     }
@@ -431,8 +450,7 @@
                     if (t._scratchBuffer && a.bufferSource && (a.bufferSource.onended = null, a.bufferSource.disconnect(0), d)) try {
                         a.bufferSource.buffer = t._scratchBuffer
                     }
-                        catch {
-                        }
+                        catch { }
                     return a.bufferSource = null, r
                 }, _clearSound: function (a) { var r = /MSIE |Trident\//.test(t._navigator && t._navigator.userAgent); r || (a.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA") }
             };
@@ -499,7 +517,8 @@
         })(); (function () {
             "use strict"; HowlerGlobal.prototype._pos = [0, 0, 0], HowlerGlobal.prototype._orientation = [0, 0, -1, 0, 1, 0], HowlerGlobal.prototype.stereo = function (t) {
                 var e = this;
-                if (!e.ctx || !e.ctx.listener) return e; for (var n = e._howls.length - 1; n >= 0; n--)e._howls[n].stereo(t);
+                if (!e.ctx || !e.ctx.listener) return e;
+                for (var n = e._howls.length - 1; n >= 0; n--)e._howls[n].stereo(t);
                 return e
             }, HowlerGlobal.prototype.pos = function (t, e, n) {
                 var i = this;
@@ -526,7 +545,8 @@
                     }
                 }), n;
                 var i = typeof Howler.ctx.createStereoPanner > "u" ? "spatial" : "stereo";
-                if (typeof e > "u") if (typeof t == "number") n._stereo = t, n._pos = [t, 0, 0]; else return n._stereo; for (var s = n._getSoundIds(e), l = 0; l < s.length; l++) {
+                if (typeof e > "u") if (typeof t == "number") n._stereo = t, n._pos = [t, 0, 0]; else return n._stereo;
+                for (var s = n._getSoundIds(e), l = 0; l < s.length; l++) {
                     var c = n._soundById(s[l]);
                     if (c) if (typeof t == "number") c._stereo = t, c._pos = [t, 0, 0], c._node && (c._pannerAttr.panningModel = "equalpower", (!c._panner || !c._panner.pan) && o(c, i), i === "spatial" ? typeof c._panner.positionX < "u" ? (c._panner.positionX.setValueAtTime(t, Howler.ctx.currentTime), c._panner.positionY.setValueAtTime(0, Howler.ctx.currentTime), c._panner.positionZ.setValueAtTime(0, Howler.ctx.currentTime)) : c._panner.setPosition(t, 0, 0) : c._panner.pan.setValueAtTime(t, Howler.ctx.currentTime)), n._emit("stereo", c._id); else return c._stereo
                 }
@@ -539,7 +559,8 @@
                         s.pos(t, e, n, i)
                     }
                 }), s;
-                if (e = typeof e != "number" ? 0 : e, n = typeof n != "number" ? -.5 : n, typeof i > "u") if (typeof t == "number") s._pos = [t, e, n]; else return s._pos; for (var l = s._getSoundIds(i), c = 0; c < l.length; c++) {
+                if (e = typeof e != "number" ? 0 : e, n = typeof n != "number" ? -.5 : n, typeof i > "u") if (typeof t == "number") s._pos = [t, e, n]; else return s._pos;
+                for (var l = s._getSoundIds(i), c = 0; c < l.length; c++) {
                     var h = s._soundById(l[c]);
                     if (h) if (typeof t == "number") h._pos = [t, e, n], h._node && ((!h._panner || h._panner.pan) && o(h, "spatial"), typeof h._panner.positionX < "u" ? (h._panner.positionX.setValueAtTime(t, Howler.ctx.currentTime), h._panner.positionY.setValueAtTime(e, Howler.ctx.currentTime), h._panner.positionZ.setValueAtTime(n, Howler.ctx.currentTime)) : h._panner.setPosition(t, e, n)), s._emit("pos", h._id); else return h._pos
                 }
@@ -552,7 +573,8 @@
                         s.orientation(t, e, n, i)
                     }
                 }), s;
-                if (e = typeof e != "number" ? s._orientation[1] : e, n = typeof n != "number" ? s._orientation[2] : n, typeof i > "u") if (typeof t == "number") s._orientation = [t, e, n]; else return s._orientation; for (var l = s._getSoundIds(i), c = 0; c < l.length; c++) {
+                if (e = typeof e != "number" ? s._orientation[1] : e, n = typeof n != "number" ? s._orientation[2] : n, typeof i > "u") if (typeof t == "number") s._orientation = [t, e, n]; else return s._orientation;
+                for (var l = s._getSoundIds(i), c = 0; c < l.length; c++) {
                     var h = s._soundById(l[c]);
                     if (h) if (typeof t == "number") h._orientation = [t, e, n], h._node && (h._panner || (h._pos || (h._pos = s._pos || [0, 0, -.5]), o(h, "spatial")), typeof h._panner.orientationX < "u" ? (h._panner.orientationX.setValueAtTime(t, Howler.ctx.currentTime), h._panner.orientationY.setValueAtTime(e, Howler.ctx.currentTime), h._panner.orientationZ.setValueAtTime(n, Howler.ctx.currentTime)) : h._panner.setOrientation(t, e, n)), s._emit("orientation", h._id); else return h._orientation
                 }
@@ -561,7 +583,8 @@
                 var t = this, e = arguments, n, i, s;
                 if (!t._webAudio) return t;
                 if (e.length === 0) return t._pannerAttr;
-                if (e.length === 1) if (typeof e[0] == "object") n = e[0], typeof i > "u" && (n.pannerAttr || (n.pannerAttr = { coneInnerAngle: n.coneInnerAngle, coneOuterAngle: n.coneOuterAngle, coneOuterGain: n.coneOuterGain, distanceModel: n.distanceModel, maxDistance: n.maxDistance, refDistance: n.refDistance, rolloffFactor: n.rolloffFactor, panningModel: n.panningModel }), t._pannerAttr = { coneInnerAngle: typeof n.pannerAttr.coneInnerAngle < "u" ? n.pannerAttr.coneInnerAngle : t._coneInnerAngle, coneOuterAngle: typeof n.pannerAttr.coneOuterAngle < "u" ? n.pannerAttr.coneOuterAngle : t._coneOuterAngle, coneOuterGain: typeof n.pannerAttr.coneOuterGain < "u" ? n.pannerAttr.coneOuterGain : t._coneOuterGain, distanceModel: typeof n.pannerAttr.distanceModel < "u" ? n.pannerAttr.distanceModel : t._distanceModel, maxDistance: typeof n.pannerAttr.maxDistance < "u" ? n.pannerAttr.maxDistance : t._maxDistance, refDistance: typeof n.pannerAttr.refDistance < "u" ? n.pannerAttr.refDistance : t._refDistance, rolloffFactor: typeof n.pannerAttr.rolloffFactor < "u" ? n.pannerAttr.rolloffFactor : t._rolloffFactor, panningModel: typeof n.pannerAttr.panningModel < "u" ? n.pannerAttr.panningModel : t._panningModel }); else return s = t._soundById(parseInt(e[0], 10)), s ? s._pannerAttr : t._pannerAttr; else e.length === 2 && (n = e[0], i = parseInt(e[1], 10)); for (var l = t._getSoundIds(i), c = 0; c < l.length; c++)if (s = t._soundById(l[c]), s) {
+                if (e.length === 1) if (typeof e[0] == "object") n = e[0], typeof i > "u" && (n.pannerAttr || (n.pannerAttr = { coneInnerAngle: n.coneInnerAngle, coneOuterAngle: n.coneOuterAngle, coneOuterGain: n.coneOuterGain, distanceModel: n.distanceModel, maxDistance: n.maxDistance, refDistance: n.refDistance, rolloffFactor: n.rolloffFactor, panningModel: n.panningModel }), t._pannerAttr = { coneInnerAngle: typeof n.pannerAttr.coneInnerAngle < "u" ? n.pannerAttr.coneInnerAngle : t._coneInnerAngle, coneOuterAngle: typeof n.pannerAttr.coneOuterAngle < "u" ? n.pannerAttr.coneOuterAngle : t._coneOuterAngle, coneOuterGain: typeof n.pannerAttr.coneOuterGain < "u" ? n.pannerAttr.coneOuterGain : t._coneOuterGain, distanceModel: typeof n.pannerAttr.distanceModel < "u" ? n.pannerAttr.distanceModel : t._distanceModel, maxDistance: typeof n.pannerAttr.maxDistance < "u" ? n.pannerAttr.maxDistance : t._maxDistance, refDistance: typeof n.pannerAttr.refDistance < "u" ? n.pannerAttr.refDistance : t._refDistance, rolloffFactor: typeof n.pannerAttr.rolloffFactor < "u" ? n.pannerAttr.rolloffFactor : t._rolloffFactor, panningModel: typeof n.pannerAttr.panningModel < "u" ? n.pannerAttr.panningModel : t._panningModel }); else return s = t._soundById(parseInt(e[0], 10)), s ? s._pannerAttr : t._pannerAttr; else e.length === 2 && (n = e[0], i = parseInt(e[1], 10));
+                for (var l = t._getSoundIds(i), c = 0; c < l.length; c++)if (s = t._soundById(l[c]), s) {
                     var h = s._pannerAttr; h = { coneInnerAngle: typeof n.coneInnerAngle < "u" ? n.coneInnerAngle : h.coneInnerAngle, coneOuterAngle: typeof n.coneOuterAngle < "u" ? n.coneOuterAngle : h.coneOuterAngle, coneOuterGain: typeof n.coneOuterGain < "u" ? n.coneOuterGain : h.coneOuterGain, distanceModel: typeof n.distanceModel < "u" ? n.distanceModel : h.distanceModel, maxDistance: typeof n.maxDistance < "u" ? n.maxDistance : h.maxDistance, refDistance: typeof n.refDistance < "u" ? n.refDistance : h.refDistance, rolloffFactor: typeof n.rolloffFactor < "u" ? n.rolloffFactor : h.rolloffFactor, panningModel: typeof n.panningModel < "u" ? n.panningModel : h.panningModel };
                     var m = s._panner; m || (s._pos || (s._pos = t._pos || [0, 0, -.5]), o(s, "spatial"), m = s._panner), m.coneInnerAngle = h.coneInnerAngle, m.coneOuterAngle = h.coneOuterAngle, m.coneOuterGain = h.coneOuterGain, m.distanceModel = h.distanceModel, m.maxDistance = h.maxDistance, m.refDistance = h.refDistance, m.rolloffFactor = h.rolloffFactor, m.panningModel = h.panningModel
 
@@ -836,7 +859,8 @@
             this.unorderedBindings.delete(t)
         }
         handleEvent(t) {
-            let e = vo(t); for (let n of this.bindings) {
+            let e = vo(t);
+            for (let n of this.bindings) {
                 if (e.immediatePropagationStopped) break; n.handleEvent(e)
             }
         } hasBindings() {
@@ -844,16 +868,15 @@
         }
         get bindings() {
             return Array.from(this.unorderedBindings).sort((t, e) => {
-                let n = t.index, i = e.index;
+                let n = t.index;
+                let i = e.index;
                 return n < i ? -1 : n > i ? 1 : 0
             })
         }
     };
     function vo(o) {
         if ("immediatePropagationStopped" in o) return o; {
-            let { stopImmediatePropagation: t
-            }
-                = o;
+            let { stopImmediatePropagation: t } = o;
             return Object.assign(o, {
                 immediatePropagationStopped: false, stopImmediatePropagation() {
                     this.immediatePropagationStopped = true, t.call(this)
@@ -886,18 +909,18 @@
             let e = this.fetchEventListenerForBinding(t); e.hasBindings() || (e.disconnect(), this.removeMappedEventListenerFor(t))
         }
         removeMappedEventListenerFor(t) {
-            let { eventTarget: e, eventName: n, eventOptions: i
-            }
-                = t, s = this.fetchEventListenerMapForEventTarget(e), l = this.cacheKey(n, i); s.delete(l), s.size == 0 && this.eventListenerMaps.delete(e)
+            let { eventTarget: e, eventName: n, eventOptions: i } = t;
+            let s = this.fetchEventListenerMapForEventTarget(e);
+            l = this.cacheKey(n, i); s.delete(l), s.size == 0 && this.eventListenerMaps.delete(e)
         }
         fetchEventListenerForBinding(t) {
-            let { eventTarget: e, eventName: n, eventOptions: i
-            }
-                = t;
+            let { eventTarget: e, eventName: n, eventOptions: i } = t;
             return this.fetchEventListener(e, n, i)
         }
         fetchEventListener(t, e, n) {
-            let i = this.fetchEventListenerMapForEventTarget(t), s = this.cacheKey(e, n), l = i.get(s);
+            let i = this.fetchEventListenerMapForEventTarget(t);
+            let s = this.cacheKey(e, n);
+            let l = i.get(s);
             return l || (l = this.createEventListener(t, e, n), i.set(s, l)), l
         }
         createEventListener(t, e, n) {
@@ -918,7 +941,9 @@
         }
     }, Eo = /^(?:(?:([^.]+?)\+)?(.+?)(?:\.(.+?))?(?:@(window|document))?->)?(.+?)(?:#([^:]+?))(?::(.+))?$/;
     function xo(o) {
-        let e = o.trim().match(Eo) || [], n = e[2], i = e[3];
+        let e = o.trim().match(Eo) || [];
+        let n = e[2];
+        let i = e[3];
         return i && !["keydown", "keyup", "keypress"].includes(n) && (n += `.${i}`, i = ""), {
             eventTarget: wo(e[4]), eventName: n, eventOptions: e[7] ? Wo(e[7]) : {}, identifier: e[5], methodName: e[6], keyFilter: e[1] || i
         }
@@ -963,7 +988,8 @@
             return new this(t.element, t.index, xo(t.content), e)
         }
         toString() {
-            let t = this.keyFilter ? `.${this.keyFilter}` : "", e = this.eventTargetName ? `@${this.eventTargetName}` : "";
+            let t = this.keyFilter ? `.${this.keyFilter}` : "";
+            let e = this.eventTargetName ? `@${this.eventTargetName}` : "";
             return `${this.eventName}${t}${e}->${this.identifier}#${this.methodName}`
         }
         shouldIgnoreKeyboardEvent(t) {
@@ -980,9 +1006,11 @@
             return !!this.keyFilterDissatisfied(t, e)
         }
         get params() {
-            let t = {}, e = new RegExp(`^data-${this.identifier}-(.+)-param$`, "i");
+            let t = {};
+            let e = new RegExp(`^data-${this.identifier}-(.+)-param$`, "i");
             for (let { name: n, value: i } of Array.from(this.element.attributes)) {
-                let s = n.match(e), l = s && s[1];
+                let s = n.match(e);
+                let l = s && s[1];
                 l && (t[ln(l)] = Zo(i))
             }
             return t
@@ -1042,32 +1070,28 @@
             throw new Error(`Action "${this.action}" references undefined method "${this.methodName}"`)
         }
         applyEventModifiers(t) {
-            let { element: e
-            }
-                = this.action, { actionDescriptorFilters: n
+            let { element: e } = this.action;
+            let { actionDescriptorFilters: n } = this.context.application;
+            let { controller: i } = this.context;
+            let s = true;
+            for (let [l, c] of Object.entries(this.eventOptions))
+                if (l in n) {
+                    let h = n[l]; s = s && h({ name: l, value: c, event: t, element: e, controller: i })
                 }
-                    = this.context.application, { controller: i
-                    }
-                    = this.context, s = true; for (let [l, c] of Object.entries(this.eventOptions)) if (l in n) {
-                        let h = n[l]; s = s && h({ name: l, value: c, event: t, element: e, controller: i })
-                    }
-                    else continue;
+                else
+                    continue;
             return s
         }
         prepareActionEvent(t) {
             return Object.assign(t, { params: this.action.params })
         }
         invokeWithEvent(t) {
-            let { target: e, currentTarget: n
-            }
-                = t;
+            let { target: e, currentTarget: n } = t;
             try {
                 this.method.call(this.controller, t), this.context.logDebugActivity(this.methodName, { event: t, target: e, currentTarget: n, action: this.methodName })
             }
             catch (i) {
-                let { identifier: s, controller: l, element: c, index: h
-                }
-                    = this, m = { identifier: s, controller: l, element: c, index: h, event: t }; this.context.handleError(i, `invoking action "${this.action}"`, m)
+                let { identifier: s, controller: l, element: c, index: h } = this, m = { identifier: s, controller: l, element: c, index: h, event: t }; this.context.handleError(i, `invoking action "${this.action}"`, m)
             }
         } willBeInvokedByEvent(t) {
             let e = t.target;
@@ -1100,7 +1124,9 @@
         }
         refresh() {
             if (this.started) {
-                let t = new Set(this.matchElementsInTree()); for (let e of Array.from(this.elements)) t.has(e) || this.removeElement(e); for (let e of Array.from(t)) this.addElement(e)
+                let t = new Set(this.matchElementsInTree());
+                for (let e of Array.from(this.elements)) t.has(e) || this.removeElement(e);
+                for (let e of Array.from(t)) this.addElement(e)
             }
         } processMutations(t) {
             if (this.started) for (let e of t) this.processMutation(e)
@@ -1169,7 +1195,8 @@
             return t.hasAttribute(this.attributeName)
         }
         matchElementsInTree(t) {
-            let e = this.matchElement(t) ? [t] : [], n = Array.from(t.querySelectorAll(this.selector));
+            let e = this.matchElement(t) ? [t] : [];
+            let n = Array.from(t.querySelectorAll(this.selector));
             return e.concat(n)
         }
         elementMatched(t) {
@@ -1261,9 +1288,7 @@
             return this.elementObserver.element
         }
         matchElement(t) {
-            let { selector: e
-            }
-                = this;
+            let { selector: e } = this;
             if (e) {
                 let n = t.matches(e);
                 return this.delegate.selectorMatchElement ? n && this.delegate.selectorMatchElement(t, this.details) : n
@@ -1271,29 +1296,27 @@
             else return false
         }
         matchElementsInTree(t) {
-            let { selector: e
-            }
-                = this;
+            let { selector: e } = this;
             if (e) {
-                let n = this.matchElement(t) ? [t] : [], i = Array.from(t.querySelectorAll(e)).filter(s => this.matchElement(s));
+                let n = this.matchElement(t) ? [t] : [];
+                let i = Array.from(t.querySelectorAll(e)).filter(s => this.matchElement(s));
                 return n.concat(i)
             }
             else return []
         }
         elementMatched(t) {
-            let { selector: e
-            }
-                = this; e && this.selectorMatched(t, e)
+            let { selector: e } = this; e && this.selectorMatched(t, e)
         }
         elementUnmatched(t) {
-            let e = this.matchesByElement.getKeysForValue(t); for (let n of e) this.selectorUnmatched(t, n)
+            let e = this.matchesByElement.getKeysForValue(t);
+            for (let n of e) this.selectorUnmatched(t, n)
         }
         elementAttributeChanged(t, e) {
-            let { selector: n
-            }
-                = this;
+            let { selector: n } = this;
             if (n) {
-                let i = this.matchElement(t), s = this.matchesByElement.has(n, t); i && !s ? this.selectorMatched(t, n) : !i && s && this.selectorUnmatched(t, n)
+                let i = this.matchElement(t);
+                let s = this.matchesByElement.has(n, t);
+                i && !s ? this.selectorMatched(t, n) : !i && s && this.selectorUnmatched(t, n)
             }
         } selectorMatched(t, e) {
             this.delegate.selectorMatched(t, e, this.details), this.matchesByElement.add(e, t)
@@ -1323,7 +1346,8 @@
         refreshAttribute(t, e) {
             let n = this.delegate.getStringMapKeyForAttribute(t);
             if (n != null) {
-                this.stringMap.has(t) || this.stringMapKeyAdded(n, t); let i = this.element.getAttribute(t);
+                this.stringMap.has(t) || this.stringMapKeyAdded(n, t);
+                let i = this.element.getAttribute(t);
                 if (this.stringMap.get(t) != i && this.stringMapValueChanged(i, n, e), i == null) {
                     let s = this.stringMap.get(t); this.stringMap.delete(t), s && this.stringMapKeyRemoved(n, t, s)
                 }
@@ -1394,11 +1418,14 @@
             this.delegate.tokenUnmatched(t), this.tokensByElement.delete(t.element, t)
         }
         refreshTokensForElement(t) {
-            let e = this.tokensByElement.getValuesForKey(t), n = this.readTokensForElement(t), i = So(e, n).findIndex(([s, l]) => !ko(s, l));
+            let e = this.tokensByElement.getValuesForKey(t);
+            let n = this.readTokensForElement(t);
+            let i = So(e, n).findIndex(([s, l]) => !ko(s, l));
             return i == -1 ? [[], []] : [e.slice(i), n.slice(i)]
         }
         readTokensForElement(t) {
-            let e = this.attributeName, n = t.getAttribute(e) || "";
+            let e = this.attributeName;
+            let n = t.getAttribute(e) || "";
             return Mo(n, t, e)
         }
     };
@@ -1435,18 +1462,10 @@
             return this.tokenListObserver.attributeName
         }
         tokenMatched(t) {
-            let { element: e
-            }
-                = t, { value: n
-                }
-                    = this.fetchParseResultForToken(t); n && (this.fetchValuesByTokenForElement(e).set(t, n), this.delegate.elementMatchedValue(e, n))
+            let { element: e } = t, { value: n } = this.fetchParseResultForToken(t); n && (this.fetchValuesByTokenForElement(e).set(t, n), this.delegate.elementMatchedValue(e, n))
         }
         tokenUnmatched(t) {
-            let { element: e
-            }
-                = t, { value: n
-                }
-                    = this.fetchParseResultForToken(t); n && (this.fetchValuesByTokenForElement(e).delete(t), this.delegate.elementUnmatchedValue(e, n))
+            let { element: e } = t, { value: n } = this.fetchParseResultForToken(t); n && (this.fetchValuesByTokenForElement(e).delete(t), this.delegate.elementUnmatchedValue(e, n))
         }
         fetchParseResultForToken(t) {
             let e = this.parseResultsByToken.get(t);
@@ -1545,11 +1564,13 @@
                 of this.valueDescriptors) n != null && !this.controller.data.has(t) && this.invokeChangedCallback(e, i(n), void 0)
         }
         invokeChangedCallback(t, e, n) {
-            let i = `${t}Changed`, s = this.receiver[i];
+            let i = `${t}Changed`;
+            let s = this.receiver[i];
             if (typeof s == "function") {
                 let l = this.valueDescriptorNameMap[t];
                 try {
-                    let c = l.reader(e), h = n; n && (h = l.reader(n)), s.call(this.receiver, c, h)
+                    let c = l.reader(e);
+                    let h = n; n && (h = l.reader(n)), s.call(this.receiver, c, h)
                 }
                 catch (c) {
                     throw c instanceof TypeError && (c.message = `Stimulus Value "${this.context.identifier}.${l.name}" - ${c.message}`), c
@@ -1557,9 +1578,7 @@
             }
         }
         get valueDescriptors() {
-            let { valueDescriptorMap: t
-            }
-                = this;
+            let { valueDescriptorMap: t } = this;
             return Object.keys(t).map(e => t[e])
         }
         get valueDescriptorNameMap() {
@@ -1567,7 +1586,8 @@
             return Object.keys(this.valueDescriptorMap).forEach(e => { let n = this.valueDescriptorMap[e]; t[n.name] = n }), t
         }
         hasValue(t) {
-            let e = this.valueDescriptorNameMap[t], n = `has${wt(e.name)}`;
+            let e = this.valueDescriptorNameMap[t];
+            let n = `has${wt(e.name)}`;
             return this.receiver[n]
         }
     }, He = class {
@@ -1613,7 +1633,9 @@
         return hi(o).reduce((n, i) => (n.push(...Io(i, t)), n), [])
     }
     function hi(o) {
-        let t = []; for (; o;)t.push(o), o = Object.getPrototypeOf(o);
+        let t = [];
+        for (; o;)
+            t.push(o), o = Object.getPrototypeOf(o);
         return t.reverse()
     }
     function Go(o, t) {
@@ -1650,7 +1672,9 @@
             let i = this.getOutletFromMap(t, n); i && this.disconnectOutlet(i, t, n)
         }
         selectorMatchElement(t, { outletName: e }) {
-            let n = this.selector(e), i = this.hasOutlet(t, e), s = t.matches(`[${this.schema.controllerAttribute}~=${e}]`);
+            let n = this.selector(e);
+            let i = this.hasOutlet(t, e);
+            let s = t.matches(`[${this.schema.controllerAttribute}~=${e}]`);
             return n ? i && s && t.matches(n) : false
         }
         elementMatchedAttribute(t, e) {
@@ -1669,16 +1693,24 @@
             var i; this.outletElementsByName.has(n, e) && (this.outletsByName.delete(n, t), this.outletElementsByName.delete(n, e), (i = this.selectorObserverMap.get(n)) === null || i === void 0 || i.pause(() => this.delegate.outletDisconnected(t, e, n)))
         }
         disconnectAllOutlets() {
-            for (let t of this.outletElementsByName.keys) for (let e of this.outletElementsByName.getValuesForKey(t)) for (let n of this.outletsByName.getValuesForKey(t)) this.disconnectOutlet(n, e, t)
+            for (let t of this.outletElementsByName.keys)
+                for (let e of this.outletElementsByName.getValuesForKey(t))
+                    for (let n of this.outletsByName.getValuesForKey(t))
+                        this.disconnectOutlet(n, e, t)
         }
         updateSelectorObserverForOutlet(t) {
-            let e = this.selectorObserverMap.get(t); e && (e.selector = this.selector(t))
+            let e = this.selectorObserverMap.get(t);
+            e && (e.selector = this.selector(t))
         }
         setupSelectorObserverForOutlet(t) {
-            let e = this.selector(t), n = new Ae(document.body, e, this, { outletName: t }); this.selectorObserverMap.set(t, n), n.start()
+            let e = this.selector(t);
+            let n = new Ae(document.body, e, this, { outletName: t });
+            this.selectorObserverMap.set(t, n), n.start()
         }
         setupAttributeObserverForOutlet(t) {
-            let e = this.attributeNameForOutletName(t), n = new qt(this.scope.element, e, this); this.attributeObserverMap.set(t, n), n.start()
+            let e = this.attributeNameForOutletName(t);
+            let n = new qt(this.scope.element, e, this);
+            this.attributeObserverMap.set(t, n), n.start()
         }
         selector(t) {
             return this.scope.outlets.getSelectorForOutletName(t)
@@ -1733,9 +1765,7 @@
     }, Pe = class {
         constructor(t, e) {
             this.logDebugActivity = (n, i = {}) => {
-                let { identifier: s, controller: l, element: c
-                }
-                    = this; i = Object.assign({ identifier: s, controller: l, element: c }, i), this.application.logDebugActivity(this.identifier, n, i)
+                let { identifier: s, controller: l, element: c } = this; i = Object.assign({ identifier: s, controller: l, element: c }, i), this.application.logDebugActivity(this.identifier, n, i)
             }, this.module = t, this.scope = e, this.controller = new t.controllerConstructor(this), this.bindingObserver = new Je(this, this.dispatcher), this.valueObserver = new ze(this, this.controller), this.targetObserver = new He(this, this), this.outletObserver = new je(this, this);
             try {
                 this.controller.initialize(), this.logDebugActivity("initialize")
@@ -1782,9 +1812,7 @@
             return this.element.parentElement
         }
         handleError(t, e, n = {}) {
-            let { identifier: i, controller: s, element: l
-            }
-                = this; n = Object.assign({ identifier: i, controller: s, element: l }, n), this.application.handleError(t, `Error ${e}`, n)
+            let { identifier: i, controller: s, element: l } = this; n = Object.assign({ identifier: i, controller: s, element: l }, n), this.application.handleError(t, `Error ${e}`, n)
         }
         targetConnected(t, e) {
             this.invokeControllerMethod(`${e}TargetConnected`, t)
@@ -1806,12 +1834,14 @@
         return No(o, Xo(o))
     }
     function No(o, t) {
-        let e = zo(o), n = Ao(o.prototype, t);
+        let e = zo(o);
+        let n = Ao(o.prototype, t);
         return Object.defineProperties(e.prototype, n), e
     }
     function Xo(o) {
         return Wt(o, "blessings").reduce((e, n) => {
-            let i = n(o); for (let s in i) {
+            let i = n(o);
+            for (let s in i) {
                 let l = e[s] || {}; e[s] = Object.assign(l, i[s])
             }
             return e
@@ -1848,8 +1878,7 @@
             return t(), o
         }
         catch {
-            return n => class extends n {
-            }
+            return n => class extends n { }
         }
     })();
     function Ho(o) {
@@ -1993,9 +2022,7 @@
         }
         deprecate(t, e) {
             if (t) {
-                let { identifier: n
-                }
-                    = this, i = this.schema.targetAttribute, s = this.schema.targetAttributeForScope(n); this.guide.warn(t, `target:${e}`, `Please replace ${i}="${n}.${e}" with ${s}="${e}". The ${i} attribute is deprecated and will be removed in a future version of Stimulus.`)
+                let { identifier: n } = this, i = this.schema.targetAttribute, s = this.schema.targetAttributeForScope(n); this.guide.warn(t, `target:${e}`, `Please replace ${i}="${n}.${e}" with ${s}="${e}". The ${i} attribute is deprecated and will be removed in a future version of Stimulus.`)
             }
             return t
         }
@@ -2082,13 +2109,12 @@
             return this.schema.controllerAttribute
         }
         parseValueForToken(t) {
-            let { element: e, content: n
-            }
-                = t;
+            let { element: e, content: n } = t;
             return this.parseValueForElementAndIdentifier(e, n)
         }
         parseValueForElementAndIdentifier(t, e) {
-            let n = this.fetchScopesByIdentifierForElement(t), i = n.get(e);
+            let n = this.fetchScopesByIdentifierForElement(t);
+            let i = n.get(e);
             return i || (i = this.delegate.createScopeForElementAndIdentifier(t, e), n.set(e, i)), i
         }
         elementMatchedValue(t, e) {
@@ -2130,7 +2156,11 @@
             this.scopeObserver.stop()
         }
         loadDefinition(t) {
-            this.unloadIdentifier(t.identifier); let e = new Ke(this.application, t); this.connectModule(e); let n = t.controllerConstructor.afterLoad; n && n.call(t.controllerConstructor, t.identifier, this.application)
+            this.unloadIdentifier(t.identifier);
+            let e = new Ke(this.application, t);
+            this.connectModule(e);
+            let n = t.controllerConstructor.afterLoad;
+            n && n.call(t.controllerConstructor, t.identifier, this.application)
         }
         unloadIdentifier(t) {
             let e = this.modulesByIdentifier.get(t); e && this.disconnectModule(e)
@@ -2149,10 +2179,12 @@
             return new an(this.schema, t, e, this.logger)
         }
         scopeConnected(t) {
-            this.scopesByIdentifier.add(t.identifier, t); let e = this.modulesByIdentifier.get(t.identifier); e && e.connectContextForScope(t)
+            this.scopesByIdentifier.add(t.identifier, t);
+            let e = this.modulesByIdentifier.get(t.identifier); e && e.connectContextForScope(t)
         }
         scopeDisconnected(t) {
-            this.scopesByIdentifier.delete(t.identifier, t); let e = this.modulesByIdentifier.get(t.identifier); e && e.disconnectContextForScope(t)
+            this.scopesByIdentifier.delete(t.identifier, t);
+            let e = this.modulesByIdentifier.get(t.identifier); e && e.disconnectContextForScope(t)
         }
         connectModule(t) {
             this.modulesByIdentifier.set(t.identifier, t), this.scopesByIdentifier.getValuesForKey(t.identifier).forEach(n => t.connectContextForScope(n))
@@ -2217,9 +2249,7 @@
         return {
             [`${o}Class`]: {
                 get() {
-                    let { classes: t
-                    }
-                        = this;
+                    let { classes: t } = this;
                     if (t.has(o)) return t.get(o); {
                         let e = t.getAttributeName(o);
                         throw new Error(`Missing attribute "${e}"`)
@@ -2250,7 +2280,8 @@
         return {
             [`${t}Outlet`]: {
                 get() {
-                    let e = this.outlets.find(o), n = this.outlets.getSelectorForOutletName(o);
+                    let e = this.outlets.find(o);
+                    let n = this.outlets.getSelectorForOutletName(o);
                     if (e) {
                         let i = ai(this, e, o);
                         if (i) return i;
@@ -2268,7 +2299,8 @@
                 }
             }, [`${t}OutletElement`]: {
                 get() {
-                    let e = this.outlets.find(o), n = this.outlets.getSelectorForOutletName(o);
+                    let e = this.outlets.find(o);
+                    let n = this.outlets.getSelectorForOutletName(o);
                     if (e) return e;
                     throw new Error(`Missing outlet element "${o}" for host controller "${this.identifier}". Stimulus couldn't find a matching outlet element using selector "${n}".`)
                 }
@@ -2308,7 +2340,8 @@
             valueDescriptorMap: {
                 get() {
                     return t.reduce((n, i) => {
-                        let s = ui(i, this.identifier), l = this.data.getAttributeNameForKey(s.key);
+                        let s = ui(i, this.identifier);
+                        let l = this.data.getAttributeNameForKey(s.key);
                         return Object.assign(n, { [l]: s })
                     }, {})
                 }
@@ -2317,9 +2350,8 @@
         return t.reduce((n, i) => Object.assign(n, oa(i)), e)
     }
     function oa(o, t) {
-        let e = ui(o, t), { key: n, name: i, reader: s, writer: l
-        }
-            = e;
+        let e = ui(o, t);
+        let { key: n, name: i, reader: s, writer: l } = e;
         return {
             [i]: {
                 get() {
@@ -2346,9 +2378,7 @@
         if (Object.prototype.toString.call(o) === "[object Object]") return "object"
     }
     function aa(o) {
-        let { controller: t, token: e, typeObject: n
-        }
-            = o, i = ti(n.type), s = ti(n.default), l = i && s, c = i && !s, h = !i && s, m = ie(n.type), a = xt(o.typeObject.default);
+        let { controller: t, token: e, typeObject: n } = o, i = ti(n.type), s = ti(n.default), l = i && s, c = i && !s, h = !i && s, m = ie(n.type), a = xt(o.typeObject.default);
         if (c) return m;
         if (h) return a;
         if (m !== a) {
@@ -2358,15 +2388,17 @@
         if (l) return m
     }
     function sa(o) {
-        let { controller: t, token: e, typeDefinition: n
-        }
-            = o, s = aa({ controller: t, token: e, typeObject: n }), l = xt(n), c = ie(n), h = s || l || c;
-        if (h) return h; let m = t ? `${t}.${n}` : e;
+        let { controller: t, token: e, typeDefinition: n } = o, s = aa({ controller: t, token: e, typeObject: n }), l = xt(n), c = ie(n), h = s || l || c;
+        if (h) return h;
+        let m = t ? `${t}.${n}` : e;
         throw new Error(`Unknown value type "${m}" for "${e}" value`)
     }
     function ra(o) {
         let t = ie(o);
-        if (t) return si[t]; let e = _e(o, "default"), n = _e(o, "type"), i = o;
+        if (t) return si[t];
+        let e = _e(o, "default");
+        let n = _e(o, "type");
+        let i = o;
         if (e) return i.default;
         if (n) {
             let { type: s } = i;
@@ -2376,9 +2408,7 @@
         return o
     }
     function la(o) {
-        let { token: t, typeDefinition: e
-        }
-            = o, n = `${ci(t)}-value`, i = sa(o);
+        let { token: t, typeDefinition: e } = o, n = `${ci(t)}-value`, i = sa(o);
         return {
             type: i, key: n, name: ln(n), get defaultValue() { return ra(e) }, get hasCustomDefaultValue() { return xt(e) !== void 0 }, reader: ca[i], writer: ri[i] || ri.default
         }
@@ -2408,8 +2438,7 @@
         static get shouldLoad() {
             return true
         }
-        static afterLoad(t, e) {
-        }
+        static afterLoad(t, e) { }
         get application() {
             return this.context.application
         }
@@ -2437,15 +2466,18 @@
         initialize() { }
         connect() { }
         disconnect() { }
-        dispatch(t, { target: e = this.element, detail: n = {}, prefix: i = this.identifier, bubbles: s = true, cancelable: l = true
-        }
-            = {}) {
-            let c = i ? `${i}:${t}` : t, h = new CustomEvent(c, { detail: n, bubbles: s, cancelable: l });
+        dispatch(t, { target: e = this.element, detail: n = {}, prefix: i = this.identifier, bubbles: s = true, cancelable: l = true } = {}) {
+            let c = i ? `${i}:${t}` : t;
+            let h = new CustomEvent(c, { detail: n, bubbles: s, cancelable: l });
             return e.dispatchEvent(h), h
         }
     }; V.blessings = [Ko, ea, ia, qo]; V.targets = []; V.outlets = []; V.values = {};
     var F = (o, t = 1e4) => (o = parseFloat(o + "") || 0, Math.round((o + Number.EPSILON) * t) / t), xn = function (o) {
-        if (!(o && o instanceof Element && o.offsetParent)) return false; let t = o.scrollHeight > o.clientHeight, e = window.getComputedStyle(o).overflowY, n = e.indexOf("hidden") !== -1, i = e.indexOf("visible") !== -1;
+        if (!(o && o instanceof Element && o.offsetParent)) return false;
+        let t = o.scrollHeight > o.clientHeight;
+        let e = window.getComputedStyle(o).overflowY;
+        let n = e.indexOf("hidden") !== -1;
+        let i = e.indexOf("visible") !== -1;
         return t && !n && !i
     }, Qe = function (o, t = void 0) { return !(!o || o === document.body || t && o === t) && (xn(o) ? o : Qe(o.parentElement, t)) }, tt = function (o) {
         var t = new DOMParser().parseFromString(o, "text/html").body;
@@ -2459,20 +2491,24 @@
             Object.defineProperty(this, "pageX", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "pageY", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "clientX", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "clientY", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "id", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "time", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "nativePointer", { enumerable: true, configurable: true, writable: true, value: void 0 }), this.nativePointer = t, this.pageX = t.pageX, this.pageY = t.pageY, this.clientX = t.clientX, this.clientY = t.clientY, this.id = self.Touch && t instanceof Touch ? t.identifier : -1, this.time = Date.now()
         }
     }, bt = { passive: false }, wn = class {
-        constructor(t, { start: e = () => true, move: n = () => { }, end: i = () => {
-        }
+        constructor(t, { start: e = () => true, move: n = () => { }, end: i = () => { }
         }) {
-            Object.defineProperty(this, "element", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "startCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "moveCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "endCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "currentPointers", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "startPointers", { enumerable: true, configurable: true, writable: true, value: [] }), this.element = t, this.startCallback = e, this.moveCallback = n, this.endCallback = i; for (let s of ["onPointerStart", "onTouchStart", "onMove", "onTouchEnd", "onPointerEnd", "onWindowBlur"]) this[s] = this[s].bind(this); this.element.addEventListener("mousedown", this.onPointerStart, bt), this.element.addEventListener("touchstart", this.onTouchStart, bt), this.element.addEventListener("touchmove", this.onMove, bt), this.element.addEventListener("touchend", this.onTouchEnd), this.element.addEventListener("touchcancel", this.onTouchEnd)
+            Object.defineProperty(this, "element", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "startCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "moveCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "endCallback", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "currentPointers", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "startPointers", { enumerable: true, configurable: true, writable: true, value: [] }), this.element = t, this.startCallback = e, this.moveCallback = n, this.endCallback = i;
+            for (let s of ["onPointerStart", "onTouchStart", "onMove", "onTouchEnd", "onPointerEnd", "onWindowBlur"]) this[s] = this[s].bind(this); this.element.addEventListener("mousedown", this.onPointerStart, bt), this.element.addEventListener("touchstart", this.onTouchStart, bt), this.element.addEventListener("touchmove", this.onMove, bt), this.element.addEventListener("touchend", this.onTouchEnd), this.element.addEventListener("touchcancel", this.onTouchEnd)
         }
         onPointerStart(t) {
-            if (!t.buttons || t.button !== 0) return; let e = new dt(t); this.currentPointers.some(n => n.id === e.id) || this.triggerPointerStart(e, t) && (window.addEventListener("mousemove", this.onMove), window.addEventListener("mouseup", this.onPointerEnd), window.addEventListener("blur", this.onWindowBlur))
+            if (!t.buttons || t.button !== 0) return;
+            let e = new dt(t); this.currentPointers.some(n => n.id === e.id) || this.triggerPointerStart(e, t) && (window.addEventListener("mousemove", this.onMove), window.addEventListener("mouseup", this.onPointerEnd), window.addEventListener("blur", this.onWindowBlur))
         }
         onTouchStart(t) {
             for (let e of Array.from(t.changedTouches || [])) this.triggerPointerStart(new dt(e), t); window.addEventListener("blur", this.onWindowBlur)
         }
         onMove(t) {
-            let e = this.currentPointers.slice(), n = "changedTouches" in t ? Array.from(t.changedTouches || []).map(s => new dt(s)) : [new dt(t)], i = []; for (let s of n) {
-                let l = this.currentPointers.findIndex(c => c.id === s.id); l < 0 || (i.push(s), this.currentPointers[l] = s)
+            let e = this.currentPointers.slice();
+            let n = "changedTouches" in t ? Array.from(t.changedTouches || []).map(s => new dt(s)) : [new dt(t)], i = [];
+            for (let s of n) {
+                let l = this.currentPointers.findIndex(c => c.id === s.id);
+                l < 0 || (i.push(s), this.currentPointers[l] = s)
             }
             i.length && this.moveCallback(t, this.currentPointers.slice(), e)
         }
@@ -2505,20 +2541,30 @@
     function pi(o, t) {
         return t ? {
             clientX: (o.clientX + t.clientX) / 2, clientY: (o.clientY + t.clientY) / 2
-        }
-            : o
+        } : o
     }
     var Wn = o => typeof o == "object" && o !== null && o.constructor === Object && Object.prototype.toString.call(o) === "[object Object]", X = (o, ...t) => {
-        let e = t.length; for (let n = 0; n < e; n++) {
-            let i = t[n] || {}; Object.entries(i).forEach(([s, l]) => { let c = Array.isArray(l) ? [] : {}; o[s] || Object.assign(o, { [s]: c }), Wn(l) ? Object.assign(o[s], X(c, l)) : Array.isArray(l) ? Object.assign(o, { [s]: [...l] }) : Object.assign(o, { [s]: l }) })
+        let e = t.length;
+        for (let n = 0; n < e; n++) {
+            let i = t[n] || {};
+            Object.entries(i).forEach(([s, l]) => {
+                let c = Array.isArray(l) ? [] : {};
+                o[s] || Object.assign(o, { [s]: c }), Wn(l) ? Object.assign(o[s], X(c, l)) : Array.isArray(l) ? Object.assign(o, { [s]: [...l] }) : Object.assign(o, { [s]: l })
+            })
         }
         return o
-    }, cn = function (o, t) { return o.split(".").reduce((e, n) => typeof e == "object" ? e[n] : void 0, t) }, yt = class {
+    }
+    var cn = function (o, t) {
+        return o.split(".").reduce((e, n) => typeof e == "object" ? e[n] : void 0, t)
+    }
+    var yt = class {
         constructor(t = {}) {
-            Object.defineProperty(this, "options", { enumerable: true, configurable: true, writable: true, value: t }), Object.defineProperty(this, "events", { enumerable: true, configurable: true, writable: true, value: new Map }), this.setOptions(t); for (let e of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) e.startsWith("on") && typeof this[e] == "function" && (this[e] = this[e].bind(this))
+            Object.defineProperty(this, "options", { enumerable: true, configurable: true, writable: true, value: t }), Object.defineProperty(this, "events", { enumerable: true, configurable: true, writable: true, value: new Map }), this.setOptions(t);
+            for (let e of Object.getOwnPropertyNames(Object.getPrototypeOf(this))) e.startsWith("on") && typeof this[e] == "function" && (this[e] = this[e].bind(this))
         }
         setOptions(t) {
-            this.options = t ? X({}, this.constructor.defaults, t) : {}; for (let [e, n] of Object.entries(this.option("on") || {})) this.on(e, n)
+            this.options = t ? X({}, this.constructor.defaults, t) : {};
+            for (let [e, n] of Object.entries(this.option("on") || {})) this.on(e, n)
         }
         option(t, ...e) {
             let n = cn(t, this.options);
@@ -2526,7 +2572,8 @@
         }
         optionFor(t, e, n, ...i) {
             let s = cn(e, t);
-            var l; typeof (l = s) != "string" || isNaN(l) || isNaN(parseFloat(l)) || (s = parseFloat(s)), s === "true" && (s = true), s === "false" && (s = false), s && typeof s == "function" && (s = s.call(this, this, t, ...i)); let c = cn(e, this.options);
+            var l; typeof (l = s) != "string" || isNaN(l) || isNaN(parseFloat(l)) || (s = parseFloat(s)), s === "true" && (s = true), s === "false" && (s = false), s && typeof s == "function" && (s = s.call(this, this, t, ...i));
+            let c = cn(e, this.options);
             return c && typeof c == "function" ? s = c.call(this, this, t, ...i, s) : s === void 0 && (s = c), s === void 0 ? n : s
 
         }
@@ -2538,11 +2585,13 @@
             t = String(t).replace(/\{\{(\w+).?(\w+)?\}\}/g, (n, i, s) => {
                 let l = "";
                 return s ? l = this.option(`${i[0] + i.toLowerCase().substring(1)}.l10n.${s}`) : i && (l = this.option(`l10n.${i}`)), l || (l = n), l
-            }); for (let n = 0; n < e.length; n++)t = t.split(e[n][0]).join(e[n][1]);
+            });
+            for (let n = 0; n < e.length; n++)t = t.split(e[n][0]).join(e[n][1]);
             return t = t.replace(/\{\{(.*?)\}\}/g, (n, i) => i)
         }
         on(t, e) {
-            let n = []; typeof t == "string" ? n = t.split(" ") : Array.isArray(t) && (n = t), this.events || (this.events = new Map), n.forEach(i => { let s = this.events.get(i); s || (this.events.set(i, []), s = []), s.includes(e) || s.push(e), this.events.set(i, s) })
+            let n = [];
+            typeof t == "string" ? n = t.split(" ") : Array.isArray(t) && (n = t), this.events || (this.events = new Map), n.forEach(i => { let s = this.events.get(i); s || (this.events.set(i, []), s = []), s.includes(e) || s.push(e), this.events.set(i, s) })
         }
         off(t, e) {
             let n = []; typeof t == "string" ? n = t.split(" ") : Array.isArray(t) && (n = t), n.forEach(i => {
@@ -2552,26 +2601,60 @@
                 }
             })
         }
-        emit(t, ...e) { [...this.events.get(t) || []].forEach(n => n(this, ...e)), t !== "*" && this.emit("*", t, ...e) }
-    }; Object.defineProperty(yt, "version", { enumerable: true, configurable: true, writable: true, value: "5.0.36" }), Object.defineProperty(yt, "defaults", { enumerable: true, configurable: true, writable: true, value: {} });
+        emit(t, ...e) {
+            [...this.events.get(t) || []].forEach(n => n(this, ...e))
+            t !== "*" && this.emit("*", t, ...e)
+        }
+    };
+    Object.defineProperty(yt, "version", { enumerable: true, configurable: true, writable: true, value: "5.0.36" })
+    Object.defineProperty(yt, "defaults", { enumerable: true, configurable: true, writable: true, value: {} });
     var Ot = class extends yt {
         constructor(t = {}) {
-            super(t), Object.defineProperty(this, "plugins", { enumerable: true, configurable: true, writable: true, value: {} })
+            super(t)
+            Object.defineProperty(this, "plugins", { enumerable: true, configurable: true, writable: true, value: {} })
         }
         attachPlugins(t = {}) {
-            let e = new Map; for (let [n, i] of Object.entries(t)) {
-                let s = this.option(n), l = this.plugins[n]; l || s === false ? l && s === false && (l.detach(), delete this.plugins[n]) : e.set(n, new i(this, s || {}))
+            let e = new Map;
+            for (let [n, i] of Object.entries(t)) {
+                let s = this.option(n);
+                let l = this.plugins[n];
+                l || s === false ? l && s === false && (l.detach(), delete this.plugins[n]) : e.set(n, new i(this, s || {}))
             }
             for (let [n, i] of e) this.plugins[n] = i, i.attach()
         }
         detachPlugins(t) {
-            t = t || Object.keys(this.plugins); for (let e of t) {
+            t = t || Object.keys(this.plugins);
+            for (let e of t) {
                 let n = this.plugins[e]; n && n.detach(), delete this.plugins[e]
             }
             return this.emit("detachPlugins"), this
         }
-    }, O; (function (o) { o[o.Init = 0] = "Init", o[o.Error = 1] = "Error", o[o.Ready = 2] = "Ready", o[o.Panning = 3] = "Panning", o[o.Mousemove = 4] = "Mousemove", o[o.Destroy = 5] = "Destroy" })(O || (O = {}));
-    var ot = ["a", "b", "c", "d", "e", "f"], Ni = { PANUP: "Move up", PANDOWN: "Move down", PANLEFT: "Move left", PANRIGHT: "Move right", ZOOMIN: "Zoom in", ZOOMOUT: "Zoom out", TOGGLEZOOM: "Toggle zoom level", TOGGLE1TO1: "Toggle zoom level", ITERATEZOOM: "Toggle zoom level", ROTATECCW: "Rotate counterclockwise", ROTATECW: "Rotate clockwise", FLIPX: "Flip horizontally", FLIPY: "Flip vertically", FITX: "Fit horizontally", FITY: "Fit vertically", RESET: "Reset", TOGGLEFS: "Toggle fullscreen" }, ha = { content: null, width: "auto", height: "auto", panMode: "drag", touch: true, dragMinThreshold: 3, lockAxis: false, mouseMoveFactor: 1, mouseMoveFriction: .12, zoom: true, pinchToZoom: true, panOnlyZoomed: "auto", minScale: 1, maxScale: 2, friction: .25, dragFriction: .35, decelFriction: .05, click: "toggleZoom", dblClick: false, wheel: "zoom", wheelLimit: 7, spinner: true, bounds: "auto", infinite: false, rubberband: true, bounce: true, maxVelocity: 75, transformParent: false, classes: { content: "f-panzoom__content", isLoading: "is-loading", canZoomIn: "can-zoom_in", canZoomOut: "can-zoom_out", isDraggable: "is-draggable", isDragging: "is-dragging", inFullscreen: "in-fullscreen", htmlHasFullscreen: "with-panzoom-in-fullscreen" }, l10n: Ni }, fi = '<circle cx="25" cy="25" r="20"></circle>', Rn = '<div class="f-spinner"><svg viewBox="0 0 50 50">' + fi + fi + "</svg></div>", N = o => o && o !== null && o instanceof Element && "nodeType" in o, Z = (o, t) => { o && Vn(t).forEach(e => { o.classList.remove(e) }) }, v = (o, t) => { o && Vn(t).forEach(e => { o.classList.add(e) }) }, oe = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, ua = 1e5, ae = 1e4, z = "mousemove", Qi = "drag", bi = "content", H = "auto", dn = null, hn = null, Qt = class o extends Ot {
+    }, O;
+    (function (o) {
+        o[o.Init = 0] = "Init"
+        o[o.Error = 1] = "Error"
+        o[o.Ready = 2] = "Ready"
+        o[o.Panning = 3] = "Panning"
+        o[o.Mousemove = 4] = "Mousemove"
+        o[o.Destroy = 5] = "Destroy"
+    })(O || (O = {}));
+    var ot = ["a", "b", "c", "d", "e", "f"];
+    var Ni = { PANUP: "Move up", PANDOWN: "Move down", PANLEFT: "Move left", PANRIGHT: "Move right", ZOOMIN: "Zoom in", ZOOMOUT: "Zoom out", TOGGLEZOOM: "Toggle zoom level", TOGGLE1TO1: "Toggle zoom level", ITERATEZOOM: "Toggle zoom level", ROTATECCW: "Rotate counterclockwise", ROTATECW: "Rotate clockwise", FLIPX: "Flip horizontally", FLIPY: "Flip vertically", FITX: "Fit horizontally", FITY: "Fit vertically", RESET: "Reset", TOGGLEFS: "Toggle fullscreen" };
+    var ha = { content: null, width: "auto", height: "auto", panMode: "drag", touch: true, dragMinThreshold: 3, lockAxis: false, mouseMoveFactor: 1, mouseMoveFriction: .12, zoom: true, pinchToZoom: true, panOnlyZoomed: "auto", minScale: 1, maxScale: 2, friction: .25, dragFriction: .35, decelFriction: .05, click: "toggleZoom", dblClick: false, wheel: "zoom", wheelLimit: 7, spinner: true, bounds: "auto", infinite: false, rubberband: true, bounce: true, maxVelocity: 75, transformParent: false, classes: { content: "f-panzoom__content", isLoading: "is-loading", canZoomIn: "can-zoom_in", canZoomOut: "can-zoom_out", isDraggable: "is-draggable", isDragging: "is-dragging", inFullscreen: "in-fullscreen", htmlHasFullscreen: "with-panzoom-in-fullscreen" }, l10n: Ni };
+    var fi = '<circle cx="25" cy="25" r="20"></circle>';
+    var Rn = '<div class="f-spinner"><svg viewBox="0 0 50 50">' + fi + fi + "</svg></div>";
+    var N = o => o && o !== null && o instanceof Element && "nodeType" in o
+    var Z = (o, t) => {
+        o && Vn(t).forEach(e => { o.classList.remove(e) })
+    }
+    var v = (o, t) => {
+        o && Vn(t).forEach(e => { o.classList.add(e) })
+    }
+    var oe = { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }
+    var ua = 1e5, ae = 1e4;
+    var z = "mousemove", Qi = "drag", bi = "content", H = "auto";
+    var dn = null, hn = null
+    var Qt = class o extends Ot {
         get fits() {
             return this.contentRect.width - this.contentRect.fitWidth < 1 && this.contentRect.height - this.contentRect.fitHeight < 1
         }
@@ -2598,33 +2681,25 @@
             return 180 * Math.atan2(this.target.b, this.target.a) / Math.PI || 0
         }
         get scale() {
-            let { a: t, b: e
-            }
-                = this.current;
+            let { a: t, b: e } = this.current;
             return Math.sqrt(t * t + e * e) || 1
         }
         get targetScale() {
-            let { a: t, b: e
-            }
-                = this.target;
+            let { a: t, b: e } = this.target;
             return Math.sqrt(t * t + e * e) || 1
         }
         get minScale() {
             return this.option("minScale") || 1
         }
         get fullScale() {
-            let { contentRect: t
-            }
-                = this;
+            let { contentRect: t } = this;
             return t.fullWidth / t.fitWidth || 1
         }
         get maxScale() {
             return this.fullScale * (this.option("maxScale") || 1) || 1
         }
         get coverScale() {
-            let { containerRect: t, contentRect: e
-            }
-                = this, n = Math.max(t.height / e.fitHeight, t.width / e.fitWidth) || 1;
+            let { containerRect: t, contentRect: e } = this, n = Math.max(t.height / e.fitHeight, t.width / e.fitWidth) || 1;
             return Math.min(this.fullScale, n)
         }
         get isScaling() {
@@ -2635,7 +2710,8 @@
             return !!(t && t instanceof HTMLImageElement) && !t.complete
         }
         get isResting() {
-            if (this.isBouncingX || this.isBouncingY) return false; for (let t of ot) {
+            if (this.isBouncingX || this.isBouncingY) return false;
+            for (let t of ot) {
                 let e = t == "e" || t === "f" ? 1e-4 : 1e-5;
                 if (Math.abs(this.target[t] - this.current[t]) > e) return false
             }
@@ -2663,39 +2739,51 @@
                 enumerable: true, configurable: true, writable: true, value: {
                     a: 0, b: 0, c: 0, d: 0, e: 0, f: 0
                 }
-            }), Object.defineProperty(this, "lockedAxis", { enumerable: true, configurable: true, writable: true, value: false }), !t) throw new Error("Container Element Not Found"); this.container = t, this.initContent(), this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), n)), this.emit("attachPlugins"), this.emit("init"); let s = this.content;
+            }), Object.defineProperty(this, "lockedAxis", { enumerable: true, configurable: true, writable: true, value: false }), !t) throw new Error("Container Element Not Found"); this.container = t, this.initContent(), this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), n)), this.emit("attachPlugins"), this.emit("init");
+            let s = this.content;
             if (s.addEventListener("load", this.onLoad), s.addEventListener("error", this.onError), this.isContentLoading) {
                 if (this.option("spinner")) {
-                    t.classList.add(this.cn("isLoading")); let l = tt(Rn); !t.contains(s) || s.parentElement instanceof HTMLPictureElement ? this.spinner = t.appendChild(l) : this.spinner = ((i = s.parentElement) === null || i === void 0 ? void 0 : i.insertBefore(l, s)) || null
+                    t.classList.add(this.cn("isLoading"));
+                    let l = tt(Rn); !t.contains(s) || s.parentElement instanceof HTMLPictureElement ? this.spinner = t.appendChild(l) : this.spinner = ((i = s.parentElement) === null || i === void 0 ? void 0 : i.insertBefore(l, s)) || null
                 }
                 this.emit("beforeLoad")
             }
             else queueMicrotask(() => { this.enable() })
         }
         initContent() {
-            let { container: t
-            }
-                = this, e = this.cn(bi), n = this.option(bi) || t.querySelector(`.${e}`);
+            let { container: t } = this, e = this.cn(bi), n = this.option(bi) || t.querySelector(`.${e}`);
             if (n || (n = t.querySelector("img,picture") || t.firstElementChild, n && v(n, e)), n instanceof HTMLPictureElement && (n = n.querySelector("img")), !n) throw new Error("No content found"); this.content = n
         }
         onLoad() {
-            let { spinner: t, container: e, state: n
-            }
-                = this; t && (t.remove(), this.spinner = null), this.option("spinner") && e.classList.remove(this.cn("isLoading")), this.emit("afterLoad"), n === O.Init ? this.enable() : this.updateMetrics()
+            let { spinner: t, container: e, state: n } = this; t && (t.remove(), this.spinner = null), this.option("spinner") && e.classList.remove(this.cn("isLoading")), this.emit("afterLoad"), n === O.Init ? this.enable() : this.updateMetrics()
         }
         onError() {
             this.state !== O.Destroy && (this.spinner && (this.spinner.remove(), this.spinner = null), this.stop(), this.detachEvents(), this.state = O.Error, this.emit("error"))
         }
         getNextScale(t) {
-            let { fullScale: e, targetScale: n, coverScale: i, maxScale: s, minScale: l
+            let { fullScale: e, targetScale: n, coverScale: i, maxScale: s, minScale: l } = this;
+            let c = l;
+            switch (t) {
+                case "toggleMax":
+                    c = n - l < .5 * (s - l) ? s : l;
+                    break;
+                case "toggleCover":
+                    c = n - l < .5 * (i - l) ? i : l;
+                    break;
+                case "toggleZoom":
+                    c = n - l < .5 * (e - l) ? e : l;
+                    break;
+                case "iterateZoom":
+                    let h = [1, e, s].sort((a, r) => a - r);
+                    let m = h.findIndex(a => a > n + 1e-5);
+                    c = h[m] || 1
             }
-                = this, c = l; switch (t) { case "toggleMax": c = n - l < .5 * (s - l) ? s : l; break; case "toggleCover": c = n - l < .5 * (i - l) ? i : l; break; case "toggleZoom": c = n - l < .5 * (e - l) ? e : l; break; case "iterateZoom": let h = [1, e, s].sort((a, r) => a - r), m = h.findIndex(a => a > n + 1e-5); c = h[m] || 1 }return c
+            return c
         }
         attachObserver() {
-            var t; let e = () => {
-                let { container: n, containerRect: i
-                }
-                    = this;
+            var t;
+            let e = () => {
+                let { container: n, containerRect: i } = this;
                 return Math.abs(i.width - n.getBoundingClientRect().width) > .1 || Math.abs(i.height - n.getBoundingClientRect().height) > .1
             }; this.resizeObserver || window.ResizeObserver === void 0 || (this.resizeObserver = new ResizeObserver(() => { this.updateTimer || (e() ? (this.onResize(), this.isMobile && (this.updateTimer = setTimeout(() => { e() && this.onResize(), this.updateTimer = null }, 500))) : this.updateTimer && (clearTimeout(this.updateTimer), this.updateTimer = null)) })), (t = this.resizeObserver) === null || t === void 0 || t.observe(this.container)
         }
@@ -2703,70 +2791,75 @@
             var t; (t = this.resizeObserver) === null || t === void 0 || t.disconnect()
         }
         attachEvents() {
-            let { container: t
-            }
-                = this; t.addEventListener("click", this.onClick, { passive: false, capture: false }), t.addEventListener("wheel", this.onWheel, { passive: false }), this.pointerTracker = new wn(t, { start: this.onPointerDown, move: this.onPointerMove, end: this.onPointerUp }), document.addEventListener(z, this.onMouseMove)
+            let { container: t } = this; t.addEventListener("click", this.onClick, { passive: false, capture: false }), t.addEventListener("wheel", this.onWheel, { passive: false }), this.pointerTracker = new wn(t, { start: this.onPointerDown, move: this.onPointerMove, end: this.onPointerUp }), document.addEventListener(z, this.onMouseMove)
         }
         detachEvents() {
-            var t; let { container: e
-            }
-                = this; e.removeEventListener("click", this.onClick, { passive: false, capture: false }), e.removeEventListener("wheel", this.onWheel, { passive: false }), (t = this.pointerTracker) === null || t === void 0 || t.stop(), this.pointerTracker = null, document.removeEventListener(z, this.onMouseMove), document.removeEventListener("keydown", this.onKeydown, true), this.clickTimer && (clearTimeout(this.clickTimer), this.clickTimer = null), this.updateTimer && (clearTimeout(this.updateTimer), this.updateTimer = null)
+            var t;
+            let { container: e } = this; e.removeEventListener("click", this.onClick, { passive: false, capture: false }), e.removeEventListener("wheel", this.onWheel, { passive: false }), (t = this.pointerTracker) === null || t === void 0 || t.stop(), this.pointerTracker = null, document.removeEventListener(z, this.onMouseMove), document.removeEventListener("keydown", this.onKeydown, true), this.clickTimer && (clearTimeout(this.clickTimer), this.clickTimer = null), this.updateTimer && (clearTimeout(this.updateTimer), this.updateTimer = null)
         }
         animate() {
-            this.setTargetForce(); let t = this.friction, e = this.option("maxVelocity"); for (let n of ot) t ? (this.velocity[n] *= 1 - t, e && !this.isScaling && (this.velocity[n] = Math.max(Math.min(this.velocity[n], e), -1 * e)), this.current[n] += this.velocity[n]) : this.current[n] = this.target[n]; this.setTransform(), this.setEdgeForce(), !this.isResting || this.isDragging ? this.rAF = requestAnimationFrame(() => this.animate()) : this.stop("current")
+            this.setTargetForce();
+            let t = this.friction;
+            let e = this.option("maxVelocity");
+            for (let n of ot)
+                t ? (this.velocity[n] *= 1 - t, e && !this.isScaling && (this.velocity[n] = Math.max(Math.min(this.velocity[n], e), -1 * e)), this.current[n] += this.velocity[n]) : this.current[n] = this.target[n];
+            this.setTransform(), this.setEdgeForce(), !this.isResting || this.isDragging ? this.rAF = requestAnimationFrame(() => this.animate()) : this.stop("current")
         }
         setTargetForce() {
             for (let t of ot) t === "e" && this.isBouncingX || t === "f" && this.isBouncingY || (this.velocity[t] = (1 / (1 - this.friction) - 1) * (this.target[t] - this.current[t]))
         }
         checkBounds(t = 0, e = 0) {
-            let { current: n
-            }
-                = this, i = n.e + t, s = n.f + e, l = this.getBounds(), { x: c, y: h
-                }
-                    = l, m = c.min, a = c.max, r = h.min, d = h.max, u = 0, p = 0;
+            let { current: n } = this, i = n.e + t, s = n.f + e, l = this.getBounds(), { x: c, y: h } = l, m = c.min, a = c.max, r = h.min, d = h.max, u = 0, p = 0;
             return m !== 1 / 0 && i < m ? u = m - i : a !== 1 / 0 && i > a && (u = a - i), r !== 1 / 0 && s < r ? p = r - s : d !== 1 / 0 && s > d && (p = d - s), Math.abs(u) < 1e-4 && (u = 0), Math.abs(p) < 1e-4 && (p = 0), Object.assign(Object.assign({}, l), { xDiff: u, yDiff: p, inBounds: !u && !p })
         }
         clampTargetBounds() {
-            let { target: t
-            }
-                = this, { x: e, y: n
-                }
-                    = this.getBounds(); e.min !== 1 / 0 && (t.e = Math.max(t.e, e.min)), e.max !== 1 / 0 && (t.e = Math.min(t.e, e.max)), n.min !== 1 / 0 && (t.f = Math.max(t.f, n.min)), n.max !== 1 / 0 && (t.f = Math.min(t.f, n.max))
+            let { target: t } = this, { x: e, y: n } = this.getBounds(); e.min !== 1 / 0 && (t.e = Math.max(t.e, e.min)), e.max !== 1 / 0 && (t.e = Math.min(t.e, e.max)), n.min !== 1 / 0 && (t.f = Math.max(t.f, n.min)), n.max !== 1 / 0 && (t.f = Math.min(t.f, n.max))
         }
         calculateContentDim(t = this.current) {
-            let { content: e, contentRect: n
-            }
-                = this, { fitWidth: i, fitHeight: s, fullWidth: l, fullHeight: c
-                }
-                    = n, h = l, m = c;
+            let { content: e, contentRect: n } = this, { fitWidth: i, fitHeight: s, fullWidth: l, fullHeight: c } = n, h = l, m = c;
             if (this.option("zoom") || this.angle !== 0) {
-                let a = !(e instanceof HTMLImageElement) && (window.getComputedStyle(e).maxWidth === "none" || window.getComputedStyle(e).maxHeight === "none"), r = a ? l : i, d = a ? c : s, u = this.getMatrix(t), p = new DOMPoint(0, 0).matrixTransform(u), f = new DOMPoint(0 + r, 0).matrixTransform(u), Q = new DOMPoint(0 + r, 0 + d).matrixTransform(u), b = new DOMPoint(0, 0 + d).matrixTransform(u), g = Math.abs(Q.x - p.x), B = Math.abs(Q.y - p.y), x = Math.abs(b.x - f.x), E = Math.abs(b.y - f.y); h = Math.max(g, x), m = Math.max(B, E)
+                let a = !(e instanceof HTMLImageElement) && (window.getComputedStyle(e).maxWidth === "none" || window.getComputedStyle(e).maxHeight === "none");
+                let r = a ? l : i;
+                let d = a ? c : s;
+                let u = this.getMatrix(t);
+                let p = new DOMPoint(0, 0).matrixTransform(u);
+                let f = new DOMPoint(0 + r, 0).matrixTransform(u);
+                let Q = new DOMPoint(0 + r, 0 + d).matrixTransform(u);
+                let b = new DOMPoint(0, 0 + d).matrixTransform(u);
+                let g = Math.abs(Q.x - p.x);
+                let B = Math.abs(Q.y - p.y);
+                let x = Math.abs(b.x - f.x);
+                let E = Math.abs(b.y - f.y);
+                h = Math.max(g, x);
+                m = Math.max(B, E)
             }
             return {
                 contentWidth: h, contentHeight: m
             }
         } setEdgeForce() {
-            if (this.ignoreBounds || this.isDragging || this.panMode === z || this.targetScale < this.scale) return this.isBouncingX = false, void (this.isBouncingY = false); let { target: t
-            }
-                = this, { x: e, y: n, xDiff: i, yDiff: s
-                }
-                    = this.checkBounds(), l = this.option("maxVelocity"), c = this.velocity.e, h = this.velocity.f; i !== 0 ? (this.isBouncingX = true, i * c <= 0 ? c += .14 * i : (c = .14 * i, e.min !== 1 / 0 && (this.target.e = Math.max(t.e, e.min)), e.max !== 1 / 0 && (this.target.e = Math.min(t.e, e.max))), l && (c = Math.max(Math.min(c, l), -1 * l))) : this.isBouncingX = false, s !== 0 ? (this.isBouncingY = true, s * h <= 0 ? h += .14 * s : (h = .14 * s, n.min !== 1 / 0 && (this.target.f = Math.max(t.f, n.min)), n.max !== 1 / 0 && (this.target.f = Math.min(t.f, n.max))), l && (h = Math.max(Math.min(h, l), -1 * l))) : this.isBouncingY = false, this.isBouncingX && (this.velocity.e = c), this.isBouncingY && (this.velocity.f = h)
+            if (this.ignoreBounds || this.isDragging || this.panMode === z || this.targetScale < this.scale) return this.isBouncingX = false, void (this.isBouncingY = false);
+            let { target: t } = this, { x: e, y: n, xDiff: i, yDiff: s } = this.checkBounds(), l = this.option("maxVelocity"), c = this.velocity.e, h = this.velocity.f; i !== 0 ? (this.isBouncingX = true, i * c <= 0 ? c += .14 * i : (c = .14 * i, e.min !== 1 / 0 && (this.target.e = Math.max(t.e, e.min)), e.max !== 1 / 0 && (this.target.e = Math.min(t.e, e.max))), l && (c = Math.max(Math.min(c, l), -1 * l))) : this.isBouncingX = false, s !== 0 ? (this.isBouncingY = true, s * h <= 0 ? h += .14 * s : (h = .14 * s, n.min !== 1 / 0 && (this.target.f = Math.max(t.f, n.min)), n.max !== 1 / 0 && (this.target.f = Math.min(t.f, n.max))), l && (h = Math.max(Math.min(h, l), -1 * l))) : this.isBouncingY = false, this.isBouncingX && (this.velocity.e = c), this.isBouncingY && (this.velocity.f = h)
         }
         enable() {
-            let { content: t
-            }
-                = this, e = new DOMMatrixReadOnly(window.getComputedStyle(t).transform); for (let n of ot) this.current[n] = this.target[n] = e[n]; this.updateMetrics(), this.attachObserver(), this.attachEvents(), this.state = O.Ready, this.emit("ready")
+            let { content: t } = this, e = new DOMMatrixReadOnly(window.getComputedStyle(t).transform);
+            for (let n of ot) this.current[n] = this.target[n] = e[n]; this.updateMetrics(), this.attachObserver(), this.attachEvents(), this.state = O.Ready, this.emit("ready")
         }
         onClick(t) {
-            var e; t.type === "click" && t.detail === 0 && (this.dragOffset.x = 0, this.dragOffset.y = 0), this.isDragging && ((e = this.pointerTracker) === null || e === void 0 || e.clear(), this.trackingPoints = [], this.startDecelAnim()); let n = t.target;
+            var e; t.type === "click" && t.detail === 0 && (this.dragOffset.x = 0, this.dragOffset.y = 0), this.isDragging && ((e = this.pointerTracker) === null || e === void 0 || e.clear(), this.trackingPoints = [], this.startDecelAnim());
+            let n = t.target;
             if (!n || t.defaultPrevented) return;
             if (n.hasAttribute("disabled")) return t.preventDefault(), void t.stopPropagation();
             if ((() => {
                 let u = window.getSelection();
                 return u && u.type === "Range"
-            })() && !n.closest("button")) return; let i = n.closest("[data-panzoom-action]"), s = n.closest("[data-panzoom-change]"), l = i || s, c = l && N(l) ? l.dataset : null;
+            })() && !n.closest("button")) return;
+            let i = n.closest("[data-panzoom-action]");
+            let s = n.closest("[data-panzoom-change]");
+            let l = i || s;
+            let c = l && N(l) ? l.dataset : null;
             if (c) {
-                let u = c.panzoomChange, p = c.panzoomAction;
+                let u = c.panzoomChange;
+                let p = c.panzoomAction;
                 if ((u || p) && t.preventDefault(), u) {
                     let f = {};
                     try {
@@ -2780,17 +2873,29 @@
                 if (p) return void (this[p] && this[p]())
             }
             if (Math.abs(this.dragOffset.x) > 3 || Math.abs(this.dragOffset.y) > 3) return t.preventDefault(), void t.stopPropagation();
-            if (n.closest("[data-fancybox]")) return; let h = this.content.getBoundingClientRect(), m = this.dragStart;
-            if (m.time && !this.canZoomOut() && (Math.abs(h.x - m.x) > 2 || Math.abs(h.y - m.y) > 2)) return; this.dragStart.time = 0; let a = u => { this.option("zoom", t) && u && typeof u == "string" && /(iterateZoom)|(toggle(Zoom|Full|Cover|Max)|(zoomTo(Fit|Cover|Max)))/.test(u) && typeof this[u] == "function" && (t.preventDefault(), this[u]({ event: t })) }, r = this.option("click", t), d = this.option("dblClick", t); d ? (this.clicks++, this.clicks == 1 && (this.clickTimer = setTimeout(() => { this.clicks === 1 ? (this.emit("click", t), !t.defaultPrevented && r && a(r)) : (this.emit("dblClick", t), t.defaultPrevented || a(d)), this.clicks = 0, this.clickTimer = null }, 350))) : (this.emit("click", t), !t.defaultPrevented && r && a(r))
+            if (n.closest("[data-fancybox]")) return;
+            let h = this.content.getBoundingClientRect();
+            let m = this.dragStart;
+            if (m.time && !this.canZoomOut() && (Math.abs(h.x - m.x) > 2 || Math.abs(h.y - m.y) > 2)) return; this.dragStart.time = 0;
+            let a = u => { this.option("zoom", t) && u && typeof u == "string" && /(iterateZoom)|(toggle(Zoom|Full|Cover|Max)|(zoomTo(Fit|Cover|Max)))/.test(u) && typeof this[u] == "function" && (t.preventDefault(), this[u]({ event: t })) };
+            let r = this.option("click", t);
+            let d = this.option("dblClick", t);
+            d ? (this.clicks++, this.clicks == 1 && (this.clickTimer = setTimeout(() => {
+                this.clicks === 1 ? (this.emit("click", t), !t.defaultPrevented && r && a(r)) : (this.emit("dblClick", t), t.defaultPrevented || a(d));
+                this.clicks = 0;
+                this.clickTimer = null
+            }, 350))) : (this.emit("click", t), !t.defaultPrevented && r && a(r))
         }
         addTrackingPoint(t) {
             let e = this.trackingPoints.filter(n => n.time > Date.now() - 100); e.push(t), this.trackingPoints = e
         }
         onPointerDown(t, e, n) {
             var i;
-            if (this.option("touch", t) === false) return false; this.pwt = 0, this.dragOffset = { x: 0, y: 0, time: 0 }, this.trackingPoints = []; let s = this.content.getBoundingClientRect();
+            if (this.option("touch", t) === false) return false; this.pwt = 0, this.dragOffset = { x: 0, y: 0, time: 0 }, this.trackingPoints = [];
+            let s = this.content.getBoundingClientRect();
             if (this.dragStart = { x: s.x, y: s.y, top: s.top, left: s.left, time: Date.now() }, this.clickTimer) return false;
-            if (this.panMode === z && this.targetScale > 1) return t.preventDefault(), t.stopPropagation(), false; let l = t.composedPath()[0];
+            if (this.panMode === z && this.targetScale > 1) return t.preventDefault(), t.stopPropagation(), false;
+            let l = t.composedPath()[0];
             if (!n.length) {
                 if (["TEXTAREA", "OPTION", "INPUT", "SELECT", "VIDEO", "IFRAME"].includes(l.nodeName) || l.closest("[contenteditable],[data-selectable],[data-draggable],[data-clickable],[data-panzoom-change],[data-panzoom-action]")) return false; (i = window.getSelection()) === null || i === void 0 || i.removeAllRanges()
             }
@@ -2798,34 +2903,74 @@
             return this.target.e = this.current.e, this.target.f = this.current.f, this.stop(), this.isDragging || (this.isDragging = true, this.addTrackingPoint(e), this.emit("touchStart", t)), true
         }
         onPointerMove(t, e, n) {
-            if (this.option("touch", t) === false || !this.isDragging || e.length < 2 && this.panOnlyZoomed && F(this.targetScale) <= F(this.minScale) || (this.emit("touchMove", t), t.defaultPrevented)) return; this.addTrackingPoint(e[0]); let { content: i
-            }
-                = this, s = pi(n[0], n[1]), l = pi(e[0], e[1]), c = 0, h = 0;
+            if (this.option("touch", t) === false || !this.isDragging || e.length < 2 && this.panOnlyZoomed && F(this.targetScale) <= F(this.minScale) || (this.emit("touchMove", t), t.defaultPrevented)) return; this.addTrackingPoint(e[0]);
+            let { content: i } = this, s = pi(n[0], n[1]), l = pi(e[0], e[1]), c = 0, h = 0;
             if (e.length > 1) {
                 let B = i.getBoundingClientRect(); c = s.clientX - B.left - .5 * B.width, h = s.clientY - B.top - .5 * B.height
             }
-            let m = mi(n[0], n[1]), a = mi(e[0], e[1]), r = m ? a / m : 1, d = l.clientX - s.clientX, u = l.clientY - s.clientY; this.dragOffset.x += d, this.dragOffset.y += u, this.dragOffset.time = Date.now() - this.dragStart.time; let p = F(this.targetScale) === F(this.minScale) && this.option("lockAxis");
+            let m = mi(n[0], n[1]);
+            let a = mi(e[0], e[1]);
+            let r = m ? a / m : 1;
+            let d = l.clientX - s.clientX;
+            let u = l.clientY - s.clientY;
+            this.dragOffset.x += d;
+            this.dragOffset.y += u;
+            this.dragOffset.time = Date.now() - this.dragStart.time;
+            let p = F(this.targetScale) === F(this.minScale) && this.option("lockAxis");
             if (p && !this.lockedAxis) if (p === "xy" || p === "y" || t.type === "touchmove") {
-                if (Math.abs(this.dragOffset.x) < 6 && Math.abs(this.dragOffset.y) < 6) return void t.preventDefault(); let B = Math.abs(180 * Math.atan2(this.dragOffset.y, this.dragOffset.x) / Math.PI); this.lockedAxis = B > 45 && B < 135 ? "y" : "x", this.dragOffset.x = 0, this.dragOffset.y = 0, d = 0, u = 0
+                if (Math.abs(this.dragOffset.x) < 6 && Math.abs(this.dragOffset.y) < 6) return void t.preventDefault();
+                let B = Math.abs(180 * Math.atan2(this.dragOffset.y, this.dragOffset.x) / Math.PI); this.lockedAxis = B > 45 && B < 135 ? "y" : "x", this.dragOffset.x = 0, this.dragOffset.y = 0, d = 0, u = 0
             }
             else this.lockedAxis = p;
-            if (Qe(t.target, this.content) && (p = "x", this.dragOffset.y = 0), p && p !== "xy" && this.lockedAxis !== p && F(this.targetScale) === F(this.minScale)) return; t.cancelable && t.preventDefault(), this.container.classList.add(this.cn("isDragging")); let f = this.checkBounds(d, u); this.option("rubberband") ? (this.isInfinite !== "x" && (f.xDiff > 0 && d < 0 || f.xDiff < 0 && d > 0) && (d *= Math.max(0, .5 - Math.abs(.75 / this.contentRect.fitWidth * f.xDiff))), this.isInfinite !== "y" && (f.yDiff > 0 && u < 0 || f.yDiff < 0 && u > 0) && (u *= Math.max(0, .5 - Math.abs(.75 / this.contentRect.fitHeight * f.yDiff)))) : (f.xDiff && (d = 0), f.yDiff && (u = 0)); let Q = this.targetScale, b = this.minScale, g = this.maxScale; Q < .5 * b && (r = Math.max(r, b)), Q > 1.5 * g && (r = Math.min(r, g)), this.lockedAxis === "y" && F(Q) === F(b) && (d = 0), this.lockedAxis === "x" && F(Q) === F(b) && (u = 0), this.applyChange({ originX: c, originY: h, panX: d, panY: u, scale: r, friction: this.option("dragFriction"), ignoreBounds: true })
+            if (Qe(t.target, this.content) && (p = "x", this.dragOffset.y = 0), p && p !== "xy" && this.lockedAxis !== p && F(this.targetScale) === F(this.minScale)) return; t.cancelable && t.preventDefault(), this.container.classList.add(this.cn("isDragging"));
+            let f = this.checkBounds(d, u);
+            this.option("rubberband") ? (this.isInfinite !== "x" && (f.xDiff > 0 && d < 0 || f.xDiff < 0 && d > 0) && (d *= Math.max(0, .5 - Math.abs(.75 / this.contentRect.fitWidth * f.xDiff))), this.isInfinite !== "y" && (f.yDiff > 0 && u < 0 || f.yDiff < 0 && u > 0) && (u *= Math.max(0, .5 - Math.abs(.75 / this.contentRect.fitHeight * f.yDiff)))) : (f.xDiff && (d = 0), f.yDiff && (u = 0));
+            let Q = this.targetScale;
+            let b = this.minScale;
+            let g = this.maxScale;
+            Q < .5 * b && (r = Math.max(r, b)), Q > 1.5 * g && (r = Math.min(r, g)), this.lockedAxis === "y" && F(Q) === F(b) && (d = 0), this.lockedAxis === "x" && F(Q) === F(b) && (u = 0), this.applyChange({ originX: c, originY: h, panX: d, panY: u, scale: r, friction: this.option("dragFriction"), ignoreBounds: true })
         }
         onPointerUp(t, e, n) {
             if (n.length) return this.dragOffset.x = 0, this.dragOffset.y = 0, void (this.trackingPoints = []); this.container.classList.remove(this.cn("isDragging")), this.isDragging && (this.addTrackingPoint(e), this.panOnlyZoomed && this.contentRect.width - this.contentRect.fitWidth < 1 && this.contentRect.height - this.contentRect.fitHeight < 1 && (this.trackingPoints = []), Qe(t.target, this.content) && this.lockedAxis === "y" && (this.trackingPoints = []), this.emit("touchEnd", t), this.isDragging = false, this.lockedAxis = false, this.state !== O.Destroy && (t.defaultPrevented || this.startDecelAnim()))
         }
         startDecelAnim() {
-            var t; let e = this.isScaling; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.isBouncingX = false, this.isBouncingY = false; for (let B of ot) this.velocity[B] = 0; this.target.e = this.current.e, this.target.f = this.current.f, Z(this.container, "is-scaling"), Z(this.container, "is-animating"), this.isTicking = false; let { trackingPoints: n
-            }
-                = this, i = n[0], s = n[n.length - 1], l = 0, c = 0, h = 0; s && i && (l = s.clientX - i.clientX, c = s.clientY - i.clientY, h = s.time - i.time); let m = ((t = window.visualViewport) === null || t === void 0 ? void 0 : t.scale) || 1; m !== 1 && (l *= m, c *= m); let a = 0, r = 0, d = 0, u = 0, p = this.option("decelFriction"), f = this.targetScale;
+            var t;
+            let e = this.isScaling;
+            this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.isBouncingX = false, this.isBouncingY = false;
+            for (let B of ot)
+                this.velocity[B] = 0;
+            this.target.e = this.current.e
+            this.target.f = this.current.f
+            Z(this.container, "is-scaling")
+            Z(this.container, "is-animating")
+            this.isTicking = false;
+            let { trackingPoints: n } = this, i = n[0], s = n[n.length - 1], l = 0, c = 0, h = 0; s && i && (l = s.clientX - i.clientX, c = s.clientY - i.clientY, h = s.time - i.time);
+            let m = ((t = window.visualViewport) === null || t === void 0 ? void 0 : t.scale) || 1;
+            m !== 1 && (l *= m, c *= m);
+            let a = 0;
+            let r = 0;
+            let d = 0;
+            let u = 0;
+            let p = this.option("decelFriction");
+            let f = this.targetScale;
             if (h > 0) {
-                d = Math.abs(l) > 3 ? l / (h / 30) : 0, u = Math.abs(c) > 3 ? c / (h / 30) : 0; let B = this.option("maxVelocity"); B && (d = Math.max(Math.min(d, B), -1 * B), u = Math.max(Math.min(u, B), -1 * B))
+                d = Math.abs(l) > 3 ? l / (h / 30) : 0, u = Math.abs(c) > 3 ? c / (h / 30) : 0;
+                let B = this.option("maxVelocity"); B && (d = Math.max(Math.min(d, B), -1 * B), u = Math.max(Math.min(u, B), -1 * B))
             }
-            d && (a = d / (1 / (1 - p) - 1)), u && (r = u / (1 / (1 - p) - 1)), (this.option("lockAxis") === "y" || this.option("lockAxis") === "xy" && this.lockedAxis === "y" && F(f) === this.minScale) && (a = d = 0), (this.option("lockAxis") === "x" || this.option("lockAxis") === "xy" && this.lockedAxis === "x" && F(f) === this.minScale) && (r = u = 0); let Q = this.dragOffset.x, b = this.dragOffset.y, g = this.option("dragMinThreshold") || 0; Math.abs(Q) < g && Math.abs(b) < g && (a = r = 0, d = u = 0), (this.option("zoom") && (f < this.minScale - 1e-5 || f > this.maxScale + 1e-5) || e && !a && !r) && (p = .35), this.applyChange({ panX: a, panY: r, friction: p }), this.emit("decel", d, u, Q, b)
+            d && (a = d / (1 / (1 - p) - 1)), u && (r = u / (1 / (1 - p) - 1)), (this.option("lockAxis") === "y" || this.option("lockAxis") === "xy" && this.lockedAxis === "y" && F(f) === this.minScale) && (a = d = 0), (this.option("lockAxis") === "x" || this.option("lockAxis") === "xy" && this.lockedAxis === "x" && F(f) === this.minScale) && (r = u = 0);
+            let Q = this.dragOffset.x;
+            let b = this.dragOffset.y;
+            let g = this.option("dragMinThreshold") || 0;
+            Math.abs(Q) < g && Math.abs(b) < g && (a = r = 0, d = u = 0)
+                (this.option("zoom") && (f < this.minScale - 1e-5 || f > this.maxScale + 1e-5) || e && !a && !r) && (p = .35)
+            this.applyChange({ panX: a, panY: r, friction: p })
+            this.emit("decel", d, u, Q, b)
         }
         onWheel(t) {
-            var e = [-t.deltaX || 0, -t.deltaY || 0, -t.detail || 0].reduce(function (s, l) { return Math.abs(l) > Math.abs(s) ? l : s }); let n = Math.max(-1, Math.min(1, e));
-            if (this.emit("wheel", t, n), this.panMode === z || t.defaultPrevented) return; let i = this.option("wheel"); i === "pan" ? (t.preventDefault(), this.panOnlyZoomed && !this.canZoomOut() || this.applyChange({ panX: 2 * -t.deltaX, panY: 2 * -t.deltaY, bounce: false })) : i === "zoom" && this.option("zoom") !== false && this.zoomWithWheel(t)
+            var e = [-t.deltaX || 0, -t.deltaY || 0, -t.detail || 0].reduce(function (s, l) { return Math.abs(l) > Math.abs(s) ? l : s });
+            let n = Math.max(-1, Math.min(1, e));
+            if (this.emit("wheel", t, n), this.panMode === z || t.defaultPrevented) return;
+            let i = this.option("wheel"); i === "pan" ? (t.preventDefault(), this.panOnlyZoomed && !this.canZoomOut() || this.applyChange({ panX: 2 * -t.deltaX, panY: 2 * -t.deltaY, bounce: false })) : i === "zoom" && this.option("zoom") !== false && this.zoomWithWheel(t)
         }
         onMouseMove(t) {
             this.panWithMouse(t)
@@ -2837,57 +2982,72 @@
             this.updateMetrics(), this.checkBounds().inBounds || this.requestTick()
         }
         setTransform() {
-            this.emit("beforeTransform"); let { current: t, target: e, content: n, contentRect: i
+            this.emit("beforeTransform");
+            let { current: t, target: e, content: n, contentRect: i } = this, s = Object.assign({}, oe);
+            for (let Q of ot) {
+                let b = Q == "e" || Q === "f" ? ae : ua; s[Q] = F(t[Q], b), Math.abs(e[Q] - t[Q]) < (Q == "e" || Q === "f" ? .51 : .001) && (t[Q] = e[Q])
             }
-                = this, s = Object.assign({}, oe); for (let Q of ot) {
-                    let b = Q == "e" || Q === "f" ? ae : ua; s[Q] = F(t[Q], b), Math.abs(e[Q] - t[Q]) < (Q == "e" || Q === "f" ? .51 : .001) && (t[Q] = e[Q])
-                }
-            let { a: l, b: c, c: h, d: m, e: a, f: r
-            }
-                = s, d = `matrix(${l}, ${c}, ${h}, ${m}, ${a}, ${r})`, u = n.parentElement instanceof HTMLPictureElement ? n.parentElement : n;
-            if (this.option("transformParent") && (u = u.parentElement || u), u.style.transform === d) return; u.style.transform = d; let { contentWidth: p, contentHeight: f
-            }
-                = this.calculateContentDim(); i.width = p, i.height = f, this.emit("afterTransform")
+            let { a: l, b: c, c: h, d: m, e: a, f: r } = s, d = `matrix(${l}, ${c}, ${h}, ${m}, ${a}, ${r})`, u = n.parentElement instanceof HTMLPictureElement ? n.parentElement : n;
+            if (this.option("transformParent") && (u = u.parentElement || u), u.style.transform === d) return; u.style.transform = d;
+            let { contentWidth: p, contentHeight: f } = this.calculateContentDim(); i.width = p, i.height = f, this.emit("afterTransform")
         }
         updateMetrics(t = false) {
             var e;
-            if (!this || this.state === O.Destroy || this.isContentLoading) return; let n = Math.max(1, ((e = window.visualViewport) === null || e === void 0 ? void 0 : e.scale) || 1), { container: i, content: s
-            }
-                = this, l = s instanceof HTMLImageElement, c = i.getBoundingClientRect(), h = getComputedStyle(this.container), m = c.width * n, a = c.height * n, r = parseFloat(h.paddingTop) + parseFloat(h.paddingBottom), d = m - (parseFloat(h.paddingLeft) + parseFloat(h.paddingRight)), u = a - r; this.containerRect = { width: m, height: a, innerWidth: d, innerHeight: u }; let p = parseFloat(s.dataset.width || "") || (L => {
-                    let Y = 0;
-                    return Y = L instanceof HTMLImageElement ? L.naturalWidth : L instanceof SVGElement ? L.width.baseVal.value : Math.max(L.offsetWidth, L.scrollWidth), Y || 0
-                })(s), f = parseFloat(s.dataset.height || "") || (L => {
-                    let Y = 0;
-                    return Y = L instanceof HTMLImageElement ? L.naturalHeight : L instanceof SVGElement ? L.height.baseVal.value : Math.max(L.offsetHeight, L.scrollHeight), Y || 0
-                })(s), Q = this.option("width", p) || H, b = this.option("height", f) || H, g = Q === H, B = b === H; typeof Q != "number" && (Q = p), typeof b != "number" && (b = f), g && (Q = p * (b / f)), B && (b = f / (p / Q)); let x = s.parentElement instanceof HTMLPictureElement ? s.parentElement : s; this.option("transformParent") && (x = x.parentElement || x); let E = x.getAttribute("style") || ""; x.style.setProperty("transform", "none", "important"), l && (x.style.width = "", x.style.height = ""), x.offsetHeight; let W = s.getBoundingClientRect(), y = W.width * n, w = W.height * n, k = y, U = w; y = Math.min(y, Q), w = Math.min(w, b), l ? {
-                    width: y, height: w
+            if (!this || this.state === O.Destroy || this.isContentLoading)
+                return;
+            let n = Math.max(1, ((e = window.visualViewport) === null || e === void 0 ? void 0 : e.scale) || 1);
+            let { container: i, content: s } = this;
+            let l = s instanceof HTMLImageElement;
+            let c = i.getBoundingClientRect();
+            let h = getComputedStyle(this.container);
+            let m = c.width * n;
+            let a = c.height * n;
+            let r = parseFloat(h.paddingTop) + parseFloat(h.paddingBottom);
+            let d = m - (parseFloat(h.paddingLeft) + parseFloat(h.paddingRight));
+            let u = a - r;
+            this.containerRect = { width: m, height: a, innerWidth: d, innerHeight: u };
+            let p = parseFloat(s.dataset.width || "") || (L => {
+                let Y = 0;
+                return Y = L instanceof HTMLImageElement ? L.naturalWidth : L instanceof SVGElement ? L.width.baseVal.value : Math.max(L.offsetWidth, L.scrollWidth), Y || 0
+            })(s), f = parseFloat(s.dataset.height || "") || (L => {
+                let Y = 0;
+                return Y = L instanceof HTMLImageElement ? L.naturalHeight : L instanceof SVGElement ? L.height.baseVal.value : Math.max(L.offsetHeight, L.scrollHeight), Y || 0
+            })(s), Q = this.option("width", p) || H, b = this.option("height", f) || H, g = Q === H, B = b === H; typeof Q != "number" && (Q = p), typeof b != "number" && (b = f), g && (Q = p * (b / f)), B && (b = f / (p / Q));
+            let x = s.parentElement instanceof HTMLPictureElement ? s.parentElement : s; this.option("transformParent") && (x = x.parentElement || x);
+            let E = x.getAttribute("style") || "";
+            x.style.setProperty("transform", "none", "important"), l && (x.style.width = "", x.style.height = ""), x.offsetHeight;
+            let W = s.getBoundingClientRect();
+            let y = W.width * n;
+            let w = W.height * n;
+            let k = y;
+            let U = w;
+            y = Math.min(y, Q), w = Math.min(w, b), l ? {
+                width: y, height: w
+            } = ((L, Y, ke, Jt) => {
+                let zt = ke / L;
+                let lt = Jt / Y;
+                let Ht = Math.min(zt, lt);
+                return {
+                    width: L *= Ht, height: Y *= Ht
                 }
-                    = ((L, Y, ke, Jt) => {
-                        let zt = ke / L, lt = Jt / Y, Ht = Math.min(zt, lt);
-                        return {
-                            width: L *= Ht, height: Y *= Ht
-                        }
-                    })(Q, b, y, w) : (y = Math.min(y, Q), w = Math.min(w, b)); let S = .5 * (U - w), T = .5 * (k - y); this.contentRect = Object.assign(Object.assign({}, this.contentRect), { top: W.top - c.top + S, bottom: c.bottom - W.bottom + S, left: W.left - c.left + T, right: c.right - W.right + T, fitWidth: y, fitHeight: w, width: y, height: w, fullWidth: Q, fullHeight: b }), x.style.cssText = E, l && (x.style.width = `${y}px`, x.style.height = `${w}px`), this.setTransform(), t !== true && this.emit("refresh"), this.ignoreBounds || (F(this.targetScale) < F(this.minScale) ? this.zoomTo(this.minScale, { friction: 0 }) : this.targetScale > this.maxScale ? this.zoomTo(this.maxScale, { friction: 0 }) : this.state === O.Init || this.checkBounds().inBounds || this.requestTick()), this.updateControls()
+            })(Q, b, y, w) : (y = Math.min(y, Q), w = Math.min(w, b));
+            let S = .5 * (U - w);
+            let T = .5 * (k - y);
+            this.contentRect = Object.assign(Object.assign({}, this.contentRect), { top: W.top - c.top + S, bottom: c.bottom - W.bottom + S, left: W.left - c.left + T, right: c.right - W.right + T, fitWidth: y, fitHeight: w, width: y, height: w, fullWidth: Q, fullHeight: b })
+            x.style.cssText = E
+            l && (x.style.width = `${y}px`, x.style.height = `${w}px`), this.setTransform(), t !== true && this.emit("refresh"), this.ignoreBounds || (F(this.targetScale) < F(this.minScale) ? this.zoomTo(this.minScale, { friction: 0 }) : this.targetScale > this.maxScale ? this.zoomTo(this.maxScale, { friction: 0 }) : this.state === O.Init || this.checkBounds().inBounds || this.requestTick()), this.updateControls()
         }
         calculateBounds() {
-            let { contentWidth: t, contentHeight: e
-            }
-                = this.calculateContentDim(this.target), { targetScale: n, lockedAxis: i
-                }
-                    = this, { fitWidth: s, fitHeight: l
-                    }
-                    = this.contentRect, c = 0, h = 0, m = 0, a = 0, r = this.option("infinite");
+            let { contentWidth: t, contentHeight: e } = this.calculateContentDim(this.target), { targetScale: n, lockedAxis: i } = this, { fitWidth: s, fitHeight: l } = this.contentRect, c = 0, h = 0, m = 0, a = 0, r = this.option("infinite");
             if (r === true || i && r === i) c = -1 / 0, m = 1 / 0, h = -1 / 0, a = 1 / 0; else {
-                let { containerRect: d, contentRect: u
-                }
-                    = this, p = F(s * n, ae), f = F(l * n, ae), { innerWidth: Q, innerHeight: b
-                    }
-                        = d;
+                let { containerRect: d, contentRect: u } = this, p = F(s * n, ae), f = F(l * n, ae), { innerWidth: Q, innerHeight: b } = d;
                 if (d.width === p && (Q = d.width), d.width === f && (b = d.height), t > Q) {
-                    m = .5 * (t - Q), c = -1 * m; let g = .5 * (u.right - u.left); c += g, m += g
+                    m = .5 * (t - Q), c = -1 * m;
+                    let g = .5 * (u.right - u.left); c += g, m += g
                 }
                 if (s > Q && t < Q && (c -= .5 * (s - Q), m -= .5 * (s - Q)), e > b) {
-                    a = .5 * (e - b), h = -1 * a; let g = .5 * (u.bottom - u.top); h += g, a += g
+                    a = .5 * (e - b), h = -1 * a;
+                    let g = .5 * (u.bottom - u.top); h += g, a += g
                 }
                 l > b && e < b && (c -= .5 * (l - b), m -= .5 * (l - b))
             }
@@ -2902,47 +3062,52 @@
             return t !== H ? t : this.calculateBounds()
         }
         updateControls() {
-            let t = this, e = t.container, { panMode: n, contentRect: i, targetScale: s, minScale: l
-            }
-                = t, c = l, h = t.option("click") || false; h && (c = t.getNextScale(h)); let m = t.canZoomIn(), a = t.canZoomOut(), r = n === Qi && !!this.option("touch"), d = a && r;
-            if (r && (F(s) < F(l) && !this.panOnlyZoomed && (d = true), (F(i.width, 1) > F(i.fitWidth, 1) || F(i.height, 1) > F(i.fitHeight, 1)) && (d = true)), F(i.width * s, 1) < F(i.fitWidth, 1) && (d = false), n === z && (d = false), et(e, this.cn("isDraggable"), d), !this.option("zoom")) return; let u = m && F(c) > F(s), p = !u && !d && a && F(c) < F(s); et(e, this.cn("canZoomIn"), u), et(e, this.cn("canZoomOut"), p); for (let f of e.querySelectorAll("[data-panzoom-action]")) {
-                let Q = false, b = false; switch (f.dataset.panzoomAction) { case "zoomIn": m ? Q = true : b = true; break; case "zoomOut": a ? Q = true : b = true; break; case "toggleZoom": case "iterateZoom": m || a ? Q = true : b = true; let g = f.querySelector("g"); g && (g.style.display = m ? "" : "none") }Q ? (f.removeAttribute("disabled"), f.removeAttribute("tabindex")) : b && (f.setAttribute("disabled", ""), f.setAttribute("tabindex", "-1"))
+            let t = this, e = t.container, { panMode: n, contentRect: i, targetScale: s, minScale: l } = t, c = l, h = t.option("click") || false; h && (c = t.getNextScale(h));
+            let m = t.canZoomIn(), a = t.canZoomOut(), r = n === Qi && !!this.option("touch"), d = a && r;
+            if (r && (F(s) < F(l) && !this.panOnlyZoomed && (d = true), (F(i.width, 1) > F(i.fitWidth, 1) || F(i.height, 1) > F(i.fitHeight, 1)) && (d = true)), F(i.width * s, 1) < F(i.fitWidth, 1) && (d = false), n === z && (d = false), et(e, this.cn("isDraggable"), d), !this.option("zoom")) return;
+            let u = m && F(c) > F(s), p = !u && !d && a && F(c) < F(s); et(e, this.cn("canZoomIn"), u), et(e, this.cn("canZoomOut"), p);
+            for (let f of e.querySelectorAll("[data-panzoom-action]")) {
+                let Q = false, b = false; switch (f.dataset.panzoomAction) {
+                    case "zoomIn": m ? Q = true : b = true; break; case "zoomOut": a ? Q = true : b = true; break; case "toggleZoom": case "iterateZoom": m || a ? Q = true : b = true;
+                        let g = f.querySelector("g"); g && (g.style.display = m ? "" : "none")
+                }Q ? (f.removeAttribute("disabled"), f.removeAttribute("tabindex")) : b && (f.setAttribute("disabled", ""), f.setAttribute("tabindex", "-1"))
             }
         } panTo({ x: t = this.target.e, y: e = this.target.f, scale: n = this.targetScale, friction: i = this.option("friction"), angle: s = 0, originX: l = 0, originY: c = 0, flipX: h = false, flipY: m = false, ignoreBounds: a = false }) {
             this.state !== O.Destroy && this.applyChange({ panX: t - this.target.e, panY: e - this.target.f, scale: n / this.targetScale, angle: s, originX: l, originY: c, friction: i, flipX: h, flipY: m, ignoreBounds: a })
         }
         applyChange({ panX: t = 0, panY: e = 0, scale: n = 1, angle: i = 0, originX: s = -this.current.e, originY: l = -this.current.f, friction: c = this.option("friction"), flipX: h = false, flipY: m = false, ignoreBounds: a = false, bounce: r = this.option("bounce") }) {
             let d = this.state;
-            if (d === O.Destroy) return; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.friction = c || 0, this.ignoreBounds = a; let { current: u
-            }
-                = this, p = u.e, f = u.f, Q = this.getMatrix(this.target), b = new DOMMatrix().translate(p, f).translate(s, l).translate(t, e);
+            if (d === O.Destroy) return; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.friction = c || 0, this.ignoreBounds = a;
+            let { current: u } = this, p = u.e, f = u.f, Q = this.getMatrix(this.target), b = new DOMMatrix().translate(p, f).translate(s, l).translate(t, e);
             if (this.option("zoom")) {
                 if (!a) {
                     let g = this.targetScale, B = this.minScale, x = this.maxScale; g * n < B && (n = B / g), g * n > x && (n = x / g)
                 }
                 b = b.scale(n)
             }
-            b = b.translate(-s, -l).translate(-p, -f).multiply(Q), i && (b = b.rotate(i)), h && (b = b.scale(-1, 1)), m && (b = b.scale(1, -1)); for (let g of ot) g !== "e" && g !== "f" && (b[g] > this.minScale + 1e-5 || b[g] < this.minScale - 1e-5) ? this.target[g] = b[g] : this.target[g] = F(b[g], ae); (this.targetScale < this.scale || Math.abs(n - 1) > .1 || this.panMode === z || r === false) && !a && this.clampTargetBounds(), d === O.Init ? this.animate() : this.isResting || (this.state = O.Panning, this.requestTick())
+            b = b.translate(-s, -l).translate(-p, -f).multiply(Q), i && (b = b.rotate(i)), h && (b = b.scale(-1, 1)), m && (b = b.scale(1, -1));
+            for (let g of ot) g !== "e" && g !== "f" && (b[g] > this.minScale + 1e-5 || b[g] < this.minScale - 1e-5) ? this.target[g] = b[g] : this.target[g] = F(b[g], ae); (this.targetScale < this.scale || Math.abs(n - 1) > .1 || this.panMode === z || r === false) && !a && this.clampTargetBounds(), d === O.Init ? this.animate() : this.isResting || (this.state = O.Panning, this.requestTick())
         }
         stop(t = false) {
-            if (this.state === O.Init || this.state === O.Destroy) return; let e = this.isTicking; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.isBouncingX = false, this.isBouncingY = false; for (let n of ot) this.velocity[n] = 0, t === "current" ? this.current[n] = this.target[n] : t === "target" && (this.target[n] = this.current[n]); this.setTransform(), Z(this.container, "is-scaling"), Z(this.container, "is-animating"), this.isTicking = false, this.state = O.Ready, e && (this.emit("endAnimation"), this.updateControls())
+            if (this.state === O.Init || this.state === O.Destroy) return;
+            let e = this.isTicking; this.rAF && (cancelAnimationFrame(this.rAF), this.rAF = null), this.isBouncingX = false, this.isBouncingY = false;
+            for (let n of ot) this.velocity[n] = 0, t === "current" ? this.current[n] = this.target[n] : t === "target" && (this.target[n] = this.current[n]); this.setTransform(), Z(this.container, "is-scaling"), Z(this.container, "is-animating"), this.isTicking = false, this.state = O.Ready, e && (this.emit("endAnimation"), this.updateControls())
         }
         requestTick() {
             this.isTicking || (this.emit("startAnimation"), this.updateControls(), v(this.container, "is-animating"), this.isScaling && v(this.container, "is-scaling")), this.isTicking = true, this.rAF || (this.rAF = requestAnimationFrame(() => this.animate()))
         }
         panWithMouse(t, e = this.option("mouseMoveFriction")) {
-            if (this.pmme = t, this.panMode !== z || !t || F(this.targetScale) <= F(this.minScale)) return; this.emit("mouseMove", t); let { container: n, containerRect: i, contentRect: s
-            }
-                = this, l = i.width, c = i.height, h = n.getBoundingClientRect(), m = (t.clientX || 0) - h.left, a = (t.clientY || 0) - h.top, { contentWidth: r, contentHeight: d
-                }
-                    = this.calculateContentDim(this.target), u = this.option("mouseMoveFactor"); u > 1 && (r !== l && (r *= u), d !== c && (d *= u)); let p = .5 * (r - l) - m / l * 100 / 100 * (r - l); p += .5 * (s.right - s.left); let f = .5 * (d - c) - a / c * 100 / 100 * (d - c); f += .5 * (s.bottom - s.top), this.applyChange({ panX: p - this.target.e, panY: f - this.target.f, friction: e })
+            if (this.pmme = t, this.panMode !== z || !t || F(this.targetScale) <= F(this.minScale)) return; this.emit("mouseMove", t);
+            let { container: n, containerRect: i, contentRect: s } = this, l = i.width, c = i.height, h = n.getBoundingClientRect(), m = (t.clientX || 0) - h.left, a = (t.clientY || 0) - h.top, { contentWidth: r, contentHeight: d } = this.calculateContentDim(this.target), u = this.option("mouseMoveFactor"); u > 1 && (r !== l && (r *= u), d !== c && (d *= u));
+            let p = .5 * (r - l) - m / l * 100 / 100 * (r - l); p += .5 * (s.right - s.left);
+            let f = .5 * (d - c) - a / c * 100 / 100 * (d - c); f += .5 * (s.bottom - s.top), this.applyChange({ panX: p - this.target.e, panY: f - this.target.f, friction: e })
         }
         zoomWithWheel(t) {
-            if (this.state === O.Destroy || this.state === O.Init) return; let e = Date.now();
+            if (this.state === O.Destroy || this.state === O.Init) return;
+            let e = Date.now();
             if (e - this.pwt < 45) return void t.preventDefault(); this.pwt = e;
-            var n = [-t.deltaX || 0, -t.deltaY || 0, -t.detail || 0].reduce(function (m, a) { return Math.abs(a) > Math.abs(m) ? a : m }); let i = Math.max(-1, Math.min(1, n)), { targetScale: s, maxScale: l, minScale: c
-            }
-                = this, h = s * (100 + 45 * i) / 100; F(h) < F(c) && F(s) <= F(c) ? (this.cwd += Math.abs(i), h = c) : F(h) > F(l) && F(s) >= F(l) ? (this.cwd += Math.abs(i), h = l) : (this.cwd = 0, h = Math.max(Math.min(h, l), c)), this.cwd > this.option("wheelLimit") || (t.preventDefault(), F(h) !== F(s) && this.zoomTo(h, { event: t }))
+            var n = [-t.deltaX || 0, -t.deltaY || 0, -t.detail || 0].reduce(function (m, a) { return Math.abs(a) > Math.abs(m) ? a : m });
+            let i = Math.max(-1, Math.min(1, n)), { targetScale: s, maxScale: l, minScale: c } = this, h = s * (100 + 45 * i) / 100; F(h) < F(c) && F(s) <= F(c) ? (this.cwd += Math.abs(i), h = c) : F(h) > F(l) && F(s) >= F(l) ? (this.cwd += Math.abs(i), h = l) : (this.cwd = 0, h = Math.max(Math.min(h, l), c)), this.cwd > this.option("wheelLimit") || (t.preventDefault(), F(h) !== F(s) && this.zoomTo(h, { event: t }))
 
         }
         canZoomIn() {
@@ -2981,12 +3146,9 @@
         iterateZoom(t) {
             this.zoomTo("next", t)
         }
-        zoomTo(t = 1, { friction: e = H, originX: n = H, originY: i = H, event: s
-        }
-            = {}) {
-            if (this.isContentLoading || this.state === O.Destroy) return; let { targetScale: l, fullScale: c, maxScale: h, coverScale: m
-            }
-                = this;
+        zoomTo(t = 1, { friction: e = H, originX: n = H, originY: i = H, event: s } = {}) {
+            if (this.isContentLoading || this.state === O.Destroy) return;
+            let { targetScale: l, fullScale: c, maxScale: h, coverScale: m } = this;
             if (this.stop(), this.panMode === z && (s = this.pmme || s), s || n === H || i === H) {
                 let r = this.content.getBoundingClientRect(), d = this.container.getBoundingClientRect(), u = s ? s.clientX : d.left + .5 * d.width, p = s ? s.clientY : d.top + .5 * d.height; n = u - r.left - .5 * r.width, i = p - r.top - .5 * r.height
             }
@@ -3005,34 +3167,30 @@
             this.applyChange({ flipY: true })
         }
         fitX() {
-            this.stop("target"); let { containerRect: t, contentRect: e, target: n
-            }
-                = this; this.applyChange({ panX: .5 * t.width - (e.left + .5 * e.fitWidth) - n.e, panY: .5 * t.height - (e.top + .5 * e.fitHeight) - n.f, scale: t.width / e.fitWidth / this.targetScale, originX: 0, originY: 0, ignoreBounds: true })
+            this.stop("target");
+            let { containerRect: t, contentRect: e, target: n } = this; this.applyChange({ panX: .5 * t.width - (e.left + .5 * e.fitWidth) - n.e, panY: .5 * t.height - (e.top + .5 * e.fitHeight) - n.f, scale: t.width / e.fitWidth / this.targetScale, originX: 0, originY: 0, ignoreBounds: true })
         }
         fitY() {
-            this.stop("target"); let { containerRect: t, contentRect: e, target: n
-            }
-                = this; this.applyChange({ panX: .5 * t.width - (e.left + .5 * e.fitWidth) - n.e, panY: .5 * t.innerHeight - (e.top + .5 * e.fitHeight) - n.f, scale: t.height / e.fitHeight / this.targetScale, originX: 0, originY: 0, ignoreBounds: true })
+            this.stop("target");
+            let { containerRect: t, contentRect: e, target: n } = this; this.applyChange({ panX: .5 * t.width - (e.left + .5 * e.fitWidth) - n.e, panY: .5 * t.innerHeight - (e.top + .5 * e.fitHeight) - n.f, scale: t.height / e.fitHeight / this.targetScale, originX: 0, originY: 0, ignoreBounds: true })
         }
         toggleFS() {
-            let { container: t
-            }
-                = this, e = this.cn("inFullscreen"), n = this.cn("htmlHasFullscreen"); t.classList.toggle(e); let i = t.classList.contains(e); i ? (document.documentElement.classList.add(n), document.addEventListener("keydown", this.onKeydown, true)) : (document.documentElement.classList.remove(n), document.removeEventListener("keydown", this.onKeydown, true)), this.updateMetrics(), this.emit(i ? "enterFS" : "exitFS")
+            let { container: t } = this, e = this.cn("inFullscreen"), n = this.cn("htmlHasFullscreen"); t.classList.toggle(e);
+            let i = t.classList.contains(e); i ? (document.documentElement.classList.add(n), document.addEventListener("keydown", this.onKeydown, true)) : (document.documentElement.classList.remove(n), document.removeEventListener("keydown", this.onKeydown, true)), this.updateMetrics(), this.emit(i ? "enterFS" : "exitFS")
         }
         getMatrix(t = this.current) {
-            let { a: e, b: n, c: i, d: s, e: l, f: c
-            }
-                = t;
+            let { a: e, b: n, c: i, d: s, e: l, f: c } = t;
             return new DOMMatrix([e, n, i, s, l, c])
         }
         reset(t) {
             if (this.state !== O.Init && this.state !== O.Destroy) {
-                this.stop("current"); for (let e of ot) this.target[e] = oe[e]; this.target.a = this.minScale, this.target.d = this.minScale, this.clampTargetBounds(), this.isResting || (this.friction = t === void 0 ? this.option("friction") : t, this.state = O.Panning, this.requestTick())
+                this.stop("current");
+                for (let e of ot) this.target[e] = oe[e]; this.target.a = this.minScale, this.target.d = this.minScale, this.clampTargetBounds(), this.isResting || (this.friction = t === void 0 ? this.option("friction") : t, this.state = O.Panning, this.requestTick())
             }
         } destroy() {
-            this.stop(), this.state = O.Destroy, this.detachEvents(), this.detachObserver(); let { container: t, content: e
-            }
-                = this, n = this.option("classes") || {}; for (let i of Object.values(n)) t.classList.remove(i + ""); e && (e.removeEventListener("load", this.onLoad), e.removeEventListener("error", this.onError)), this.detachPlugins()
+            this.stop(), this.state = O.Destroy, this.detachEvents(), this.detachObserver();
+            let { container: t, content: e } = this, n = this.option("classes") || {};
+            for (let i of Object.values(n)) t.classList.remove(i + ""); e && (e.removeEventListener("load", this.onLoad), e.removeEventListener("error", this.onError)), this.detachPlugins()
         }
     }; Object.defineProperty(Qt, "defaults", { enumerable: true, configurable: true, writable: true, value: ha }), Object.defineProperty(Qt, "Plugins", { enumerable: true, configurable: true, writable: true, value: {} });
     var gi = function (o, t) {
@@ -3069,23 +3227,33 @@
         build() {
             let t = this.list;
             if (!t) {
-                t = document.createElement("ul"), v(t, this.cn("list")), t.setAttribute("role", "tablist"); let e = this.instance.container; e.appendChild(t), v(e, this.cn("hasDots")), this.list = t
+                t = document.createElement("ul"), v(t, this.cn("list")), t.setAttribute("role", "tablist");
+                let e = this.instance.container; e.appendChild(t), v(e, this.cn("hasDots")), this.list = t
             }
             return t
         }
         refresh() {
-            var t; let e = this.instance.pages.length, n = Math.min(2, this.option("minCount")), i = Math.max(2e3, this.option("maxCount")), s = this.option("dynamicFrom");
-            if (e < n || e > i) return void this.cleanup(); let l = typeof s == "number" && e > 5 && e >= s, c = !this.list || this.isDynamic !== l || this.list.children.length !== e; c && this.cleanup(); let h = this.build();
-            if (et(h, this.cn("isDynamic"), !!l), c) for (let r = 0; r < e; r++)h.append(this.createItem(r)); let m, a = 0; for (let r of [...h.children]) {
-                let d = a === this.instance.page; d && (m = r), et(r, this.cn("isCurrent"), d), (t = r.children[0]) === null || t === void 0 || t.setAttribute("aria-selected", d ? "true" : "false"); for (let u of ["isBeforePrev", "isPrev", "isNext", "isAfterNext"]) Z(r, this.cn(u)); a++
+            var t;
+            let e = this.instance.pages.length, n = Math.min(2, this.option("minCount")), i = Math.max(2e3, this.option("maxCount")), s = this.option("dynamicFrom");
+            if (e < n || e > i) return void this.cleanup();
+            let l = typeof s == "number" && e > 5 && e >= s, c = !this.list || this.isDynamic !== l || this.list.children.length !== e; c && this.cleanup();
+            let h = this.build();
+            if (et(h, this.cn("isDynamic"), !!l), c) for (let r = 0; r < e; r++)h.append(this.createItem(r));
+            let m, a = 0;
+            for (let r of [...h.children]) {
+                let d = a === this.instance.page; d && (m = r), et(r, this.cn("isCurrent"), d), (t = r.children[0]) === null || t === void 0 || t.setAttribute("aria-selected", d ? "true" : "false");
+                for (let u of ["isBeforePrev", "isPrev", "isNext", "isAfterNext"]) Z(r, this.cn(u)); a++
             }
             if (m = m || h.firstChild, l && m) {
-                let r = m.previousElementSibling, d = r && r.previousElementSibling; v(r, this.cn("isPrev")), v(d, this.cn("isBeforePrev")); let u = m.nextElementSibling, p = u && u.nextElementSibling; v(u, this.cn("isNext")), v(p, this.cn("isAfterNext"))
+                let r = m.previousElementSibling, d = r && r.previousElementSibling; v(r, this.cn("isPrev")), v(d, this.cn("isBeforePrev"));
+                let u = m.nextElementSibling, p = u && u.nextElementSibling; v(u, this.cn("isNext")), v(p, this.cn("isAfterNext"))
             }
             this.isDynamic = l
         }
         createItem(t = 0) {
-            var e; let n = document.createElement("li"); n.setAttribute("role", "presentation"); let i = tt(this.instance.localize(this.option("dotTpl"), [["%d", t + 1]]).replace(/\%i/g, t + ""));
+            var e;
+            let n = document.createElement("li"); n.setAttribute("role", "presentation");
+            let i = tt(this.instance.localize(this.option("dotTpl"), [["%d", t + 1]]).replace(/\%i/g, t + ""));
             return n.appendChild(i), (e = n.children[0]) === null || e === void 0 || e.setAttribute("role", "tab"), n
         }
         cleanup() {
@@ -3104,18 +3272,19 @@
         }
         onRefresh() {
             let t = this.instance, e = t.pages.length, n = t.page;
-            if (e < 2) return void this.cleanup(); this.build(); let i = this.prev, s = this.next; i && s && (i.removeAttribute(se), s.removeAttribute(se), t.isInfinite || (n <= 0 && i.setAttribute(se, ""), n >= e - 1 && s.setAttribute(se, "")))
+            if (e < 2) return void this.cleanup(); this.build();
+            let i = this.prev, s = this.next; i && s && (i.removeAttribute(se), s.removeAttribute(se), t.isInfinite || (n <= 0 && i.setAttribute(se, ""), n >= e - 1 && s.setAttribute(se, "")))
         }
         addBtn(t) {
-            var e; let n = this.instance, i = document.createElement("button"); i.setAttribute("tabindex", "0"), i.setAttribute("title", n.localize(`{{${t.toUpperCase()}}}`)), v(i, this.cn("button") + " " + this.cn(t === re ? "isNext" : "isPrev")); let s = n.isRTL ? t === re ? Bi : re : t;
+            var e;
+            let n = this.instance, i = document.createElement("button"); i.setAttribute("tabindex", "0"), i.setAttribute("title", n.localize(`{{${t.toUpperCase()}}}`)), v(i, this.cn("button") + " " + this.cn(t === re ? "isNext" : "isPrev"));
+            let s = n.isRTL ? t === re ? Bi : re : t;
             var l;
             return i.innerHTML = n.localize(this.option(`${s}Tpl`)), i.dataset[`carousel${l = t, l ? l.match("^[a-z]") ? l.charAt(0).toUpperCase() + l.substring(1) : l : ""}`] = "true", (e = this.container) === null || e === void 0 || e.appendChild(i), i
 
         }
         build() {
-            let t = this.instance.container, e = this.cn("container"), { container: n, prev: i, next: s
-            }
-                = this; n || (n = t.querySelector("." + e), this.isDom = !!n), n || (n = document.createElement("div"), v(n, e), t.appendChild(n)), this.container = n, s || (s = n.querySelector("[data-carousel-next]")), s || (s = this.addBtn(re)), this.next = s, i || (i = n.querySelector("[data-carousel-prev]")), i || (i = this.addBtn(Bi)), this.prev = i
+            let t = this.instance.container, e = this.cn("container"), { container: n, prev: i, next: s } = this; n || (n = t.querySelector("." + e), this.isDom = !!n), n || (n = document.createElement("div"), v(n, e), t.appendChild(n)), this.container = n, s || (s = n.querySelector("[data-carousel-next]")), s || (s = this.addBtn(re)), this.next = s, i || (i = n.querySelector("[data-carousel-prev]")), i || (i = this.addBtn(Bi)), this.prev = i
         }
         cleanup() {
             this.isDom || (this.prev && this.prev.remove(), this.next && this.next.remove(), this.container && this.container.remove()), this.prev = null, this.next = null, this.container = null, this.isDom = false
@@ -3140,9 +3309,7 @@
             this.nav = this.instance, this.target = t, this.attachEvents()
         }
         attachEvents() {
-            let { nav: t, target: e
-            }
-                = this; t && e && (t.options.initialSlide = e.options.initialPage, t.state === D.Ready ? this.onNavReady(t) : t.on("ready", this.onNavReady), e.state === D.Ready ? this.onTargetReady(e) : e.on("ready", this.onTargetReady))
+            let { nav: t, target: e } = this; t && e && (t.options.initialSlide = e.options.initialPage, t.state === D.Ready ? this.onNavReady(t) : t.on("ready", this.onNavReady), e.state === D.Ready ? this.onTargetReady(e) : e.on("ready", this.onTargetReady))
         }
         onNavReady(t) {
             t.on("createSlide", this.onNavCreateSlide), t.on("Panzoom.click", this.onNavClick), t.on("Panzoom.touchEnd", this.onNavTouch), this.onTargetChange()
@@ -3155,20 +3322,21 @@
         }
         onNavTouch(t, e, n) {
             var i, s;
-            if (Math.abs(e.dragOffset.x) > 3 || Math.abs(e.dragOffset.y) > 3) return; let l = n.target, { nav: c, target: h
-            }
-                = this;
-            if (!c || !h || !l) return; let m = l.closest("[data-index]");
-            if (n.stopPropagation(), n.preventDefault(), !m) return; let a = parseInt(m.dataset.index || "", 10) || 0, r = h.getPageForSlide(a), d = c.getPageForSlide(a); c.slideTo(d), h.slideTo(r, { friction: ((s = (i = this.nav) === null || i === void 0 ? void 0 : i.plugins) === null || s === void 0 ? void 0 : s.Sync.option("friction")) || 0 }), this.markSelectedSlide(a)
+            if (Math.abs(e.dragOffset.x) > 3 || Math.abs(e.dragOffset.y) > 3) return;
+            let l = n.target, { nav: c, target: h } = this;
+            if (!c || !h || !l) return;
+            let m = l.closest("[data-index]");
+            if (n.stopPropagation(), n.preventDefault(), !m) return;
+            let a = parseInt(m.dataset.index || "", 10) || 0, r = h.getPageForSlide(a), d = c.getPageForSlide(a); c.slideTo(d), h.slideTo(r, { friction: ((s = (i = this.nav) === null || i === void 0 ? void 0 : i.plugins) === null || s === void 0 ? void 0 : s.Sync.option("friction")) || 0 }), this.markSelectedSlide(a)
         }
         onNavCreateSlide(t, e) {
             e.index === this.selectedIndex && this.markSelectedSlide(e.index)
         }
         onTargetChange() {
-            var t, e; let { target: n, nav: i
-            }
-                = this;
-            if (!n || !i || i.state !== D.Ready || n.state !== D.Ready) return; let s = (e = (t = n.pages[n.page]) === null || t === void 0 ? void 0 : t.slides[0]) === null || e === void 0 ? void 0 : e.index, l = i.getPageForSlide(s); this.markSelectedSlide(s), i.slideTo(l, i.prevPage === null && n.prevPage === null ? {
+            var t, e;
+            let { target: n, nav: i } = this;
+            if (!n || !i || i.state !== D.Ready || n.state !== D.Ready) return;
+            let s = (e = (t = n.pages[n.page]) === null || t === void 0 ? void 0 : t.slides[0]) === null || e === void 0 ? void 0 : e.index, l = i.getPageForSlide(s); this.markSelectedSlide(s), i.slideTo(l, i.prevPage === null && n.prevPage === null ? {
                 friction: 0
             }
                 : void 0)
@@ -3195,9 +3363,7 @@
             return this.state === D.Ready
         }
         get isInfinite() {
-            let t = false, { contentDim: e, viewportDim: n, pages: i, slides: s
-            }
-                = this, l = s[0];
+            let t = false, { contentDim: e, viewportDim: n, pages: i, slides: s } = this, l = s[0];
             return i.length >= 2 && l && e + l.dim >= n && (t = this.option("infinite")), t
         }
         get isRTL() {
@@ -3210,52 +3376,54 @@
             if (super(), Object.defineProperty(this, "bp", { enumerable: true, configurable: true, writable: true, value: "" }), Object.defineProperty(this, "lp", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "userOptions", { enumerable: true, configurable: true, writable: true, value: {} }), Object.defineProperty(this, "userPlugins", { enumerable: true, configurable: true, writable: true, value: {} }), Object.defineProperty(this, "state", { enumerable: true, configurable: true, writable: true, value: D.Init }), Object.defineProperty(this, "page", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "prevPage", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "container", { enumerable: true, configurable: true, writable: true, value: void 0 }), Object.defineProperty(this, "viewport", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "track", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "slides", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "pages", { enumerable: true, configurable: true, writable: true, value: [] }), Object.defineProperty(this, "panzoom", { enumerable: true, configurable: true, writable: true, value: null }), Object.defineProperty(this, "inTransition", { enumerable: true, configurable: true, writable: true, value: new Set }), Object.defineProperty(this, "contentDim", { enumerable: true, configurable: true, writable: true, value: 0 }), Object.defineProperty(this, "viewportDim", { enumerable: true, configurable: true, writable: true, value: 0 }), typeof t == "string" && (t = document.querySelector(t)), !t || !N(t)) throw new Error("No Element found"); this.container = t, this.slideNext = gi(this.slideNext.bind(this), 150), this.slidePrev = gi(this.slidePrev.bind(this), 150), this.userOptions = e, this.userPlugins = n, queueMicrotask(() => { this.processOptions() })
         }
         processOptions() {
-            var t, e; let n = X({}, o.defaults, this.userOptions), i = "", s = n.breakpoints;
+            var t, e;
+            let n = X({}, o.defaults, this.userOptions), i = "", s = n.breakpoints;
             if (s && Wn(s)) for (let [l, c] of Object.entries(s)) window.matchMedia(l).matches && Wn(c) && (i += l, X(n, c)); i === this.bp && this.state !== D.Init || (this.bp = i, this.state === D.Ready && (n.initialSlide = ((e = (t = this.pages[this.page]) === null || t === void 0 ? void 0 : t.slides[0]) === null || e === void 0 ? void 0 : e.index) || 0), this.state !== D.Init && this.destroy(), super.setOptions(n), this.option("enabled") === false ? this.attachEvents() : setTimeout(() => { this.init() }, 0))
         }
         init() {
             this.state = D.Init, this.emit("init"), this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), this.userPlugins)), this.emit("attachPlugins"), this.initLayout(), this.initSlides(), this.updateMetrics(), this.setInitialPosition(), this.initPanzoom(), this.attachEvents(), this.state = D.Ready, this.emit("ready")
         }
         initLayout() {
-            let { container: t
-            }
-                = this, e = this.option("classes"); v(t, this.cn("container")), et(t, e.isLTR, !this.isRTL), et(t, e.isRTL, this.isRTL), et(t, e.isVertical, !this.isHorizontal), et(t, e.isHorizontal, this.isHorizontal); let n = this.option("viewport") || t.querySelector(`.${e.viewport}`); n || (n = document.createElement("div"), v(n, e.viewport), n.append(...Fi(t, `.${e.slide}`)), t.prepend(n)), n.addEventListener("scroll", this.onScroll); let i = this.option("track") || t.querySelector(`.${e.track}`); i || (i = document.createElement("div"), v(i, e.track), i.append(...Array.from(n.childNodes))), i.setAttribute("aria-live", "polite"), n.contains(i) || n.prepend(i), this.viewport = n, this.track = i, this.emit("initLayout")
+            let { container: t } = this, e = this.option("classes"); v(t, this.cn("container")), et(t, e.isLTR, !this.isRTL), et(t, e.isRTL, this.isRTL), et(t, e.isVertical, !this.isHorizontal), et(t, e.isHorizontal, this.isHorizontal);
+            let n = this.option("viewport") || t.querySelector(`.${e.viewport}`); n || (n = document.createElement("div"), v(n, e.viewport), n.append(...Fi(t, `.${e.slide}`)), t.prepend(n)), n.addEventListener("scroll", this.onScroll);
+            let i = this.option("track") || t.querySelector(`.${e.track}`); i || (i = document.createElement("div"), v(i, e.track), i.append(...Array.from(n.childNodes))), i.setAttribute("aria-live", "polite"), n.contains(i) || n.prepend(i), this.viewport = n, this.track = i, this.emit("initLayout")
         }
         initSlides() {
-            let { track: t
-            }
-                = this;
-            if (!t) return; let e = [...this.slides], n = [];[...Fi(t, `.${this.cn(ce)}`)].forEach(i => {
+            let { track: t } = this;
+            if (!t) return;
+            let e = [...this.slides], n = [];[...Fi(t, `.${this.cn(ce)}`)].forEach(i => {
                 if (N(i)) {
                     let s = un({ el: i, isDom: true, index: this.slides.length }); n.push(s)
                 }
-            }); for (let i of [...this.option("slides", []) || [], ...e]) n.push(un(i)); this.slides = n; for (let i = 0; i < this.slides.length; i++)this.slides[i].index = i; for (let i of n) this.emit("beforeInitSlide", i, i.index), this.emit("initSlide", i, i.index); this.emit("initSlides")
+            });
+            for (let i of [...this.option("slides", []) || [], ...e]) n.push(un(i)); this.slides = n;
+            for (let i = 0; i < this.slides.length; i++)this.slides[i].index = i;
+            for (let i of n) this.emit("beforeInitSlide", i, i.index), this.emit("initSlide", i, i.index); this.emit("initSlides")
         }
         setInitialPage() {
             let t = this.option("initialSlide"); this.page = typeof t == "number" ? this.getPageForSlide(t) : parseInt(this.option("initialPage", 0) + "", 10) || 0
         }
         setInitialPosition() {
-            let { track: t, pages: e, isHorizontal: n
-            }
-                = this;
-            if (!t || !e.length) return; let i = this.page; e[i] || (this.page = i = 0); let s = (e[i].pos || 0) * (this.isRTL && n ? 1 : -1), l = n ? `${s}px` : "0", c = n ? "0" : `${s}px`; t.style.transform = `translate3d(${l}, ${c}, 0) scale(1)`, this.option("adaptiveHeight") && this.setViewportHeight()
+            let { track: t, pages: e, isHorizontal: n } = this;
+            if (!t || !e.length) return;
+            let i = this.page; e[i] || (this.page = i = 0);
+            let s = (e[i].pos || 0) * (this.isRTL && n ? 1 : -1), l = n ? `${s}px` : "0", c = n ? "0" : `${s}px`; t.style.transform = `translate3d(${l}, ${c}, 0) scale(1)`, this.option("adaptiveHeight") && this.setViewportHeight()
         }
         initPanzoom() {
-            this.panzoom && (this.panzoom.destroy(), this.panzoom = null); let t = this.option("Panzoom") || {}; this.panzoom = new Qt(this.viewport, X({}, { content: this.track, zoom: false, panOnlyZoomed: false, lockAxis: this.isHorizontal ? "x" : "y", infinite: this.isInfinite, click: false, dblClick: false, touch: e => !(this.pages.length < 2 && !e.options.infinite), bounds: () => this.getBounds(), maxVelocity: e => Math.abs(e.target[this.axis] - e.current[this.axis]) < 2 * this.viewportDim ? 100 : 0 }, t)), this.panzoom.on("*", (e, n, ...i) => { this.emit(`Panzoom.${n}`, e, ...i) }), this.panzoom.on("decel", this.onDecel), this.panzoom.on("refresh", this.onRefresh), this.panzoom.on("beforeTransform", this.onBeforeTransform), this.panzoom.on("endAnimation", this.onEndAnimation)
+            this.panzoom && (this.panzoom.destroy(), this.panzoom = null);
+            let t = this.option("Panzoom") || {}; this.panzoom = new Qt(this.viewport, X({}, { content: this.track, zoom: false, panOnlyZoomed: false, lockAxis: this.isHorizontal ? "x" : "y", infinite: this.isInfinite, click: false, dblClick: false, touch: e => !(this.pages.length < 2 && !e.options.infinite), bounds: () => this.getBounds(), maxVelocity: e => Math.abs(e.target[this.axis] - e.current[this.axis]) < 2 * this.viewportDim ? 100 : 0 }, t)), this.panzoom.on("*", (e, n, ...i) => { this.emit(`Panzoom.${n}`, e, ...i) }), this.panzoom.on("decel", this.onDecel), this.panzoom.on("refresh", this.onRefresh), this.panzoom.on("beforeTransform", this.onBeforeTransform), this.panzoom.on("endAnimation", this.onEndAnimation)
         }
         attachEvents() {
             let t = this.container; t && (t.addEventListener("click", this.onClick, { passive: false, capture: false }), t.addEventListener("slideTo", this.onSlideTo)), window.addEventListener("resize", this.onResize)
         }
         createPages() {
-            let t = [], { contentDim: e, viewportDim: n
-            }
-                = this, i = this.option("slidesPerPage"); i = (i === "auto" || e <= n) && this.option("fill") !== false ? 1 / 0 : parseFloat(i + ""); let s = 0, l = 0, c = 0; for (let h of this.slides) (!t.length || l + h.dim - n > .05 || c >= i) && (t.push(pa()), s = t.length - 1, l = 0, c = 0), t[s].slides.push(h), l += h.dim + h.gap, c++;
+            let t = [], { contentDim: e, viewportDim: n } = this, i = this.option("slidesPerPage"); i = (i === "auto" || e <= n) && this.option("fill") !== false ? 1 / 0 : parseFloat(i + "");
+            let s = 0, l = 0, c = 0;
+            for (let h of this.slides) (!t.length || l + h.dim - n > .05 || c >= i) && (t.push(pa()), s = t.length - 1, l = 0, c = 0), t[s].slides.push(h), l += h.dim + h.gap, c++;
             return t
         }
         processPages() {
-            let t = this.pages, { contentDim: e, viewportDim: n, isInfinite: i
-            }
-                = this, s = this.option("center"), l = this.option("fill"), c = l && s && e > n && !i;
+            let t = this.pages, { contentDim: e, viewportDim: n, isInfinite: i } = this, s = this.option("center"), l = this.option("fill"), c = l && s && e > n && !i;
             if (t.forEach((a, r) => {
                 var d;
                 a.index = r, a.pos = ((d = a.slides[0]) === null || d === void 0 ? void 0 : d.pos) || 0, a.dim = 0;
@@ -3277,18 +3445,18 @@
             return t = parseInt((t || 0).toString()) || 0, n = this.isInfinite ? (t % e + e) % e : Math.max(Math.min(t, e - 1), 0), n
         }
         getSlideMetrics(t) {
-            var e, n; let i = this.isHorizontal ? "width" : "height", s = 0, l = 0, c = t.el, h = !(!c || c.parentNode);
+            var e, n;
+            let i = this.isHorizontal ? "width" : "height", s = 0, l = 0, c = t.el, h = !(!c || c.parentNode);
             if (c ? s = parseFloat(c.dataset[i] || "") || 0 : (c = document.createElement("div"), c.style.visibility = "hidden", (this.track || document.body).prepend(c)), v(c, this.cn(ce) + " " + t.class + " " + t.customClass), s) c.style[i] = `${s}px`, c.style[i === "width" ? "height" : "width"] = ""; else {
-                h && (this.track || document.body).prepend(c), s = c.getBoundingClientRect()[i] * Math.max(1, ((e = window.visualViewport) === null || e === void 0 ? void 0 : e.scale) || 1); let a = c[this.isHorizontal ? "offsetWidth" : "offsetHeight"]; a - 1 > s && (s = a)
+                h && (this.track || document.body).prepend(c), s = c.getBoundingClientRect()[i] * Math.max(1, ((e = window.visualViewport) === null || e === void 0 ? void 0 : e.scale) || 1);
+                let a = c[this.isHorizontal ? "offsetWidth" : "offsetHeight"]; a - 1 > s && (s = a)
             }
             let m = getComputedStyle(c);
             return m.boxSizing === "content-box" && (this.isHorizontal ? (s += parseFloat(m.paddingLeft) || 0, s += parseFloat(m.paddingRight) || 0) : (s += parseFloat(m.paddingTop) || 0, s += parseFloat(m.paddingBottom) || 0)), l = parseFloat(m[this.isHorizontal ? "marginRight" : "marginBottom"]) || 0, h ? (n = c.parentElement) === null || n === void 0 || n.removeChild(c) : t.el || c.remove(), {
                 dim: F(s, 1e3), gap: F(l, 1e3)
             }
         } getBounds() {
-            let { isInfinite: t, isRTL: e, isHorizontal: n, pages: i
-            }
-                = this, s = { min: 0, max: 0 };
+            let { isInfinite: t, isRTL: e, isHorizontal: n, pages: i } = this, s = { min: 0, max: 0 };
             if (t) s = { min: -1 / 0, max: 1 / 0 }; else if (i.length) {
                 let l = i[0].pos, c = i[i.length - 1].pos; s = e && n ? {
                     min: l, max: c
@@ -3303,70 +3471,88 @@
                     : s
             }
         } repositionSlides() {
-            let t, { isHorizontal: e, isRTL: n, isInfinite: i, viewport: s, viewportDim: l, contentDim: c, page: h, pages: m, slides: a, panzoom: r
+            let t, { isHorizontal: e, isRTL: n, isInfinite: i, viewport: s, viewportDim: l, contentDim: c, page: h, pages: m, slides: a, panzoom: r } = this, d = 0, u = 0, p = 0, f = 0; r ? f = -1 * r.current[this.axis] : m[h] && (f = m[h].pos || 0), t = e ? n ? "right" : "left" : "top", n && e && (f *= -1);
+            for (let B of a) {
+                let x = B.el; x ? (t === "top" ? (x.style.right = "", x.style.left = "") : x.style.top = "", B.index !== d ? x.style[t] = u === 0 ? "" : `${F(u, 1e3)}px` : x.style[t] = "", p += B.dim + B.gap, d++) : u += B.dim + B.gap
             }
-                = this, d = 0, u = 0, p = 0, f = 0; r ? f = -1 * r.current[this.axis] : m[h] && (f = m[h].pos || 0), t = e ? n ? "right" : "left" : "top", n && e && (f *= -1); for (let B of a) {
-                    let x = B.el; x ? (t === "top" ? (x.style.right = "", x.style.left = "") : x.style.top = "", B.index !== d ? x.style[t] = u === 0 ? "" : `${F(u, 1e3)}px` : x.style[t] = "", p += B.dim + B.gap, d++) : u += B.dim + B.gap
-                }
             if (i && p && s) {
-                let B = getComputedStyle(s), x = "padding", E = e ? "Right" : "Bottom", W = parseFloat(B[x + (e ? "Left" : "Top")]); f -= W, l += W, l += parseFloat(B[x + E]); for (let y of a) y.el && (F(y.pos) < F(l) && F(y.pos + y.dim + y.gap) < F(f) && F(f) > F(c - l) && (y.el.style[t] = `${F(u + p, 1e3)}px`), F(y.pos + y.gap) >= F(c - l) && F(y.pos) > F(f + l) && F(f) < F(l) && (y.el.style[t] = `-${F(p, 1e3)}px`))
+                let B = getComputedStyle(s), x = "padding", E = e ? "Right" : "Bottom", W = parseFloat(B[x + (e ? "Left" : "Top")]); f -= W, l += W, l += parseFloat(B[x + E]);
+                for (let y of a) y.el && (F(y.pos) < F(l) && F(y.pos + y.dim + y.gap) < F(f) && F(f) > F(c - l) && (y.el.style[t] = `${F(u + p, 1e3)}px`), F(y.pos + y.gap) >= F(c - l) && F(y.pos) > F(f + l) && F(f) < F(l) && (y.el.style[t] = `-${F(p, 1e3)}px`))
             }
             let Q, b, g = [...this.inTransition];
             if (g.length > 1 && (Q = m[g[0]], b = m[g[1]]), Q && b) {
-                let B = 0; for (let x of a) x.el ? this.inTransition.has(x.index) && Q.slides.indexOf(x) < 0 && (x.el.style[t] = `${F(B + (Q.pos - b.pos), 1e3)}px`) : B += x.dim + x.gap
+                let B = 0;
+                for (let x of a) x.el ? this.inTransition.has(x.index) && Q.slides.indexOf(x) < 0 && (x.el.style[t] = `${F(B + (Q.pos - b.pos), 1e3)}px`) : B += x.dim + x.gap
             }
         } createSlideEl(t) {
-            let { track: e, slides: n
-            }
-                = this;
-            if (!e || !t || t.el && t.el.parentNode) return; let i = t.el || document.createElement("div"); v(i, this.cn(ce)), v(i, t.class), v(i, t.customClass); let s = t.html; s && (s instanceof HTMLElement ? i.appendChild(s) : i.innerHTML = t.html + ""); let l = []; n.forEach((a, r) => { a.el && l.push(r) }); let c = t.index, h = null; l.length && (h = n[l.reduce((a, r) => Math.abs(r - c) < Math.abs(a - c) ? r : a)]); let m = h && h.el && h.el.parentNode ? h.index < t.index ? h.el.nextSibling : h.el : null; e.insertBefore(i, e.contains(m) ? m : null), t.el = i, this.emit("createSlide", t)
+            let { track: e, slides: n } = this;
+            if (!e || !t || t.el && t.el.parentNode) return;
+            let i = t.el || document.createElement("div"); v(i, this.cn(ce)), v(i, t.class), v(i, t.customClass);
+            let s = t.html; s && (s instanceof HTMLElement ? i.appendChild(s) : i.innerHTML = t.html + "");
+            let l = []; n.forEach((a, r) => { a.el && l.push(r) });
+            let c = t.index, h = null; l.length && (h = n[l.reduce((a, r) => Math.abs(r - c) < Math.abs(a - c) ? r : a)]);
+            let m = h && h.el && h.el.parentNode ? h.index < t.index ? h.el.nextSibling : h.el : null; e.insertBefore(i, e.contains(m) ? m : null), t.el = i, this.emit("createSlide", t)
         }
         removeSlideEl(t, e = false) {
             let n = t?.el;
-            if (!n || !n.parentNode) return; let i = this.cn(Ui);
-            if (n.classList.contains(i) && (Z(n, i), this.emit("unselectSlide", t)), t.isDom && !e) return n.removeAttribute("aria-hidden"), n.removeAttribute("data-index"), void (n.style.left = ""); this.emit("removeSlide", t); let s = new CustomEvent(le); n.dispatchEvent(s), t.el && (t.el.remove(), t.el = null)
+            if (!n || !n.parentNode) return;
+            let i = this.cn(Ui);
+            if (n.classList.contains(i) && (Z(n, i), this.emit("unselectSlide", t)), t.isDom && !e) return n.removeAttribute("aria-hidden"), n.removeAttribute("data-index"), void (n.style.left = ""); this.emit("removeSlide", t);
+            let s = new CustomEvent(le); n.dispatchEvent(s), t.el && (t.el.remove(), t.el = null)
         }
         transitionTo(t = 0, e = this.option("transition")) {
             var n, i, s, l;
-            if (!e) return false; let c = this.page, { pages: h, panzoom: m
-            }
-                = this; t = parseInt((t || 0).toString()) || 0; let a = this.getPageFromIndex(t);
-            if (!m || !h[a] || h.length < 2 || Math.abs((((i = (n = h[c]) === null || n === void 0 ? void 0 : n.slides[0]) === null || i === void 0 ? void 0 : i.dim) || 0) - this.viewportDim) > 1) return false; let r = t > c ? 1 : -1; this.isInfinite && (c === 0 && t === h.length - 1 && (r = -1), c === h.length - 1 && t === 0 && (r = 1)); let d = h[a].pos * (this.isRTL ? 1 : -1);
-            if (c === a && Math.abs(d - m.target[this.axis]) < 1) return false; this.clearTransitions(); let u = m.isResting; v(this.container, this.cn("inTransition")); let p = ((s = h[c]) === null || s === void 0 ? void 0 : s.slides[0]) || null, f = ((l = h[a]) === null || l === void 0 ? void 0 : l.slides[0]) || null; this.inTransition.add(f.index), this.createSlideEl(f); let Q = p.el, b = f.el; u || e === ce || (e = "fadeFast", Q = null); let g = this.isRTL ? "next" : "prev", B = this.isRTL ? "prev" : "next";
+            if (!e) return false;
+            let c = this.page, { pages: h, panzoom: m } = this; t = parseInt((t || 0).toString()) || 0;
+            let a = this.getPageFromIndex(t);
+            if (!m || !h[a] || h.length < 2 || Math.abs((((i = (n = h[c]) === null || n === void 0 ? void 0 : n.slides[0]) === null || i === void 0 ? void 0 : i.dim) || 0) - this.viewportDim) > 1) return false;
+            let r = t > c ? 1 : -1; this.isInfinite && (c === 0 && t === h.length - 1 && (r = -1), c === h.length - 1 && t === 0 && (r = 1));
+            let d = h[a].pos * (this.isRTL ? 1 : -1);
+            if (c === a && Math.abs(d - m.target[this.axis]) < 1) return false; this.clearTransitions();
+            let u = m.isResting; v(this.container, this.cn("inTransition"));
+            let p = ((s = h[c]) === null || s === void 0 ? void 0 : s.slides[0]) || null, f = ((l = h[a]) === null || l === void 0 ? void 0 : l.slides[0]) || null; this.inTransition.add(f.index), this.createSlideEl(f);
+            let Q = p.el, b = f.el; u || e === ce || (e = "fadeFast", Q = null);
+            let g = this.isRTL ? "next" : "prev", B = this.isRTL ? "prev" : "next";
             return Q && (this.inTransition.add(p.index), p.transition = e, Q.addEventListener(le, this.onAnimationEnd), Q.classList.add(`f-${e}Out`, `to-${r > 0 ? B : g}`)), b && (f.transition = e, b.addEventListener(le, this.onAnimationEnd), b.classList.add(`f-${e}In`, `from-${r > 0 ? g : B}`)), m.current[this.axis] = d, m.target[this.axis] = d, m.requestTick(), this.onChange(a), true
         }
         manageSlideVisiblity() {
-            let t = new Set, e = new Set, n = this.getVisibleSlides(parseFloat(this.option("preload", 0) + "") || 0); for (let i of this.slides) n.has(i) ? t.add(i) : e.add(i); for (let i of this.inTransition) t.add(this.slides[i]); for (let i of t) this.createSlideEl(i), this.lazyLoadSlide(i); for (let i of e) t.has(i) || this.removeSlideEl(i); this.markSelectedSlides(), this.repositionSlides()
+            let t = new Set, e = new Set, n = this.getVisibleSlides(parseFloat(this.option("preload", 0) + "") || 0);
+            for (let i of this.slides) n.has(i) ? t.add(i) : e.add(i);
+            for (let i of this.inTransition) t.add(this.slides[i]);
+            for (let i of t) this.createSlideEl(i), this.lazyLoadSlide(i);
+            for (let i of e) t.has(i) || this.removeSlideEl(i); this.markSelectedSlides(), this.repositionSlides()
         }
         markSelectedSlides() {
-            if (!this.pages[this.page] || !this.pages[this.page].slides) return; let t = "aria-hidden", e = this.cn(Ui);
+            if (!this.pages[this.page] || !this.pages[this.page].slides) return;
+            let t = "aria-hidden", e = this.cn(Ui);
             if (e) for (let n of this.slides) {
                 let i = n.el; i && (i.dataset.index = `${n.index}`, i.classList.contains("f-thumbs__slide") ? this.getVisibleSlides(0).has(n) ? i.removeAttribute(t) : i.setAttribute(t, "true") : this.pages[this.page].slides.includes(n) ? (i.classList.contains(e) || (v(i, e), this.emit("selectSlide", n)), i.removeAttribute(t)) : (i.classList.contains(e) && (Z(i, e), this.emit("unselectSlide", n)), i.setAttribute(t, "true")))
             }
         } flipInfiniteTrack() {
-            let { axis: t, isHorizontal: e, isInfinite: n, isRTL: i, viewportDim: s, contentDim: l
-            }
-                = this, c = this.panzoom;
-            if (!c || !n) return; let h = c.current[t], m = c.target[t] - h, a = 0, r = .5 * s; i && e ? (h < -r && (a = -1, h += l), h > l - r && (a = 1, h -= l)) : (h > r && (a = 1, h -= l), h < -l + r && (a = -1, h += l)), a && (c.current[t] = h, c.target[t] = h + m)
+            let { axis: t, isHorizontal: e, isInfinite: n, isRTL: i, viewportDim: s, contentDim: l } = this, c = this.panzoom;
+            if (!c || !n) return;
+            let h = c.current[t], m = c.target[t] - h, a = 0, r = .5 * s; i && e ? (h < -r && (a = -1, h += l), h > l - r && (a = 1, h -= l)) : (h > r && (a = 1, h -= l), h < -l + r && (a = -1, h += l)), a && (c.current[t] = h, c.target[t] = h + m)
         }
         lazyLoadImg(t, e) {
             let n = this, i = "f-fadeIn", s = "is-preloading", l = false, c = null, h = () => { l || (l = true, c && (c.remove(), c = null), Z(e, s), e.complete && (v(e, i), setTimeout(() => { Z(e, i) }, 350)), this.option("adaptiveHeight") && t.el && this.pages[this.page].slides.indexOf(t) > -1 && (n.updateMetrics(), n.setViewportHeight()), this.emit("load", t)) }; v(e, s), e.src = e.dataset.lazySrcset || e.dataset.lazySrc || "", delete e.dataset.lazySrc, delete e.dataset.lazySrcset, e.addEventListener("error", () => { h() }), e.addEventListener("load", () => { h() }), setTimeout(() => { let m = e.parentNode; m && t.el && (e.complete ? h() : l || (c = tt(Rn), m.insertBefore(c, e))) }, 300)
         }
         lazyLoadSlide(t) {
             let e = t && t.el;
-            if (!e) return; let n = new Set, i = Array.from(e.querySelectorAll("[data-lazy-src],[data-lazy-srcset]")); e.dataset.lazySrc && i.push(e), i.map(s => { s instanceof HTMLImageElement ? n.add(s) : s instanceof HTMLElement && s.dataset.lazySrc && (s.style.backgroundImage = `url('${s.dataset.lazySrc}')`, delete s.dataset.lazySrc) }); for (let s of n) this.lazyLoadImg(t, s)
+            if (!e) return;
+            let n = new Set, i = Array.from(e.querySelectorAll("[data-lazy-src],[data-lazy-srcset]")); e.dataset.lazySrc && i.push(e), i.map(s => { s instanceof HTMLImageElement ? n.add(s) : s instanceof HTMLElement && s.dataset.lazySrc && (s.style.backgroundImage = `url('${s.dataset.lazySrc}')`, delete s.dataset.lazySrc) });
+            for (let s of n) this.lazyLoadImg(t, s)
         }
         onAnimationEnd(t) {
-            var e; let n = t.target, i = n ? parseInt(n.dataset.index || "", 10) || 0 : -1, s = this.slides[i], l = t.animationName;
-            if (!n || !s || !l) return; let c = !!this.inTransition.has(i) && s.transition; c && l.substring(0, c.length + 2) === `f-${c}` && this.inTransition.delete(i), this.inTransition.size || this.clearTransitions(), i === this.page && (!((e = this.panzoom) === null || e === void 0) && e.isResting) && this.emit("settle")
+            var e;
+            let n = t.target, i = n ? parseInt(n.dataset.index || "", 10) || 0 : -1, s = this.slides[i], l = t.animationName;
+            if (!n || !s || !l) return;
+            let c = !!this.inTransition.has(i) && s.transition; c && l.substring(0, c.length + 2) === `f-${c}` && this.inTransition.delete(i), this.inTransition.size || this.clearTransitions(), i === this.page && (!((e = this.panzoom) === null || e === void 0) && e.isResting) && this.emit("settle")
         }
         onDecel(t, e = 0, n = 0, i = 0, s = 0) {
-            if (this.option("dragFree")) return void this.setPageFromPosition(); let { isRTL: l, isHorizontal: c, axis: h, pages: m
-            }
-                = this, a = m.length, r = Math.abs(Math.atan2(n, e) / (Math.PI / 180)), d = 0;
-            if (d = r > 45 && r < 135 ? c ? 0 : n : c ? e : 0, !a) return; let u = this.page, p = l && c ? 1 : -1, f = t.current[h] * p, { pageIndex: Q
-            }
-                = this.getPageFromPosition(f); Math.abs(d) > 5 ? (m[u].dim < document.documentElement["client" + (this.isHorizontal ? "Width" : "Height")] - 1 && (u = Q), u = l && c ? d < 0 ? u - 1 : u + 1 : d < 0 ? u + 1 : u - 1) : u = i === 0 && s === 0 ? u : Q, this.slideTo(u, { transition: false, friction: t.option("decelFriction") })
+            if (this.option("dragFree")) return void this.setPageFromPosition();
+            let { isRTL: l, isHorizontal: c, axis: h, pages: m } = this, a = m.length, r = Math.abs(Math.atan2(n, e) / (Math.PI / 180)), d = 0;
+            if (d = r > 45 && r < 135 ? c ? 0 : n : c ? e : 0, !a) return;
+            let u = this.page, p = l && c ? 1 : -1, f = t.current[h] * p, { pageIndex: Q } = this.getPageFromPosition(f); Math.abs(d) > 5 ? (m[u].dim < document.documentElement["client" + (this.isHorizontal ? "Width" : "Height")] - 1 && (u = Q), u = l && c ? d < 0 ? u - 1 : u + 1 : d < 0 ? u + 1 : u - 1) : u = i === 0 && s === 0 ? u : Q, this.slideTo(u, { transition: false, friction: t.option("decelFriction") })
         }
         onClick(t) {
             let e = t.target, n = e && N(e) ? e.dataset : null, i, s; n && (n.carouselPage !== void 0 ? (s = "slideTo", i = n.carouselPage) : n.carouselNext !== void 0 ? s = "slideNext" : n.carouselPrev !== void 0 && (s = "slidePrev")), s ? (t.preventDefault(), t.stopPropagation(), e && !e.hasAttribute("disabled") && this[s](i)) : this.emit("click", t)
@@ -3396,15 +3582,15 @@
             this.destroy(), this.state = D.Init, this.prevPage = null, this.userOptions = t || this.userOptions, this.userPlugins = e || this.userPlugins, this.processOptions()
         }
         slideTo(t = 0, { friction: e = this.option("friction"), transition: n = this.option("transition") } = {}) {
-            if (this.state === D.Destroy) return; t = parseInt((t || 0).toString()) || 0; let i = this.getPageFromIndex(t), { axis: s, isHorizontal: l, isRTL: c, pages: h, panzoom: m
-            }
-                = this, a = h.length, r = c && l ? 1 : -1;
+            if (this.state === D.Destroy) return; t = parseInt((t || 0).toString()) || 0;
+            let i = this.getPageFromIndex(t), { axis: s, isHorizontal: l, isRTL: c, pages: h, panzoom: m } = this, a = h.length, r = c && l ? 1 : -1;
             if (!m || !a) return;
             if (this.page !== i) {
                 let u = new Event("beforeChange", { bubbles: true, cancelable: true });
                 if (this.emit("beforeChange", u, t), u.defaultPrevented) return
             }
-            if (this.transitionTo(t, n)) return; let d = h[i].pos;
+            if (this.transitionTo(t, n)) return;
+            let d = h[i].pos;
             if (this.isInfinite) {
                 let u = this.contentDim, p = m.target[s] * r; a === 2 ? d += u * Math.floor(parseFloat(t + "") / 2) : d = [d, d - u, d + u].reduce(function (f, Q) { return Math.abs(Q - p) < Math.abs(f - p) ? Q : f })
             }
@@ -3412,9 +3598,7 @@
         }
         slideToClosest(t) {
             if (this.panzoom) {
-                let { pageIndex: e
-                }
-                    = this.getPageFromPosition(); this.slideTo(e, t)
+                let { pageIndex: e } = this.getPageFromPosition(); this.slideTo(e, t)
             }
         }
         slideNext() {
@@ -3425,10 +3609,13 @@
         }
         clearTransitions() {
             this.inTransition.clear();
-            Z(this.container, this.cn("inTransition")); let t = ["to-prev", "to-next", "from-prev", "from-next"]; for (let e of this.slides) {
+            Z(this.container, this.cn("inTransition"));
+            let t = ["to-prev", "to-next", "from-prev", "from-next"];
+            for (let e of this.slides) {
                 let n = e.el;
                 if (n) {
-                    n.removeEventListener(le, this.onAnimationEnd), n.classList.remove(...t); let i = e.transition; i && n.classList.remove(`f-${i}Out`, `f-${i}In`)
+                    n.removeEventListener(le, this.onAnimationEnd), n.classList.remove(...t);
+                    let i = e.transition; i && n.classList.remove(`f-${i}Out`, `f-${i}In`)
                 }
             }
             this.manageSlideVisiblity()
@@ -3465,76 +3652,82 @@
             this.addSlide(this.slides.length, t)
         }
         removeSlide(t) {
-            let e = this.slides.length; t = (t % e + e) % e; let n = this.slides[t];
+            let e = this.slides.length; t = (t % e + e) % e;
+            let n = this.slides[t];
             if (n) {
-                this.removeSlideEl(n, true), this.slides.splice(t, 1); for (let i = 0; i < this.slides.length; i++)this.slides[i].index = i; this.updateMetrics(), this.slideTo(this.page, { friction: 0, transition: false }), this.emit("destroySlide", n)
+                this.removeSlideEl(n, true), this.slides.splice(t, 1);
+                for (let i = 0; i < this.slides.length; i++)this.slides[i].index = i; this.updateMetrics(), this.slideTo(this.page, { friction: 0, transition: false }), this.emit("destroySlide", n)
             }
         } updateMetrics() {
-            let { panzoom: t, viewport: e, track: n, slides: i, isHorizontal: s, isInfinite: l
-            }
-                = this;
-            if (!n) return; let c = s ? "width" : "height", h = s ? "offsetWidth" : "offsetHeight";
+            let { panzoom: t, viewport: e, track: n, slides: i, isHorizontal: s, isInfinite: l } = this;
+            if (!n) return;
+            let c = s ? "width" : "height", h = s ? "offsetWidth" : "offsetHeight";
             if (e) {
                 let r = Math.max(e[h], F(e.getBoundingClientRect()[c], 1e3)), d = getComputedStyle(e), u = "padding", p = s ? "Right" : "Bottom"; r -= parseFloat(d[u + (s ? "Left" : "Top")]) + parseFloat(d[u + p]), this.viewportDim = r
             }
-            let m, a = 0; for (let [r, d] of i.entries()) {
+            let m, a = 0;
+            for (let [r, d] of i.entries()) {
                 let u = 0, p = 0; !d.el && m ? (u = m.dim, p = m.gap) : ({
                     dim: u, gap: p
-                }
-                    = this.getSlideMetrics(d), m = d), u = F(u, 1e3), p = F(p, 1e3), d.dim = u, d.gap = p, d.pos = a, a += u, (l || r < i.length - 1) && (a += p)
+                } = this.getSlideMetrics(d), m = d), u = F(u, 1e3), p = F(p, 1e3), d.dim = u, d.gap = p, d.pos = a, a += u, (l || r < i.length - 1) && (a += p)
             }
             a = F(a, 1e3), this.contentDim = a, t && (t.contentRect[c] = a, t.contentRect[s ? "fullWidth" : "fullHeight"] = a), this.pages = this.createPages(), this.pages = this.processPages(), this.state === D.Init && this.setInitialPage(), this.page = Math.max(0, Math.min(this.page, this.pages.length - 1)), this.manageSlideVisiblity(), this.emit("refresh")
         }
         getProgress(t, e = false, n = false) {
-            t === void 0 && (t = this.page); let i = this, s = i.panzoom, l = i.contentDim, c = i.pages[t] || 0;
-            if (!c || !s) return t > this.page ? -1 : 1; let h = -1 * s.current.e, m = F((h - c.pos) / (1 * c.dim), 1e3), a = m, r = m; this.isInfinite && n !== true && (a = F((h - c.pos + l) / (1 * c.dim), 1e3), r = F((h - c.pos - l) / (1 * c.dim), 1e3)); let d = [m, a, r].reduce(function (u, p) { return Math.abs(p) < Math.abs(u) ? p : u });
+            t === void 0 && (t = this.page);
+            let i = this, s = i.panzoom, l = i.contentDim, c = i.pages[t] || 0;
+            if (!c || !s) return t > this.page ? -1 : 1;
+            let h = -1 * s.current.e, m = F((h - c.pos) / (1 * c.dim), 1e3), a = m, r = m; this.isInfinite && n !== true && (a = F((h - c.pos + l) / (1 * c.dim), 1e3), r = F((h - c.pos - l) / (1 * c.dim), 1e3));
+            let d = [m, a, r].reduce(function (u, p) { return Math.abs(p) < Math.abs(u) ? p : u });
             return e ? d : d > 1 ? 1 : d < -1 ? -1 : d
         }
         setViewportHeight() {
-            let { page: t, pages: e, viewport: n, isHorizontal: i
-            }
-                = this;
-            if (!n || !e[t]) return; let s = 0; i && this.track && (this.track.style.height = "auto", e[t].slides.forEach(l => { l.el && (s = Math.max(s, l.el.offsetHeight)) })), n.style.height = s ? `${s}px` : ""
+            let { page: t, pages: e, viewport: n, isHorizontal: i } = this;
+            if (!n || !e[t]) return;
+            let s = 0; i && this.track && (this.track.style.height = "auto", e[t].slides.forEach(l => { l.el && (s = Math.max(s, l.el.offsetHeight)) })), n.style.height = s ? `${s}px` : ""
         }
         getPageForSlide(t) {
             for (let e of this.pages) for (let n of e.slides) if (n.index === t) return e.index;
             return -1
         }
         getVisibleSlides(t = 0) {
-            var e; let n = new Set, { panzoom: i, contentDim: s, viewportDim: l, pages: c, page: h
-            }
-                = this;
+            var e;
+            let n = new Set, { panzoom: i, contentDim: s, viewportDim: l, pages: c, page: h } = this;
             if (l) {
-                s = s + ((e = this.slides[this.slides.length - 1]) === null || e === void 0 ? void 0 : e.gap) || 0; let m = 0; m = i && i.state !== O.Init && i.state !== O.Destroy ? -1 * i.current[this.axis] : c[h] && c[h].pos || 0, this.isInfinite && (m -= Math.floor(m / s) * s), this.isRTL && this.isHorizontal && (m *= -1); let a = m - l * t, r = m + l * (t + 1), d = this.isInfinite ? [-1, 0, 1] : [0]; for (let u of this.slides) for (let p of d) {
+                s = s + ((e = this.slides[this.slides.length - 1]) === null || e === void 0 ? void 0 : e.gap) || 0;
+                let m = 0; m = i && i.state !== O.Init && i.state !== O.Destroy ? -1 * i.current[this.axis] : c[h] && c[h].pos || 0, this.isInfinite && (m -= Math.floor(m / s) * s), this.isRTL && this.isHorizontal && (m *= -1);
+                let a = m - l * t, r = m + l * (t + 1), d = this.isInfinite ? [-1, 0, 1] : [0];
+                for (let u of this.slides) for (let p of d) {
                     let f = u.pos + p * s, Q = f + u.dim + u.gap; f < r && Q > a && n.add(u)
                 }
             } return n
         }
         getPageFromPosition(t) {
-            let { viewportDim: e, contentDim: n, slides: i, pages: s, panzoom: l
-            }
-                = this, c = s.length, h = i.length, m = i[0], a = i[h - 1], r = this.option("center"), d = 0, u = 0, p = 0, f = t === void 0 ? -1 * (l?.target[this.axis] || 0) : t; r && (f += .5 * e), this.isInfinite ? (f < m.pos - .5 * a.gap && (f -= n, p = -1), f > a.pos + a.dim + .5 * a.gap && (f -= n, p = 1)) : f = Math.max(m.pos || 0, Math.min(f, a.pos)); let Q = a, b = i.find(g => {
-                    let B = g.pos - .5 * Q.gap, x = g.pos + g.dim + .5 * g.gap;
-                    return Q = g, f >= B && f < x
-                });
+            let { viewportDim: e, contentDim: n, slides: i, pages: s, panzoom: l } = this, c = s.length, h = i.length, m = i[0], a = i[h - 1], r = this.option("center"), d = 0, u = 0, p = 0, f = t === void 0 ? -1 * (l?.target[this.axis] || 0) : t; r && (f += .5 * e), this.isInfinite ? (f < m.pos - .5 * a.gap && (f -= n, p = -1), f > a.pos + a.dim + .5 * a.gap && (f -= n, p = 1)) : f = Math.max(m.pos || 0, Math.min(f, a.pos));
+            let Q = a, b = i.find(g => {
+                let B = g.pos - .5 * Q.gap, x = g.pos + g.dim + .5 * g.gap;
+                return Q = g, f >= B && f < x
+            });
             return b || (b = a), u = this.getPageForSlide(b.index), d = u + p * c, {
                 page: d, pageIndex: u
             }
         } setPageFromPosition() {
-            let { pageIndex: t
-            }
-                = this.getPageFromPosition(); this.onChange(t)
+            let { pageIndex: t } = this.getPageFromPosition(); this.onChange(t)
         }
         destroy() {
-            if ([D.Destroy].includes(this.state)) return; this.state = D.Destroy; let { container: t, viewport: e, track: n, slides: i, panzoom: s
-            }
-                = this, l = this.option("classes"); t.removeEventListener("click", this.onClick, { passive: false, capture: false }), t.removeEventListener("slideTo", this.onSlideTo), window.removeEventListener("resize", this.onResize), s && (s.destroy(), this.panzoom = null), i && i.forEach(h => { this.removeSlideEl(h) }), this.detachPlugins(), e && (e.removeEventListener("scroll", this.onScroll), e.offsetParent && n && n.offsetParent && e.replaceWith(...n.childNodes)); for (let [h, m] of Object.entries(l)) h !== "container" && m && t.classList.remove(m); this.track = null, this.viewport = null, this.page = 0, this.slides = []; let c = this.events.get("ready"); this.events = new Map, c && this.events.set("ready", c)
+            if ([D.Destroy].includes(this.state)) return; this.state = D.Destroy;
+            let { container: t, viewport: e, track: n, slides: i, panzoom: s } = this, l = this.option("classes"); t.removeEventListener("click", this.onClick, { passive: false, capture: false }), t.removeEventListener("slideTo", this.onSlideTo), window.removeEventListener("resize", this.onResize), s && (s.destroy(), this.panzoom = null), i && i.forEach(h => { this.removeSlideEl(h) }), this.detachPlugins(), e && (e.removeEventListener("scroll", this.onScroll), e.offsetParent && n && n.offsetParent && e.replaceWith(...n.childNodes));
+            for (let [h, m] of Object.entries(l)) h !== "container" && m && t.classList.remove(m); this.track = null, this.viewport = null, this.page = 0, this.slides = [];
+            let c = this.events.get("ready"); this.events = new Map, c && this.events.set("ready", c)
         }
     }; Object.defineProperty(vt, "Panzoom", { enumerable: true, configurable: true, writable: true, value: Qt }), Object.defineProperty(vt, "defaults", { enumerable: true, configurable: true, writable: true, value: ma }), Object.defineProperty(vt, "Plugins", { enumerable: true, configurable: true, writable: true, value: Qa });
     var Xi = function (o) {
-        if (!N(o)) return 0; let t = window.scrollY, e = window.innerHeight, n = t + e, i = o.getBoundingClientRect(), s = i.y + t, l = i.height, c = s + l;
+        if (!N(o)) return 0;
+        let t = window.scrollY, e = window.innerHeight, n = t + e, i = o.getBoundingClientRect(), s = i.y + t, l = i.height, c = s + l;
         if (t > c || n < s) return 0;
-        if (t < s && n > c || s < t && c > n) return 100; let h = l; s < t && (h -= t - s), c > n && (h -= c - n); let m = h / e * 100;
+        if (t < s && n > c || s < t && c > n) return 100;
+        let h = l; s < t && (h -= t - s), c > n && (h -= c - n);
+        let m = h / e * 100;
         return Math.round(m)
     }, Zt = !(typeof window > "u" || !window.document || !window.document.createElement), mn, pn = ["a[href]", "area[href]", 'input:not([disabled]):not([type="hidden"]):not([aria-hidden])', "select:not([disabled]):not([aria-hidden])", "textarea:not([disabled]):not([aria-hidden])", "button:not([disabled]):not([aria-hidden]):not(.fancybox-focus-guard)", "iframe", "object", "embed", "video", "audio", "[contenteditable]", '[tabindex]:not([tabindex^="-"]):not([disabled]):not([aria-hidden])'].join(","), vi = o => {
         if (o && Zt) {
@@ -3547,8 +3740,7 @@
                 if (mn) o.focus({ preventScroll: true }); else {
                     let t = window.scrollY || document.body.scrollTop, e = window.scrollX || document.body.scrollLeft; o.focus(), document.body.scrollTo({ top: t, left: e, behavior: "auto" })
                 }
-            } catch {
-            }
+            } catch { }
         }
     }, Ai = () => {
         let o = document, t, e = "", n = "", i = "";
@@ -3585,18 +3777,16 @@
             hash: o, slug: t.join("-"), index: n
         }
     }, Ji = () => {
-        let { slug: o, index: t
-        }
-            = Be();
-        if (!o) return; let e = document.querySelector(`[data-slug="${o}"]`);
-        if (e && e.dispatchEvent(new CustomEvent("click", { bubbles: true, cancelable: true })), K.getInstance()) return; let n = document.querySelectorAll(`[data-fancybox="${o}"]`); n.length && (e = n[t - 1], e && e.dispatchEvent(new CustomEvent("click", { bubbles: true, cancelable: true })))
+        let { slug: o, index: t } = Be();
+        if (!o) return;
+        let e = document.querySelector(`[data-slug="${o}"]`);
+        if (e && e.dispatchEvent(new CustomEvent("click", { bubbles: true, cancelable: true })), K.getInstance()) return;
+        let n = document.querySelectorAll(`[data-fancybox="${o}"]`); n.length && (e = n[t - 1], e && e.dispatchEvent(new CustomEvent("click", { bubbles: true, cancelable: true })))
     }, zi = () => {
-        if (K.defaults.Hash === false) return; let o = K.getInstance();
-        if (o?.options.Hash === false) return; let { slug: t, index: e
-        }
-            = Be(), { slug: n
-            }
-                = Yi(); o && (t === n ? o.jumpTo(e - 1) : (Rt = true, o.close())), Ji()
+        if (K.defaults.Hash === false) return;
+        let o = K.getInstance();
+        if (o?.options.Hash === false) return;
+        let { slug: t, index: e } = Be(), { slug: n } = Yi(); o && (t === n ? o.jumpTo(e - 1) : (Rt = true, o.close())), Ji()
     }, Hi = () => { pt && clearTimeout(pt), queueMicrotask(() => { zi() }) }, Ei = () => { window.addEventListener("hashchange", Hi, false), setTimeout(() => { zi() }, 500) }; Zt && (/complete|interactive|loaded/.test(document.readyState) ? Ei() : document.addEventListener("DOMContentLoaded", Ei));
     var he = "is-zooming-in", Ue = class extends A {
         onCreateSlide(t, e, n) {
@@ -3606,18 +3796,20 @@
             n.panzoom && n.panzoom.destroy(), n.panzoom = void 0, n.imageEl = void 0
         }
         onChange(t, e, n, i) {
-            Z(this.instance.container, he); for (let s of e.slides) {
+            Z(this.instance.container, he);
+            for (let s of e.slides) {
                 let l = s.panzoom; l && s.index !== n && l.reset(.35)
             }
         } onClose() {
-            var t; let e = this.instance, n = e.container, i = e.getSlide();
-            if (!n || !n.parentElement || !i) return; let { el: s, contentEl: l, panzoom: c, thumbElSrc: h
-            }
-                = i;
-            if (!s || !h || !l || !c || c.isContentLoading || c.state === O.Init || c.state === O.Destroy) return; c.updateMetrics(); let m = this.getZoomInfo(i);
-            if (!m) return; this.instance.state = G.CustomClosing, n.classList.remove(he), n.classList.add("is-zooming-out"), l.style.backgroundImage = `url('${h}')`; let a = n.getBoundingClientRect(); (((t = window.visualViewport) === null || t === void 0 ? void 0 : t.scale) || 1) === 1 && Object.assign(n.style, { position: "absolute", top: `${n.offsetTop + window.scrollY}px`, left: `${n.offsetLeft + window.scrollX}px`, bottom: "auto", right: "auto", width: `${a.width}px`, height: `${a.height}px`, overflow: "hidden" }); let { x: r, y: d, scale: u, opacity: p
-            }
-                = m;
+            var t;
+            let e = this.instance, n = e.container, i = e.getSlide();
+            if (!n || !n.parentElement || !i) return;
+            let { el: s, contentEl: l, panzoom: c, thumbElSrc: h } = i;
+            if (!s || !h || !l || !c || c.isContentLoading || c.state === O.Init || c.state === O.Destroy) return; c.updateMetrics();
+            let m = this.getZoomInfo(i);
+            if (!m) return; this.instance.state = G.CustomClosing, n.classList.remove(he), n.classList.add("is-zooming-out"), l.style.backgroundImage = `url('${h}')`;
+            let a = n.getBoundingClientRect(); (((t = window.visualViewport) === null || t === void 0 ? void 0 : t.scale) || 1) === 1 && Object.assign(n.style, { position: "absolute", top: `${n.offsetTop + window.scrollY}px`, left: `${n.offsetLeft + window.scrollX}px`, bottom: "auto", right: "auto", width: `${a.width}px`, height: `${a.height}px`, overflow: "hidden" });
+            let { x: r, y: d, scale: u, opacity: p } = m;
             if (p) {
                 let f = ((Q, b, g, B) => {
                     let x = b - Q, E = B - g;
@@ -3628,15 +3820,16 @@
         }
         setImage(t, e) {
             let n = this.instance; t.src = e, this.process(t, e).then(i => {
-                let { contentEl: s, imageEl: l, thumbElSrc: c, el: h
-                }
-                    = t;
-                if (n.isClosing() || !s || !l) return; s.offsetHeight; let m = !!n.isOpeningSlide(t) && this.getZoomInfo(t);
+                let { contentEl: s, imageEl: l, thumbElSrc: c, el: h } = t;
+                if (n.isClosing() || !s || !l) return; s.offsetHeight;
+                let m = !!n.isOpeningSlide(t) && this.getZoomInfo(t);
                 if (this.option("protected") && h) {
-                    h.addEventListener("contextmenu", d => { d.preventDefault() }); let r = document.createElement("div"); v(r, "fancybox-protected"), s.appendChild(r)
+                    h.addEventListener("contextmenu", d => { d.preventDefault() });
+                    let r = document.createElement("div"); v(r, "fancybox-protected"), s.appendChild(r)
                 }
                 if (c && m) {
-                    let r = i.contentRect, d = Math.max(r.fullWidth, r.fullHeight), u = null; !m.opacity && d > 1200 && (u = document.createElement("img"), v(u, "fancybox-ghost"), u.src = c, s.appendChild(u)); let p = () => { u && (v(u, "f-fadeFastOut"), setTimeout(() => { u && (u.remove(), u = null) }, 200)) }; (a = c, new Promise((f, Q) => { let b = new Image; b.onload = f, b.onerror = Q, b.src = a })).then(() => { n.hideLoading(t), t.state = _.Opening, this.instance.emit("reveal", t), this.zoomIn(t).then(() => { p(), this.instance.done(t) }, () => { }), u && setTimeout(() => { p() }, d > 2500 ? 800 : 200) }, () => { n.hideLoading(t), n.revealContent(t) })
+                    let r = i.contentRect, d = Math.max(r.fullWidth, r.fullHeight), u = null; !m.opacity && d > 1200 && (u = document.createElement("img"), v(u, "fancybox-ghost"), u.src = c, s.appendChild(u));
+                    let p = () => { u && (v(u, "f-fadeFastOut"), setTimeout(() => { u && (u.remove(), u = null) }, 200)) }; (a = c, new Promise((f, Q) => { let b = new Image; b.onload = f, b.onerror = Q, b.src = a })).then(() => { n.hideLoading(t), t.state = _.Opening, this.instance.emit("reveal", t), this.zoomIn(t).then(() => { p(), this.instance.done(t) }, () => { }), u && setTimeout(() => { p() }, d > 2500 ? 800 : 200) }, () => { n.hideLoading(t), n.revealContent(t) })
                 }
                 else {
                     let r = this.optionFor(t, "initialSize"), d = this.optionFor(t, "zoom"), u = { event: n.prevMouseMoveEvent || n.options.event, friction: d ? .12 : 0 }, p = n.optionFor(t, "showClass") || void 0, f = true; n.isOpeningSlide(t) && (r === "full" ? i.zoomToFull(u) : r === "cover" ? i.zoomToCover(u) : r === "max" ? i.zoomToMax(u) : f = false, i.stop("current")), f && p && (p = i.isDragging ? "f-fadeIn" : ""), n.hideLoading(t), n.revealContent(t, p)
@@ -3646,7 +3839,9 @@
         }
         process(t, e) {
             return new Promise((n, i) => {
-                var s; let l = this.instance, c = t.el; l.clearContent(t), l.showLoading(t); let h = this.optionFor(t, "content");
+                var s;
+                let l = this.instance, c = t.el; l.clearContent(t), l.showLoading(t);
+                let h = this.optionFor(t, "content");
                 if (typeof h == "string" && (h = tt(h)), !h || !N(h)) {
                     if (h = document.createElement("img"), h instanceof HTMLImageElement) {
                         let m = "", a = t.caption; m = typeof a == "string" && a ? a.replace(/<[^>]+>/gi, "").substring(0, 1e3) : `Image ${t.index + 1} of ${((s = l.carousel) === null || s === void 0 ? void 0 : s.pages.length) || 1}`, h.src = e || "", h.alt = m, h.draggable = false, t.srcset && h.setAttribute("srcset", t.srcset), this.instance.isOpeningSlide(t) && (h.fetchPriority = "high")
@@ -3676,25 +3871,22 @@
         }
         zoomIn(t) {
             return new Promise((e, n) => {
-                let i = this.instance, s = i.container, { panzoom: l, contentEl: c, el: h
-                }
-                    = t; l && l.updateMetrics(); let m = this.getZoomInfo(t);
-                if (!(m && h && c && l && s)) return void n(); let { x: a, y: r, scale: d, opacity: u
-                }
-                    = m, p = () => { t.state !== _.Closing && (u && (c.style.opacity = Math.max(Math.min(1, 1 - (1 - l.scale) / (1 - d)), 0) + ""), l.scale >= 1 && l.scale > l.targetScale - .1 && e(l)) }, f = g => { (g.scale < .99 || g.scale > 1.01) && !g.isDragging || (Z(s, he), c.style.opacity = "", g.off("endAnimation", f), g.off("touchStart", f), g.off("afterTransform", p), e(g)) }; l.on("endAnimation", f), l.on("touchStart", f), l.on("afterTransform", p), l.on(["error", "destroy"], () => { n() }), l.panTo({ x: a, y: r, scale: d, friction: 0, ignoreBounds: true }), l.stop("current"); let Q = { event: l.panMode === "mousemove" ? i.prevMouseMoveEvent || i.options.event : void 0 }, b = this.optionFor(t, "initialSize"); v(s, he), i.hideLoading(t), b === "full" ? l.zoomToFull(Q) : b === "cover" ? l.zoomToCover(Q) : b === "max" ? l.zoomToMax(Q) : l.reset(.172)
+                let i = this.instance, s = i.container, { panzoom: l, contentEl: c, el: h } = t; l && l.updateMetrics();
+                let m = this.getZoomInfo(t);
+                if (!(m && h && c && l && s)) return void n();
+                let { x: a, y: r, scale: d, opacity: u } = m, p = () => { t.state !== _.Closing && (u && (c.style.opacity = Math.max(Math.min(1, 1 - (1 - l.scale) / (1 - d)), 0) + ""), l.scale >= 1 && l.scale > l.targetScale - .1 && e(l)) }, f = g => { (g.scale < .99 || g.scale > 1.01) && !g.isDragging || (Z(s, he), c.style.opacity = "", g.off("endAnimation", f), g.off("touchStart", f), g.off("afterTransform", p), e(g)) }; l.on("endAnimation", f), l.on("touchStart", f), l.on("afterTransform", p), l.on(["error", "destroy"], () => { n() }), l.panTo({ x: a, y: r, scale: d, friction: 0, ignoreBounds: true }), l.stop("current");
+                let Q = { event: l.panMode === "mousemove" ? i.prevMouseMoveEvent || i.options.event : void 0 }, b = this.optionFor(t, "initialSize"); v(s, he), i.hideLoading(t), b === "full" ? l.zoomToFull(Q) : b === "cover" ? l.zoomToCover(Q) : b === "max" ? l.zoomToMax(Q) : l.reset(.172)
             })
         }
         getZoomInfo(t) {
-            let { el: e, imageEl: n, thumbEl: i, panzoom: s
-            }
-                = t, l = this.instance, c = l.container;
-            if (!e || !n || !i || !s || Xi(i) < 3 || !this.optionFor(t, "zoom") || !c || l.state === G.Destroy || getComputedStyle(c).getPropertyValue("--f-images-zoom") === "0") return false; let h = window.visualViewport || null;
-            if ((h ? h.scale : 1) !== 1) return false; let { top: m, left: a, width: r, height: d
-            }
-                = i.getBoundingClientRect(), { top: u, left: p, fitWidth: f, fitHeight: Q
-                }
-                    = s.contentRect;
-            if (!(r && d && f && Q)) return false; let b = s.container.getBoundingClientRect(); p += b.left, u += b.top; let g = -1 * (p + .5 * f - (a + .5 * r)), B = -1 * (u + .5 * Q - (m + .5 * d)), x = r / f, E = this.option("zoomOpacity") || false;
+            let { el: e, imageEl: n, thumbEl: i, panzoom: s } = t, l = this.instance, c = l.container;
+            if (!e || !n || !i || !s || Xi(i) < 3 || !this.optionFor(t, "zoom") || !c || l.state === G.Destroy || getComputedStyle(c).getPropertyValue("--f-images-zoom") === "0") return false;
+            let h = window.visualViewport || null;
+            if ((h ? h.scale : 1) !== 1) return false;
+            let { top: m, left: a, width: r, height: d } = i.getBoundingClientRect(), { top: u, left: p, fitWidth: f, fitHeight: Q } = s.contentRect;
+            if (!(r && d && f && Q)) return false;
+            let b = s.container.getBoundingClientRect(); p += b.left, u += b.top;
+            let g = -1 * (p + .5 * f - (a + .5 * r)), B = -1 * (u + .5 * Q - (m + .5 * d)), x = r / f, E = this.option("zoomOpacity") || false;
             return E === "auto" && (E = Math.abs(r / d - f / Q) > .1), {
                 x: g, y: B, scale: x, opacity: E
             }
@@ -3710,7 +3902,8 @@
         }
     }), typeof SuppressedError == "function" && SuppressedError;
     var fn = "html", xi = "image", Qn = "map", at = "youtube", ht = "vimeo", Lt = "html5video", wi = (o, t = {}) => {
-        let e = new URL(o), n = new URLSearchParams(e.search), i = new URLSearchParams; for (let [c, h] of [...n, ...Object.entries(t)]) {
+        let e = new URL(o), n = new URLSearchParams(e.search), i = new URLSearchParams;
+        for (let [c, h] of [...n, ...Object.entries(t)]) {
             let m = h + "";
             if (c === "t") {
                 let a = m.match(/((\d*)m)?(\d*)s?/); a && i.set("start", 60 * parseInt(a[2] || "0") + parseInt(a[3] || "0") + "")
@@ -3730,7 +3923,9 @@
             this.setContent(n)
         }
         onClearContent(t, e) {
-            e.xhr && (e.xhr.abort(), e.xhr = null); let n = e.iframeEl; n && (n.onload = n.onerror = null, n.src = "//about:blank", e.iframeEl = null); let i = e.contentEl, s = e.placeholderEl;
+            e.xhr && (e.xhr.abort(), e.xhr = null);
+            let n = e.iframeEl; n && (n.onload = n.onerror = null, n.src = "//about:blank", e.iframeEl = null);
+            let i = e.contentEl, s = e.placeholderEl;
             if (e.type === "inline" && i && s) i.classList.remove("fancybox__content"), getComputedStyle(i).getPropertyValue("display") !== "none" && (i.style.display = "none"), setTimeout(() => { s && (i && s.parentNode && s.parentNode.insertBefore(i, s), s.remove()) }, 0), e.contentEl = void 0, e.placeholderEl = void 0; else for (; e.el && e.el.firstChild;)e.el.removeChild(e.el.firstChild)
         }
         onSelectSlide(t, e, n) {
@@ -3742,8 +3937,7 @@
                 try {
                     (s = (i = n.el) === null || i === void 0 ? void 0 : i.querySelector("video")) === null || s === void 0 || s.pause()
                 }
-                catch {
-                }
+                catch { }
                 return
             }
             let l; n.type === ht ? l = {
@@ -3766,10 +3960,11 @@
                 else if (t.origin.match(/^https:\/\/(www.)?youtube(-nocookie)?.com$/) && e.event === "onReady") {
                     let n = document.getElementById(e.id); n && (n.dataset.ready = "true")
                 }
-            } catch {
-            }
+            } catch { }
         } loadAjaxContent(t) {
-            let e = this.instance.optionFor(t, "src") || ""; this.instance.showLoading(t); let n = this.instance, i = new XMLHttpRequest; n.showLoading(t), i.onreadystatechange = function () { i.readyState === XMLHttpRequest.DONE && n.state === G.Ready && (n.hideLoading(t), i.status === 200 ? n.setContent(t, i.responseText) : n.setError(t, i.status === 404 ? "{{AJAX_NOT_FOUND}}" : "{{AJAX_FORBIDDEN}}")) }; let s = t.ajax || null; i.open(s ? "POST" : "GET", e + ""), i.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"), i.setRequestHeader("X-Requested-With", "XMLHttpRequest"), i.send(s), t.xhr = i
+            let e = this.instance.optionFor(t, "src") || ""; this.instance.showLoading(t);
+            let n = this.instance, i = new XMLHttpRequest; n.showLoading(t), i.onreadystatechange = function () { i.readyState === XMLHttpRequest.DONE && n.state === G.Ready && (n.hideLoading(t), i.status === 200 ? n.setContent(t, i.responseText) : n.setError(t, i.status === 404 ? "{{AJAX_NOT_FOUND}}" : "{{AJAX_FORBIDDEN}}")) };
+            let s = t.ajax || null; i.open(s ? "POST" : "GET", e + ""), i.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"), i.setRequestHeader("X-Requested-With", "XMLHttpRequest"), i.send(s), t.xhr = i
         }
         setInlineContent(t) {
             let e = null;
@@ -3778,7 +3973,9 @@
             }
             if (e) {
                 if (t.type === "clone" || e.closest(".fancybox__slide")) {
-                    e = e.cloneNode(!0); let n = e.dataset.animationName; n && (e.classList.remove(n), delete e.dataset.animationName); let i = e.getAttribute("id"); i = i ? `${i}--clone` : `clone-${this.instance.id}-${t.index}`, e.setAttribute("id", i)
+                    e = e.cloneNode(!0);
+                    let n = e.dataset.animationName; n && (e.classList.remove(n), delete e.dataset.animationName);
+                    let i = e.getAttribute("id"); i = i ? `${i}--clone` : `clone-${this.instance.id}-${t.index}`, e.setAttribute("id", i)
                 }
                 else if (e.parentNode) {
                     let n = document.createElement("div"); n.classList.add("fancybox-placeholder"), e.parentNode.insertBefore(n, e), t.placeholderEl = n
@@ -3788,42 +3985,46 @@
             else this.instance.setError(t, "{{ELEMENT_NOT_FOUND}}")
         }
         setIframeContent(t) {
-            let { src: e, el: n
-            }
-                = t;
-            if (!e || typeof e != "string" || !n) return; n.classList.add("is-loading"); let i = this.instance, s = document.createElement("iframe"); s.className = "fancybox__iframe", s.setAttribute("id", `fancybox__iframe_${i.id}_${t.index}`); for (let [c, h] of Object.entries(this.optionFor(t, "iframeAttr") || {})) s.setAttribute(c, h); s.onerror = () => { i.setError(t, "{{IFRAME_ERROR}}") }, t.iframeEl = s; let l = this.optionFor(t, "preload");
-            if (t.type !== "iframe" || l === false) return s.setAttribute("src", t.src + ""), i.setContent(t, s, false), this.resizeIframe(t), void i.revealContent(t); i.showLoading(t), s.onload = () => { if (!s.src.length) return; let c = s.dataset.ready !== "true"; s.dataset.ready = "true", this.resizeIframe(t), c ? i.revealContent(t) : i.hideLoading(t) }, s.setAttribute("src", e), i.setContent(t, s, false)
+            let { src: e, el: n } = t;
+            if (!e || typeof e != "string" || !n) return; n.classList.add("is-loading");
+            let i = this.instance, s = document.createElement("iframe"); s.className = "fancybox__iframe", s.setAttribute("id", `fancybox__iframe_${i.id}_${t.index}`);
+            for (let [c, h] of Object.entries(this.optionFor(t, "iframeAttr") || {})) s.setAttribute(c, h); s.onerror = () => { i.setError(t, "{{IFRAME_ERROR}}") }, t.iframeEl = s;
+            let l = this.optionFor(t, "preload");
+            if (t.type !== "iframe" || l === false) return s.setAttribute("src", t.src + ""), i.setContent(t, s, false), this.resizeIframe(t), void i.revealContent(t); i.showLoading(t), s.onload = () => {
+                if (!s.src.length) return;
+                let c = s.dataset.ready !== "true"; s.dataset.ready = "true", this.resizeIframe(t), c ? i.revealContent(t) : i.hideLoading(t)
+            }, s.setAttribute("src", e), i.setContent(t, s, false)
         }
         resizeIframe(t) {
-            let { type: e, iframeEl: n
-            }
-                = t;
-            if (e === at || e === ht) return; let i = n?.parentElement;
-            if (!n || !i) return; let s = t.autoSize; s === void 0 && (s = this.optionFor(t, "autoSize")); let l = t.width || 0, c = t.height || 0; l && c && (s = false); let h = i && i.style;
+            let { type: e, iframeEl: n } = t;
+            if (e === at || e === ht) return;
+            let i = n?.parentElement;
+            if (!n || !i) return;
+            let s = t.autoSize; s === void 0 && (s = this.optionFor(t, "autoSize"));
+            let l = t.width || 0, c = t.height || 0; l && c && (s = false);
+            let h = i && i.style;
             if (t.preload !== false && s !== false && h) try {
                 let m = window.getComputedStyle(i), a = parseFloat(m.paddingLeft) + parseFloat(m.paddingRight), r = parseFloat(m.paddingTop) + parseFloat(m.paddingBottom), d = n.contentWindow;
                 if (d) {
                     let u = d.document, p = u.getElementsByTagName(fn)[0], f = u.body; h.width = "", f.style.overflow = "hidden", l = l || p.scrollWidth + a, h.width = `${l}px`, f.style.overflow = "", h.flex = "0 0 auto", h.height = `${f.scrollHeight}px`, c = p.scrollHeight + r
                 }
-            } catch {
-            }
+            } catch { }
             if (l || c) {
                 let m = { flex: "0 1 auto", width: "", height: "" }; l && l !== "auto" && (m.width = `${l}px`), c && c !== "auto" && (m.height = `${c}px`), Object.assign(h, m)
             }
         } playVideo() {
             let t = this.instance.getSlide();
-            if (!t) return; let { el: e
-            }
-                = t;
+            if (!t) return;
+            let { el: e } = t;
             if (!e || !e.offsetParent || !this.optionFor(t, "videoAutoplay")) return;
             if (t.type === Lt) try {
                 let i = e.querySelector("video");
                 if (i) {
                     let s = i.play(); s !== void 0 && s.then(() => { }).catch(l => { i.muted = true, i.play() })
                 }
-            } catch {
-            }
-            if (t.type !== at && t.type !== ht) return; let n = () => {
+            } catch { }
+            if (t.type !== at && t.type !== ht) return;
+            let n = () => {
                 if (t.iframeEl && t.iframeEl.contentWindow) {
                     let i;
                     if (t.iframeEl.dataset.ready === "true") return i = t.type === at ? {
@@ -3835,18 +4036,20 @@
             }; n()
         }
         processType(t) {
-            if (t.html) return t.type = fn, t.src = t.html, void (t.html = ""); let e = this.instance.optionFor(t, "src", "");
-            if (!e || typeof e != "string") return; let n = t.type, i = null;
+            if (t.html) return t.type = fn, t.src = t.html, void (t.html = "");
+            let e = this.instance.optionFor(t, "src", "");
+            if (!e || typeof e != "string") return;
+            let n = t.type, i = null;
             if (i = e.match(/(youtube\.com|youtu\.be|youtube\-nocookie\.com)\/(?:watch\?(?:.*&)?v=|v\/|u\/|shorts\/|embed\/?)?(videoseries\?list=(?:.*)|[\w-]{11}|\?listType=(?:.*)&list=(?:.*))(?:.*)/i)) {
-                let s = this.optionFor(t, at), { nocookie: l
-                }
-                    = s, c = function (r, d) {
-                        var u = {}; for (var p in r) Object.prototype.hasOwnProperty.call(r, p) && d.indexOf(p) < 0 && (u[p] = r[p]);
-                        if (r != null && typeof Object.getOwnPropertySymbols == "function") {
-                            var f = 0; for (p = Object.getOwnPropertySymbols(r); f < p.length; f++)d.indexOf(p[f]) < 0 && Object.prototype.propertyIsEnumerable.call(r, p[f]) && (u[p[f]] = r[p[f]])
-                        }
-                        return u
-                    }(s, ["nocookie"]), h = `www.youtube${l ? "-nocookie" : ""}.com`, m = wi(e, c), a = encodeURIComponent(i[2]); t.videoId = a, t.src = `https://${h}/embed/${a}?${m}`, t.thumbSrc = t.thumbSrc || `https://i.ytimg.com/vi/${a}/mqdefault.jpg`, n = at
+                let s = this.optionFor(t, at), { nocookie: l } = s, c = function (r, d) {
+                    var u = {};
+                    for (var p in r) Object.prototype.hasOwnProperty.call(r, p) && d.indexOf(p) < 0 && (u[p] = r[p]);
+                    if (r != null && typeof Object.getOwnPropertySymbols == "function") {
+                        var f = 0;
+                        for (p = Object.getOwnPropertySymbols(r); f < p.length; f++)d.indexOf(p[f]) < 0 && Object.prototype.propertyIsEnumerable.call(r, p[f]) && (u[p[f]] = r[p[f]])
+                    }
+                    return u
+                }(s, ["nocookie"]), h = `www.youtube${l ? "-nocookie" : ""}.com`, m = wi(e, c), a = encodeURIComponent(i[2]); t.videoId = a, t.src = `https://${h}/embed/${a}?${m}`, t.thumbSrc = t.thumbSrc || `https://i.ytimg.com/vi/${a}/mqdefault.jpg`, n = at
             }
             else if (i = e.match(/^.+vimeo.com\/(?:\/)?([\d]+)((\/|\?h=)([a-z0-9]+))?(.*)?/)) {
                 let s = wi(e, this.optionFor(t, ht)), l = encodeURIComponent(i[1]), c = i[4] || ""; t.videoId = l, t.src = `https://player.vimeo.com/video/${l}?${c ? `h=${c}${s ? "&" : ""}` : ""}${s}`, n = ht
@@ -3863,12 +4066,15 @@
             }
         } setAspectRatio(t) {
             let e = t.contentEl;
-            if (!(t.el && e && t.type && [at, ht, Lt].includes(t.type))) return; let n, i = t.width || "auto", s = t.height || "auto";
+            if (!(t.el && e && t.type && [at, ht, Lt].includes(t.type))) return;
+            let n, i = t.width || "auto", s = t.height || "auto";
             if (i === "auto" || s === "auto") {
-                n = this.optionFor(t, "videoRatio"); let m = (n + "").match(/(\d+)\s*\/\s?(\d+)/); n = m && m.length > 2 ? parseFloat(m[1]) / parseFloat(m[2]) : parseFloat(n + "")
+                n = this.optionFor(t, "videoRatio");
+                let m = (n + "").match(/(\d+)\s*\/\s?(\d+)/); n = m && m.length > 2 ? parseFloat(m[1]) / parseFloat(m[2]) : parseFloat(n + "")
             }
             else i && s && (n = i / s);
-            if (!n) return; e.style.aspectRatio = "", e.style.width = "", e.style.height = "", e.offsetHeight; let l = e.getBoundingClientRect(), c = l.width || 1, h = l.height || 1; e.style.aspectRatio = n + "", n < c / h ? (s = s === "auto" ? h : Math.min(h, s), e.style.width = "auto", e.style.height = `${s}px`) : (i = i === "auto" ? c : Math.min(c, i), e.style.width = `${i}px`, e.style.height = "auto")
+            if (!n) return; e.style.aspectRatio = "", e.style.width = "", e.style.height = "", e.offsetHeight;
+            let l = e.getBoundingClientRect(), c = l.width || 1, h = l.height || 1; e.style.aspectRatio = n + "", n < c / h ? (s = s === "auto" ? h : Math.min(h, s), e.style.width = "auto", e.style.height = `${s}px`) : (i = i === "auto" ? c : Math.min(c, i), e.style.width = `${i}px`, e.style.height = "auto")
         }
         attach() {
             let t = this, e = t.instance; e.on("Carousel.beforeInitSlide", t.onBeforeInitSlide), e.on("Carousel.createSlide", t.onCreateSlide), e.on("Carousel.selectSlide", t.onSelectSlide), e.on("Carousel.unselectSlide", t.onUnselectSlide), e.on("Carousel.Panzoom.refresh", t.onRefresh), e.on("done", t.onDone), e.on("clearContent", t.onClearContent), window.addEventListener("message", t.onMessage)
@@ -3910,13 +4116,17 @@
         }
         createProgressBar() {
             var t;
-            if (!this.option("showProgress")) return null; this.removeProgressBar(); let e = this.instance, n = ((t = e.pages[e.page]) === null || t === void 0 ? void 0 : t.slides) || [], i = this.option("progressParentEl");
-            if (i || (i = (n.length === 1 ? n[0].el : null) || e.viewport), !i) return null; let s = document.createElement("div");
+            if (!this.option("showProgress")) return null; this.removeProgressBar();
+            let e = this.instance, n = ((t = e.pages[e.page]) === null || t === void 0 ? void 0 : t.slides) || [], i = this.option("progressParentEl");
+            if (i || (i = (n.length === 1 ? n[0].el : null) || e.viewport), !i) return null;
+            let s = document.createElement("div");
             return v(s, "f-progress"), i.prepend(s), this.progressBar = s, s.offsetHeight, s
         }
         set() {
             let t = this, e = t.instance;
-            if (e.pages.length < 2 || t.timer) return; let n = t.option("timeout"); t.state = ue, v(e.container, "has-autoplay"); let i = t.createProgressBar(); i && (i.style.transitionDuration = `${n}ms`, i.style.transform = "scaleX(1)"), t.timer = setTimeout(() => { t.timer = null, t.inHover || t.onTimerEnd() }, n), t.emit("set")
+            if (e.pages.length < 2 || t.timer) return;
+            let n = t.option("timeout"); t.state = ue, v(e.container, "has-autoplay");
+            let i = t.createProgressBar(); i && (i.style.transitionDuration = `${n}ms`, i.style.transform = "scaleX(1)"), t.timer = setTimeout(() => { t.timer = null, t.inHover || t.onTimerEnd() }, n), t.emit("set")
         }
         clear() {
             let t = this; t.timer && (clearTimeout(t.timer), t.timer = null), t.removeProgressBar()
@@ -3963,7 +4173,8 @@
         }
         onPrepare(t) {
             let e = t.carousel;
-            if (!e) return; let n = t.container; n && (e.options.Autoplay = X({ autoStart: false }, this.option("Autoplay") || {}, {
+            if (!e) return;
+            let n = t.container; n && (e.options.Autoplay = X({ autoStart: false }, this.option("Autoplay") || {}, {
                 pauseOnHover: false, timeout: this.option("timeout"), progressParentEl: () => this.option("progressParentEl") || null, on: {
                     start: () => { t.emit("startSlideshow") }, set: i => { var s; n.classList.add("has-slideshow"), ((s = t.getSlide()) === null || s === void 0 ? void 0 : s.state) !== _.Ready && i.pause() }, stop: () => { n.classList.remove("has-slideshow"), t.isCompact || t.endIdle(), t.emit("endSlideshow") }, resume: (i, s) => {
                         var l, c, h; !s || !s.cancelable || ((l = t.getSlide()) === null || l === void 0 ? void 0 : l.state) === _.Ready && (!((h = (c = t.carousel) === null || c === void 0 ? void 0 : c.panzoom) === null || h === void 0) && h.isResting) || s.preventDefault()
@@ -3976,10 +4187,12 @@
         }
         onDone(t, e) {
             let n = this.ref, i = t.carousel;
-            if (!n || !i) return; let s = e.panzoom; s && s.on("startAnimation", () => { t.isCurrentSlide(e) && n.stop() }), t.isCurrentSlide(e) && n.resume()
+            if (!n || !i) return;
+            let s = e.panzoom; s && s.on("startAnimation", () => { t.isCurrentSlide(e) && n.stop() }), t.isCurrentSlide(e) && n.resume()
         }
         onKeydown(t, e) {
-            var n; let i = this.ref; i && e === this.option("key") && ((n = document.activeElement) === null || n === void 0 ? void 0 : n.nodeName) !== "BUTTON" && i.toggle()
+            var n;
+            let i = this.ref; i && e === this.option("key") && ((n = document.activeElement) === null || n === void 0 ? void 0 : n.nodeName) !== "BUTTON" && i.toggle()
         }
         attach() {
             let t = this, e = t.instance; e.on("Carousel.init", t.onPrepare), e.on("Carousel.ready", t.onReady), e.on("done", t.onDone), e.on("keydown", t.onKeydown)
@@ -4011,20 +4224,25 @@
         }
         onChange() {
             var o;
-            if (!this.isModern) return; let t = this.container, e = this.instance, n = e.panzoom, i = this.carousel, s = i ? i.panzoom : null, l = e.page;
+            if (!this.isModern) return;
+            let t = this.container, e = this.instance, n = e.panzoom, i = this.carousel, s = i ? i.panzoom : null, l = e.page;
             if (n && i && s) {
                 if (n.isDragging) {
-                    Z(t, this.cn(Wi)); let c = ((o = i.pages[l]) === null || o === void 0 ? void 0 : o.pos) || 0; c += e.getProgress(l) * (this[q] + this.thumbGap); let h = s.getBounds(); -1 * c > h.x.min && -1 * c < h.x.max && s.panTo({ x: -1 * c, friction: .12 })
+                    Z(t, this.cn(Wi));
+                    let c = ((o = i.pages[l]) === null || o === void 0 ? void 0 : o.pos) || 0; c += e.getProgress(l) * (this[q] + this.thumbGap);
+                    let h = s.getBounds(); -1 * c > h.x.min && -1 * c < h.x.max && s.panTo({ x: -1 * c, friction: .12 })
                 }
                 else et(t, this.cn(Wi), n.isResting); this.shiftModern()
             }
         } onRefresh() {
-            this.updateProps(); for (let o of this.instance.slides || []) this.resizeModernSlide(o); this.shiftModern()
+            this.updateProps();
+            for (let o of this.instance.slides || []) this.resizeModernSlide(o); this.shiftModern()
         }
         isDisabled() {
             let o = this.option("minCount") || 0;
             if (o) {
-                let e = this.instance, n = 0; for (let i of e.slides || []) i.thumbSrc && n++;
+                let e = this.instance, n = 0;
+                for (let i of e.slides || []) i.thumbSrc && n++;
                 if (n < o) return true
             }
             let t = this.option("type");
@@ -4039,7 +4257,8 @@
             let t = this.carousel; t && t.addSlide(o.index, this.getThumb(o))
         }
         getSlides() {
-            let o = []; for (let t of this.instance.slides || []) o.push(this.getThumb(t));
+            let o = [];
+            for (let t of this.instance.slides || []) o.push(this.getThumb(t));
             return o
         }
         resizeModernSlide(o) {
@@ -4047,45 +4266,51 @@
         }
         updateProps() {
             let o = this.container;
-            if (!o) return; let t = e => parseFloat(getComputedStyle(o).getPropertyValue("--f-thumb-" + e)) || 0; this.thumbGap = t("gap"), this.thumbExtraGap = t("extra-gap"), this[pe] = t("width") || 40, this[q] = t("clip-width") || 40, this[gt] = t("height") || 40
+            if (!o) return;
+            let t = e => parseFloat(getComputedStyle(o).getPropertyValue("--f-thumb-" + e)) || 0; this.thumbGap = t("gap"), this.thumbExtraGap = t("extra-gap"), this[pe] = t("width") || 40, this[q] = t("clip-width") || 40, this[gt] = t("height") || 40
         }
         build() {
             let o = this;
             if (o.state !== st.Init) return;
-            if (o.isDisabled()) return void o.emit("disabled"); let t = o.instance, e = t.container, n = o.getSlides(), i = o.option("type"); o.type = i; let s = o.option("parentEl"), l = o.cn("container"), c = o.cn("track"), h = s?.querySelector("." + l); h || (h = document.createElement("div"), v(h, l), s ? s.appendChild(h) : e.after(h)), v(h, `is-${i}`), v(e, o.cn("hasThumbs")), o.container = h, o.updateProps(); let m = h.querySelector("." + c); m || (m = document.createElement("div"), v(m, o.cn("track")), h.appendChild(m)), o.track = m; let a = X({}, {
+            if (o.isDisabled()) return void o.emit("disabled");
+            let t = o.instance, e = t.container, n = o.getSlides(), i = o.option("type"); o.type = i;
+            let s = o.option("parentEl"), l = o.cn("container"), c = o.cn("track"), h = s?.querySelector("." + l); h || (h = document.createElement("div"), v(h, l), s ? s.appendChild(h) : e.after(h)), v(h, `is-${i}`), v(e, o.cn("hasThumbs")), o.container = h, o.updateProps();
+            let m = h.querySelector("." + c); m || (m = document.createElement("div"), v(m, o.cn("track")), h.appendChild(m)), o.track = m;
+            let a = X({}, {
                 track: m, infinite: false, center: true, fill: i === "classic", dragFree: true, slidesPerPage: 1, transition: false, preload: .25, friction: .12, Panzoom: { maxVelocity: 0 }, Dots: false, Navigation: false, classes: {
                     container: "f-thumbs", viewport: "f-thumbs__viewport", track: "f-thumbs__track", slide: "f-thumbs__slide"
                 }
             }, o.option("Carousel") || {}, { Sync: { target: t }, slides: n }), r = new t.constructor(h, a); r.on("createSlide", (d, u) => { o.setProps(u.index), o.emit("createSlide", u, u.el) }), r.on("ready", () => { o.shiftModern(), o.emit("ready") }), r.on("refresh", () => { o.shiftModern() }), r.on("Panzoom.click", (d, u, p) => { o.onClick(p) }), o.carousel = r, o.state = st.Ready
         }
         onClick(o) {
-            o.preventDefault(), o.stopPropagation(); let t = this.instance, { pages: e, page: n
-            }
-                = t, i = f => {
-                    if (f) {
-                        let Q = f.closest("[data-carousel-index]");
-                        if (Q) return [parseInt(Q.dataset.carouselIndex || "", 10) || 0, Q]
-                    }
-                    return [-1, void 0]
-                }, s = (f, Q) => {
-                    let b = document.elementFromPoint(f, Q);
-                    return b ? i(b) : [-1, void 0]
-                }, [l, c] = i(o.target);
-            if (l > -1) return; let h = this[q], m = o.clientX, a = o.clientY, [r, d] = s(m - h, a), [u, p] = s(m + h, a); d && p ? (l = Math.abs(m - d.getBoundingClientRect().right) < Math.abs(m - p.getBoundingClientRect().left) ? r : u, l === n && (l = l === r ? u : r)) : d ? l = r : p && (l = u), l > -1 && e[l] && t.slideTo(l)
+            o.preventDefault(), o.stopPropagation();
+            let t = this.instance, { pages: e, page: n } = t, i = f => {
+                if (f) {
+                    let Q = f.closest("[data-carousel-index]");
+                    if (Q) return [parseInt(Q.dataset.carouselIndex || "", 10) || 0, Q]
+                }
+                return [-1, void 0]
+            }, s = (f, Q) => {
+                let b = document.elementFromPoint(f, Q);
+                return b ? i(b) : [-1, void 0]
+            }, [l, c] = i(o.target);
+            if (l > -1) return;
+            let h = this[q], m = o.clientX, a = o.clientY, [r, d] = s(m - h, a), [u, p] = s(m + h, a); d && p ? (l = Math.abs(m - d.getBoundingClientRect().right) < Math.abs(m - p.getBoundingClientRect().left) ? r : u, l === n && (l = l === r ? u : r)) : d ? l = r : p && (l = u), l > -1 && e[l] && t.slideTo(l)
         }
         getShift(o) {
-            var t; let e = this, { instance: n
-            }
-                = e, i = e.carousel;
-            if (!n || !i) return 0; let s = e[pe], l = e[q], c = e.thumbGap, h = e.thumbExtraGap;
-            if (!(!((t = i.slides[o]) === null || t === void 0) && t.el)) return 0; let m = .5 * (s - l), a = n.pages.length - 1, r = n.getProgress(0), d = n.getProgress(a), u = n.getProgress(o, false, true), p = 0, f = m + h + c, Q = r < 0 && r > -1, b = d > 0 && d < 1;
+            var t;
+            let e = this, { instance: n } = e, i = e.carousel;
+            if (!n || !i) return 0;
+            let s = e[pe], l = e[q], c = e.thumbGap, h = e.thumbExtraGap;
+            if (!(!((t = i.slides[o]) === null || t === void 0) && t.el)) return 0;
+            let m = .5 * (s - l), a = n.pages.length - 1, r = n.getProgress(0), d = n.getProgress(a), u = n.getProgress(o, false, true), p = 0, f = m + h + c, Q = r < 0 && r > -1, b = d > 0 && d < 1;
             return o === 0 ? (p = f * Math.abs(r), b && r === 1 && (p -= f * Math.abs(d))) : o === a ? (p = f * Math.abs(d) * -1, Q && d === -1 && (p += f * Math.abs(r))) : Q || b ? (p = -1 * f, p += f * Math.abs(r), p += f * (1 - Math.abs(d))) : p = f * u, p
         }
         setProps(o) {
-            var t; let e = this;
-            if (!e.isModern) return; let { instance: n
-            }
-                = e, i = e.carousel;
+            var t;
+            let e = this;
+            if (!e.isModern) return;
+            let { instance: n } = e, i = e.carousel;
             if (n && i) {
                 let s = (t = i.slides[o]) === null || t === void 0 ? void 0 : t.el;
                 if (s && s.childNodes.length) {
@@ -4095,10 +4320,11 @@
         }
         shiftModern() {
             let o = this;
-            if (!o.isModern) return; let { instance: t, track: e
-            }
-                = o, n = t.panzoom, i = o.carousel;
-            if (!(t && e && n && i) || n.state === O.Init || n.state === O.Destroy) return; for (let l of t.slides) o.setProps(l.index); let s = (o[q] + o.thumbGap) * (i.slides.length || 0); e.style.setProperty("--width", s + "")
+            if (!o.isModern) return;
+            let { instance: t, track: e } = o, n = t.panzoom, i = o.carousel;
+            if (!(t && e && n && i) || n.state === O.Init || n.state === O.Destroy) return;
+            for (let l of t.slides) o.setProps(l.index);
+            let s = (o[q] + o.thumbGap) * (i.slides.length || 0); e.style.setProperty("--width", s + "")
         }
         cleanup() {
             let o = this; o.carousel && o.carousel.destroy(), o.carousel = null, o.container && o.container.remove(), o.container = null, o.track && o.track.remove(), o.track = null, o.state = st.Init, Z(o.instance.container, o.cn("hasThumbs"))
@@ -4125,14 +4351,18 @@
             e.stopPropagation()
         }
         onCreateSlide(t, e) {
-            var n, i, s; let l = ((s = (i = (n = this.instance) === null || n === void 0 ? void 0 : n.carousel) === null || i === void 0 ? void 0 : i.slides[e.index]) === null || s === void 0 ? void 0 : s.type) || "", c = e.el;
+            var n, i, s;
+            let l = ((s = (i = (n = this.instance) === null || n === void 0 ? void 0 : n.carousel) === null || i === void 0 ? void 0 : i.slides[e.index]) === null || s === void 0 ? void 0 : s.type) || "", c = e.el;
             if (c && l) {
                 let h = `for-${l}`;["video", "youtube", "vimeo", "html5video"].includes(l) && (h += " for-video"), v(c, h)
             }
         } onInit() {
-            var t; let e = this, n = e.instance, i = n.carousel;
-            if (e.ref || !i) return; let s = e.option("parentEl") || n.footer || n.container;
-            if (!s) return; let l = X({}, e.options, {
+            var t;
+            let e = this, n = e.instance, i = n.carousel;
+            if (e.ref || !i) return;
+            let s = e.option("parentEl") || n.footer || n.container;
+            if (!s) return;
+            let l = X({}, e.options, {
                 parentEl: s, classes: { container: "f-thumbs fancybox__thumbs" }, Carousel: {
                     Sync: {
                         friction: n.option("Carousel.friction") || 0
@@ -4145,7 +4375,8 @@
             }); l.Carousel = l.Carousel || {}, l.Carousel.on = X(((t = e.options.Carousel) === null || t === void 0 ? void 0 : t.on) || {}, { click: this.onClick, createSlide: this.onCreateSlide }), i.options.Thumbs = l, i.attachPlugins({ Thumbs: Pi }), e.ref = i.plugins.Thumbs, e.option("showOnStart") || (e.ref.state = st.Hidden, e.hidden = true)
         }
         onResize() {
-            var t; let e = (t = this.ref) === null || t === void 0 ? void 0 : t.container; e && (e.style.maxHeight = "")
+            var t;
+            let e = (t = this.ref) === null || t === void 0 ? void 0 : t.container; e && (e.style.maxHeight = "")
         }
         onKeydown(t, e) {
             let n = this.option("key"); n && n === e && this.toggle()
@@ -4156,20 +4387,23 @@
         }
         show() {
             let t = this.ref;
-            if (!t || t.isDisabled()) return; let e = t.container; e && (this.refresh(), e.offsetHeight, e.removeAttribute(Vi), e.classList.remove(Li), this.hidden = false)
+            if (!t || t.isDisabled()) return;
+            let e = t.container; e && (this.refresh(), e.offsetHeight, e.removeAttribute(Vi), e.classList.remove(Li), this.hidden = false)
         }
         hide() {
             let t = this.ref, e = t && t.container; e && (this.refresh(), e.offsetHeight, e.classList.add(Li), e.setAttribute(Vi, "true")), this.hidden = true
         }
         refresh() {
             let t = this.ref;
-            if (!t || !t.state) return; let e = t.container, n = e?.firstChild || null; e && n && n.childNodes.length && (e.style.maxHeight = `${n.getBoundingClientRect().height}px`)
+            if (!t || !t.state) return;
+            let e = t.container, n = e?.firstChild || null; e && n && n.childNodes.length && (e.style.maxHeight = `${n.getBoundingClientRect().height}px`)
         }
         attach() {
             let t = this, e = t.instance; e.state === G.Init ? e.on("Carousel.init", t.onInit) : t.onInit(), e.on("resize", t.onResize), e.on("keydown", t.onKeydown)
         }
         detach() {
-            var t; let e = this, n = e.instance; n.off("Carousel.init", e.onInit), n.off("resize", e.onResize), n.off("keydown", e.onKeydown), (t = n.carousel) === null || t === void 0 || t.detachPlugins(["Thumbs"]), e.ref = null
+            var t;
+            let e = this, n = e.instance; n.off("Carousel.init", e.onInit), n.off("resize", e.onResize), n.off("keydown", e.onKeydown), (t = n.carousel) === null || t === void 0 || t.detachPlugins(["Thumbs"]), e.ref = null
         }
     }; Object.defineProperty(xe, "defaults", { enumerable: true, configurable: true, writable: true, value: Fa });
     var bn = {
@@ -4205,31 +4439,36 @@
         }
         onReady(t) {
             var e;
-            if (!t.carousel) return; let n = this.option("display"), i = this.option("absolute"), s = this.option("enabled");
+            if (!t.carousel) return;
+            let n = this.option("display"), i = this.option("absolute"), s = this.option("enabled");
             if (s === "auto") {
                 let m = this.instance.carousel, a = 0;
                 if (m) for (let r of m.slides) (r.panzoom || r.type === "image") && a++; a || (s = false)
             }
-            s || (n = void 0); let l = 0, c = { left: [], middle: [], right: [] };
+            s || (n = void 0);
+            let l = 0, c = { left: [], middle: [], right: [] };
             if (n) for (let m of ["left", "middle", "right"]) for (let a of n[m]) {
                 let r = this.createEl(a); r && ((e = c[m]) === null || e === void 0 || e.push(r), l++)
             }
             let h = null;
             if (l && (h = this.createContainer()), h) {
                 for (let [m, a] of Object.entries(c)) {
-                    let r = document.createElement("div"); v(r, gn + "__column is-" + m); for (let d of a) r.appendChild(d); i !== "auto" || m !== "middle" || a.length || (i = true), h.appendChild(r)
+                    let r = document.createElement("div"); v(r, gn + "__column is-" + m);
+                    for (let d of a) r.appendChild(d); i !== "auto" || m !== "middle" || a.length || (i = true), h.appendChild(r)
                 }
                 i === true && v(h, "is-absolute"), this.state = ft.Ready, this.onRefresh()
             }
             else this.state = ft.Disabled
         }
         onClick(t) {
-            var e, n; let i = this.instance, s = i.getSlide(), l = s?.panzoom, c = t.target, h = c && N(c) ? c.dataset : null;
+            var e, n;
+            let i = this.instance, s = i.getSlide(), l = s?.panzoom, c = t.target, h = c && N(c) ? c.dataset : null;
             if (!h) return;
             if (h.fancyboxToggleThumbs !== void 0) return t.preventDefault(), t.stopPropagation(), void ((e = i.plugins.Thumbs) === null || e === void 0 || e.toggle());
             if (h.fancyboxToggleFullscreen !== void 0) return t.preventDefault(), t.stopPropagation(), void this.instance.toggleFullscreen();
             if (h.fancyboxToggleSlideshow !== void 0) {
-                t.preventDefault(), t.stopPropagation(); let r = (n = i.carousel) === null || n === void 0 ? void 0 : n.plugins.Autoplay, d = r.isActive;
+                t.preventDefault(), t.stopPropagation();
+                let r = (n = i.carousel) === null || n === void 0 ? void 0 : n.plugins.Autoplay, d = r.isActive;
                 return l && l.panMode === "mousemove" && !d && l.reset(), void (d ? r.stop() : r.start())
             }
             let m = h.panzoomAction, a = h.panzoomChange;
@@ -4238,8 +4477,7 @@
                 try {
                     r = JSON.parse(a)
                 }
-                catch {
-                }
+                catch { }
                 l && l.applyChange(r)
             }
             else m && l && l[m] && l[m]()
@@ -4248,22 +4486,34 @@
             this.onRefresh()
         }
         onRefresh() {
-            if (this.instance.isClosing()) return; let t = this.container;
-            if (!t) return; let e = this.instance.getSlide();
-            if (!e || e.state !== _.Ready) return; let n = e && !e.error && e.panzoom; for (let l of t.querySelectorAll("[data-panzoom-action]")) n ? (l.removeAttribute("disabled"), l.removeAttribute("tabindex")) : (l.setAttribute("disabled", ""), l.setAttribute("tabindex", "-1")); let i = n && n.canZoomIn(), s = n && n.canZoomOut(); for (let l of t.querySelectorAll('[data-panzoom-action="zoomIn"]')) i ? (l.removeAttribute("disabled"), l.removeAttribute("tabindex")) : (l.setAttribute("disabled", ""), l.setAttribute("tabindex", "-1")); for (let l of t.querySelectorAll('[data-panzoom-action="zoomOut"]')) s ? (l.removeAttribute("disabled"), l.removeAttribute("tabindex")) : (l.setAttribute("disabled", ""), l.setAttribute("tabindex", "-1")); for (let l of t.querySelectorAll('[data-panzoom-action="toggleZoom"],[data-panzoom-action="iterateZoom"]')) {
-                s || i ? (l.removeAttribute("disabled"), l.removeAttribute("tabindex")) : (l.setAttribute("disabled", ""), l.setAttribute("tabindex", "-1")); let c = l.querySelector("g"); c && (c.style.display = i ? "" : "none")
+            if (this.instance.isClosing()) return;
+            let t = this.container;
+            if (!t) return;
+            let e = this.instance.getSlide();
+            if (!e || e.state !== _.Ready) return;
+            let n = e && !e.error && e.panzoom;
+            for (let l of t.querySelectorAll("[data-panzoom-action]")) n ? (l.removeAttribute("disabled"), l.removeAttribute("tabindex")) : (l.setAttribute("disabled", ""), l.setAttribute("tabindex", "-1"));
+            let i = n && n.canZoomIn(), s = n && n.canZoomOut();
+            for (let l of t.querySelectorAll('[data-panzoom-action="zoomIn"]')) i ? (l.removeAttribute("disabled"), l.removeAttribute("tabindex")) : (l.setAttribute("disabled", ""), l.setAttribute("tabindex", "-1"));
+            for (let l of t.querySelectorAll('[data-panzoom-action="zoomOut"]')) s ? (l.removeAttribute("disabled"), l.removeAttribute("tabindex")) : (l.setAttribute("disabled", ""), l.setAttribute("tabindex", "-1"));
+            for (let l of t.querySelectorAll('[data-panzoom-action="toggleZoom"],[data-panzoom-action="iterateZoom"]')) {
+                s || i ? (l.removeAttribute("disabled"), l.removeAttribute("tabindex")) : (l.setAttribute("disabled", ""), l.setAttribute("tabindex", "-1"));
+                let c = l.querySelector("g"); c && (c.style.display = i ? "" : "none")
             }
         } onDone(t, e) {
             var n; (n = e.panzoom) === null || n === void 0 || n.on("afterTransform", () => { this.instance.isCurrentSlide(e) && this.onRefresh() }), this.instance.isCurrentSlide(e) && this.onRefresh()
         }
         createContainer() {
             let t = this.instance.container;
-            if (!t) return null; let e = this.option("parentEl") || t, n = e.querySelector("." + gn);
+            if (!t) return null;
+            let e = this.option("parentEl") || t, n = e.querySelector("." + gn);
             return n || (n = document.createElement("div"), v(n, gn), e.prepend(n)), n.addEventListener("click", this.onClick, { passive: false, capture: true }), t && v(t, Ri), this.container = n, n
         }
         createEl(t) {
             let e = this.instance, n = e.carousel;
-            if (!n || t === "toggleFS" || t === "fullscreen" && !Ai()) return null; let i = null, s = n.slides.length || 0, l = 0, c = 0; for (let m of n.slides) (m.panzoom || m.type === "image") && l++, (m.type === "image" || m.downloadSrc) && c++;
+            if (!n || t === "toggleFS" || t === "fullscreen" && !Ai()) return null;
+            let i = null, s = n.slides.length || 0, l = 0, c = 0;
+            for (let m of n.slides) (m.panzoom || m.type === "image") && l++, (m.type === "image" || m.downloadSrc) && c++;
             if (s < 2 && ["infobar", "prev", "next"].includes(t)) return i;
             if (bn[t] !== void 0 && !l || t === "download" && !c) return null;
             if (t === "thumbs") {
@@ -4282,7 +4532,8 @@
             return i
         }
         removeContainer() {
-            let t = this.container; t && t.remove(), this.container = null, this.state = ft.Disabled; let e = this.instance.container; e && Z(e, Ri)
+            let t = this.container; t && t.remove(), this.container = null, this.state = ft.Disabled;
+            let e = this.instance.container; e && Z(e, Ri)
         }
         attach() {
             let t = this, e = t.instance; e.on("Carousel.initSlides", t.onReady), e.on("done", t.onDone), e.on(["reveal", "Carousel.change"], t.onChange), t.onReady(t.instance)
@@ -4297,26 +4548,21 @@
                 Rt = false
             }
             onChange(o) {
-                pt && clearTimeout(pt); let { hash: t
-                }
-                    = Yi(), { hash: e
-                    }
-                        = Be(), n = o.isOpeningSlide(o.getSlide()); n && (yi = e === t ? "" : e), t && t !== e && (pt = setTimeout(() => {
-                            try {
-                                if (o.state === G.Ready) {
-                                    let i = "replaceState"; n && !de && (i = "pushState", de = true), window.history[i]({}, document.title, window.location.pathname + window.location.search + t)
-                                }
-                            } catch {
-                            }
-                        }, 300))
+                pt && clearTimeout(pt);
+                let { hash: t } = Yi(), { hash: e } = Be(), n = o.isOpeningSlide(o.getSlide()); n && (yi = e === t ? "" : e), t && t !== e && (pt = setTimeout(() => {
+                    try {
+                        if (o.state === G.Ready) {
+                            let i = "replaceState"; n && !de && (i = "pushState", de = true), window.history[i]({}, document.title, window.location.pathname + window.location.search + t)
+                        }
+                    } catch { }
+                }, 300))
             }
             onClose(o) {
                 if (pt && clearTimeout(pt), !Rt && de) return de = false, Rt = false, void window.history.back();
                 if (!Rt) try {
                     window.history.replaceState({}, document.title, window.location.pathname + window.location.search + (yi || ""))
                 }
-                    catch {
-                    }
+                    catch { }
             } attach() {
                 let o = this.instance; o.on("ready", this.onReady), o.on(["Carousel.ready", "Carousel.change"], this.onChange), o.on("close", this.onClose)
             }
@@ -4348,19 +4594,25 @@
         }
         init() {
             if (this.state === G.Destroy) return; this.state = G.Init, this.attachPlugins(Object.assign(Object.assign({}, o.Plugins), this.userPlugins)), this.emit("init"), this.emit("attachPlugins"), this.option("hideScrollbar") === true && (() => {
-                if (!Zt) return; let e = document, n = e.body, i = e.documentElement;
-                if (n.classList.contains(Fn)) return; let s = window.innerWidth - i.getBoundingClientRect().width, l = parseFloat(window.getComputedStyle(n).marginRight); s < 0 && (s = 0), i.style.setProperty(Oi, `${s}px`), l && n.style.setProperty(Ti, `${l}px`), n.classList.add(Fn)
-            })(), this.initLayout(), this.scale(); let t = () => { this.initCarousel(this.userSlides), this.state = G.Ready, this.attachEvents(), this.emit("ready"), setTimeout(() => { this.container && this.container.setAttribute(Bn, "false") }, 16) }; this.option("Fullscreen.autoStart") && j && !j.isFullscreen() ? j.request().then(() => { this.startedFs = true, t() }).catch(() => t()) : t()
+                if (!Zt) return;
+                let e = document, n = e.body, i = e.documentElement;
+                if (n.classList.contains(Fn)) return;
+                let s = window.innerWidth - i.getBoundingClientRect().width, l = parseFloat(window.getComputedStyle(n).marginRight); s < 0 && (s = 0), i.style.setProperty(Oi, `${s}px`), l && n.style.setProperty(Ti, `${l}px`), n.classList.add(Fn)
+            })(), this.initLayout(), this.scale();
+            let t = () => { this.initCarousel(this.userSlides), this.state = G.Ready, this.attachEvents(), this.emit("ready"), setTimeout(() => { this.container && this.container.setAttribute(Bn, "false") }, 16) }; this.option("Fullscreen.autoStart") && j && !j.isFullscreen() ? j.request().then(() => { this.startedFs = true, t() }).catch(() => t()) : t()
         }
         initLayout() {
-            var t, e; let n = this.option("parentEl") || document.body, i = tt(this.localize(this.option("tpl.main") || ""));
+            var t, e;
+            let n = this.option("parentEl") || document.body, i = tt(this.localize(this.option("tpl.main") || ""));
             if (i) {
                 if (i.setAttribute("id", `fancybox-${this.id}`), i.setAttribute("aria-label", this.localize("{{MODAL}}")), i.classList.toggle(Ci, this.isCompact), v(i, this.option("mainClass") || ""), v(i, yn), this.container = i, this.footer = i.querySelector(".fancybox__footer"), n.appendChild(i), v(document.documentElement, Zi), P && mt || (P = document.createElement("span"), v(P, "fancybox-focus-guard"), P.setAttribute(ut, "0"), P.setAttribute(Bn, "true"), P.setAttribute("aria-label", "Focus guard"), mt = P.cloneNode(), (t = i.parentElement) === null || t === void 0 || t.insertBefore(P, i), (e = i.parentElement) === null || e === void 0 || e.append(mt)), i.addEventListener("mousedown", s => { Di = s.pageX, Gi = s.pageY, Z(i, Un) }), this.option("closeExisting")) for (let s of Ut.values()) s.id !== this.id && s.close(); else this.option("animated") && (v(i, vn), setTimeout(() => { this.isClosing() || Z(i, vn) }, 350)); this.emit("initLayout")
             }
         } initCarousel(t) {
             let e = this.container;
-            if (!e) return; let n = e.querySelector(".fancybox__carousel");
-            if (!n) return; let i = this.carousel = new vt(n, X({}, {
+            if (!e) return;
+            let n = e.querySelector(".fancybox__carousel");
+            if (!n) return;
+            let i = this.carousel = new vt(n, X({}, {
                 slides: t, transition: "fade", Panzoom: { lockAxis: this.option("dragToClose") ? "xy" : "x", infinite: !!this.option("dragToClose") && "y" }, Dots: false, Navigation: {
                     classes: {
                         container: "fancybox__nav", button: "f-button", isNext: "is-next", isPrev: "is-prev"
@@ -4368,58 +4620,72 @@
                 }, initialPage: this.option("startIndex"), l10n: this.option("l10n")
             }, this.option("Carousel") || {})); i.on("*", (s, l, ...c) => { this.emit(`Carousel.${l}`, s, ...c) }), i.on(["ready", "change"], () => { this.manageCaption() }), this.on("Carousel.removeSlide", (s, l, c) => { this.clearContent(c), c.state = void 0 }), i.on("Panzoom.touchStart", () => { var s, l; this.isCompact || this.endIdle(), !((s = document.activeElement) === null || s === void 0) && s.closest(".f-thumbs") && ((l = this.container) === null || l === void 0 || l.focus()) }), i.on("settle", () => { this.idleTimer || this.isCompact || !this.option("idle") || this.setIdle(), this.option("autoFocus") && !this.isClosing && this.checkFocus() }), this.option("dragToClose") && (i.on("Panzoom.afterTransform", (s, l) => {
                 let c = this.getSlide();
-                if (c && xn(c.el)) return; let h = this.container;
+                if (c && xn(c.el)) return;
+                let h = this.container;
                 if (h) {
                     let m = Math.abs(l.current.f), a = m < 1 ? "" : Math.max(.5, Math.min(1, 1 - m / l.contentRect.fitHeight * 1.5)); h.style.setProperty("--fancybox-ts", a ? "0s" : ""), h.style.setProperty("--fancybox-opacity", a + "")
                 }
             }), i.on("Panzoom.touchEnd", (s, l, c) => {
-                var h; let m = this.getSlide();
-                if (m && xn(m.el) || l.isMobile && document.activeElement && ["TEXTAREA", "INPUT"].indexOf((h = document.activeElement) === null || h === void 0 ? void 0 : h.nodeName) !== -1) return; let a = Math.abs(l.dragOffset.y); l.lockedAxis === "y" && (a >= 200 || a >= 50 && l.dragOffset.time < 300) && (c && c.cancelable && c.preventDefault(), this.close(c, "f-throwOut" + (l.current.f < 0 ? "Up" : "Down")))
+                var h;
+                let m = this.getSlide();
+                if (m && xn(m.el) || l.isMobile && document.activeElement && ["TEXTAREA", "INPUT"].indexOf((h = document.activeElement) === null || h === void 0 ? void 0 : h.nodeName) !== -1) return;
+                let a = Math.abs(l.dragOffset.y); l.lockedAxis === "y" && (a >= 200 || a >= 50 && l.dragOffset.time < 300) && (c && c.cancelable && c.preventDefault(), this.close(c, "f-throwOut" + (l.current.f < 0 ? "Up" : "Down")))
             })), i.on("change", s => {
-                var l; let c = (l = this.getSlide()) === null || l === void 0 ? void 0 : l.triggerEl;
+                var l;
+                let c = (l = this.getSlide()) === null || l === void 0 ? void 0 : l.triggerEl;
                 if (c) {
                     let h = new CustomEvent("slideTo", { bubbles: true, cancelable: true, detail: s.page }); c.dispatchEvent(h)
                 }
             }), i.on(["refresh", "change"], s => {
                 let l = this.container;
-                if (!l) return; for (let m of l.querySelectorAll("[data-fancybox-current-index]")) m.innerHTML = s.page + 1; for (let m of l.querySelectorAll("[data-fancybox-count]")) m.innerHTML = s.pages.length;
+                if (!l) return;
+                for (let m of l.querySelectorAll("[data-fancybox-current-index]")) m.innerHTML = s.page + 1;
+                for (let m of l.querySelectorAll("[data-fancybox-count]")) m.innerHTML = s.pages.length;
                 if (!s.isInfinite) {
-                    for (let m of l.querySelectorAll("[data-fancybox-next]")) s.page < s.pages.length - 1 ? (m.removeAttribute(Ft), m.removeAttribute(ut)) : (m.setAttribute(Ft, ""), m.setAttribute(ut, "-1")); for (let m of l.querySelectorAll("[data-fancybox-prev]")) s.page > 0 ? (m.removeAttribute(Ft), m.removeAttribute(ut)) : (m.setAttribute(Ft, ""), m.setAttribute(ut, "-1"))
+                    for (let m of l.querySelectorAll("[data-fancybox-next]")) s.page < s.pages.length - 1 ? (m.removeAttribute(Ft), m.removeAttribute(ut)) : (m.setAttribute(Ft, ""), m.setAttribute(ut, "-1"));
+                    for (let m of l.querySelectorAll("[data-fancybox-prev]")) s.page > 0 ? (m.removeAttribute(Ft), m.removeAttribute(ut)) : (m.setAttribute(Ft, ""), m.setAttribute(ut, "-1"))
                 }
                 let c = this.getSlide();
-                if (!c) return; let h = c.downloadSrc || ""; h || c.type !== "image" || c.error || !ct(c[Bt]) || (h = c[Bt]); for (let m of l.querySelectorAll("[data-fancybox-download]")) {
+                if (!c) return;
+                let h = c.downloadSrc || ""; h || c.type !== "image" || c.error || !ct(c[Bt]) || (h = c[Bt]);
+                for (let m of l.querySelectorAll("[data-fancybox-download]")) {
                     let a = c.downloadFilename; h ? (m.removeAttribute(Ft), m.removeAttribute(ut), m.setAttribute(En, h), m.setAttribute(Si, a || h), m.setAttribute("target", "_blank")) : (m.setAttribute(Ft, ""), m.setAttribute(ut, "-1"), m.removeAttribute(En), m.removeAttribute(Si))
                 }
             }), this.emit("initCarousel")
         }
         attachEvents() {
             let t = this, e = t.container;
-            if (!e) return; e.addEventListener("click", t.onClick, { passive: false, capture: false }), e.addEventListener("wheel", t.onWheel, { passive: false, capture: false }), document.addEventListener("keydown", t.onKeydown, { passive: false, capture: true }), document.addEventListener("visibilitychange", t.onVisibilityChange, false), document.addEventListener("mousemove", t.onMousemove), t.option("trapFocus") && document.addEventListener("focus", t.onFocus, true), window.addEventListener("resize", t.onResize); let n = window.visualViewport; n && (n.addEventListener("scroll", t.onResize), n.addEventListener("resize", t.onResize))
+            if (!e) return; e.addEventListener("click", t.onClick, { passive: false, capture: false }), e.addEventListener("wheel", t.onWheel, { passive: false, capture: false }), document.addEventListener("keydown", t.onKeydown, { passive: false, capture: true }), document.addEventListener("visibilitychange", t.onVisibilityChange, false), document.addEventListener("mousemove", t.onMousemove), t.option("trapFocus") && document.addEventListener("focus", t.onFocus, true), window.addEventListener("resize", t.onResize);
+            let n = window.visualViewport; n && (n.addEventListener("scroll", t.onResize), n.addEventListener("resize", t.onResize))
         }
         detachEvents() {
             let t = this, e = t.container;
-            if (!e) return; document.removeEventListener("keydown", t.onKeydown, { passive: false, capture: true }), e.removeEventListener("wheel", t.onWheel, { passive: false, capture: false }), e.removeEventListener("click", t.onClick, { passive: false, capture: false }), document.removeEventListener("mousemove", t.onMousemove), window.removeEventListener("resize", t.onResize); let n = window.visualViewport; n && (n.removeEventListener("resize", t.onResize), n.removeEventListener("scroll", t.onResize)), document.removeEventListener("visibilitychange", t.onVisibilityChange, false), document.removeEventListener("focus", t.onFocus, true)
+            if (!e) return; document.removeEventListener("keydown", t.onKeydown, { passive: false, capture: true }), e.removeEventListener("wheel", t.onWheel, { passive: false, capture: false }), e.removeEventListener("click", t.onClick, { passive: false, capture: false }), document.removeEventListener("mousemove", t.onMousemove), window.removeEventListener("resize", t.onResize);
+            let n = window.visualViewport; n && (n.removeEventListener("resize", t.onResize), n.removeEventListener("scroll", t.onResize)), document.removeEventListener("visibilitychange", t.onVisibilityChange, false), document.removeEventListener("focus", t.onFocus, true)
         }
         scale() {
             let t = this.container;
-            if (!t) return; let e = window.visualViewport, n = Math.max(1, e?.scale || 1), i = "", s = "", l = "";
+            if (!t) return;
+            let e = window.visualViewport, n = Math.max(1, e?.scale || 1), i = "", s = "", l = "";
             if (e && n > 1) {
                 let c = `${e.offsetLeft}px`, h = `${e.offsetTop}px`; i = e.width * n + "px", s = e.height * n + "px", l = `translate3d(${c}, ${h}, 0) scale(${1 / n})`
             }
             t.style.transform = l, t.style.width = i, t.style.height = s
         }
         onClick(t) {
-            var e; let { container: n, isCompact: i
-            }
-                = this;
-            if (!n || this.isClosing()) return; !i && this.option("idle") && this.resetIdle(); let s = t.composedPath()[0];
+            var e;
+            let { container: n, isCompact: i } = this;
+            if (!n || this.isClosing()) return; !i && this.option("idle") && this.resetIdle();
+            let s = t.composedPath()[0];
             if (s.closest(".fancybox-spinner") || s.closest("[data-fancybox-close]")) return t.preventDefault(), void this.close(t);
             if (s.closest("[data-fancybox-prev]")) return t.preventDefault(), void this.prev();
             if (s.closest("[data-fancybox-next]")) return t.preventDefault(), void this.next();
-            if (t.type === "click" && t.detail === 0 || Math.abs(t.pageX - Di) > 30 || Math.abs(t.pageY - Gi) > 30) return; let l = document.activeElement;
+            if (t.type === "click" && t.detail === 0 || Math.abs(t.pageX - Di) > 30 || Math.abs(t.pageY - Gi) > 30) return;
+            let l = document.activeElement;
             if (ki() && l && n.contains(l)) return;
             if (i && ((e = this.getSlide()) === null || e === void 0 ? void 0 : e.type) === "image") return void (this.clickTimer ? (clearTimeout(this.clickTimer), this.clickTimer = null) : this.clickTimer = setTimeout(() => { this.toggleIdle(), this.clickTimer = null }, 350));
-            if (this.emit("click", t), t.defaultPrevented) return; let c = false;
+            if (this.emit("click", t), t.defaultPrevented) return;
+            let c = false;
             if (s.closest(".fancybox__content")) {
                 if (l) {
                     if (l.closest("[contenteditable]")) return; s.matches(pn) || l.blur()
@@ -4429,19 +4695,24 @@
             else s.closest(".fancybox__carousel") && !s.matches(pn) && (c = this.option("backdropClick")); c === "close" ? (t.preventDefault(), this.close(t)) : c === "next" ? (t.preventDefault(), this.next()) : c === "prev" && (t.preventDefault(), this.prev())
         }
         onWheel(t) {
-            let e = t.target, n = this.option("wheel", t); e.closest(".fancybox__thumbs") && (n = "slide"); let i = n === "slide", s = [-t.deltaX || 0, -t.deltaY || 0, -t.detail || 0].reduce(function (h, m) { return Math.abs(m) > Math.abs(h) ? m : h }), l = Math.max(-1, Math.min(1, s)), c = Date.now(); this.pwt && c - this.pwt < 300 ? i && t.preventDefault() : (this.pwt = c, this.emit("wheel", t, l), t.defaultPrevented || (n === "close" ? (t.preventDefault(), this.close(t)) : n === "slide" && (Qe(e) || (t.preventDefault(), this[l > 0 ? "prev" : "next"]()))))
+            let e = t.target, n = this.option("wheel", t); e.closest(".fancybox__thumbs") && (n = "slide");
+            let i = n === "slide", s = [-t.deltaX || 0, -t.deltaY || 0, -t.detail || 0].reduce(function (h, m) { return Math.abs(m) > Math.abs(h) ? m : h }), l = Math.max(-1, Math.min(1, s)), c = Date.now(); this.pwt && c - this.pwt < 300 ? i && t.preventDefault() : (this.pwt = c, this.emit("wheel", t, l), t.defaultPrevented || (n === "close" ? (t.preventDefault(), this.close(t)) : n === "slide" && (Qe(e) || (t.preventDefault(), this[l > 0 ? "prev" : "next"]()))))
         }
         onScroll() {
             window.scrollTo(Ii, _i)
         }
         onKeydown(t) {
-            if (!this.isTopmost()) return; this.isCompact || !this.option("idle") || this.isClosing() || this.resetIdle(); let e = t.key, n = this.option("keyboard");
-            if (!n) return; let i = t.composedPath()[0], s = document.activeElement && document.activeElement.classList, l = s && s.contains("f-button") || i.dataset.carouselPage || i.dataset.carouselIndex;
-            if (e !== "Escape" && !l && N(i) && (i.isContentEditable || ["TEXTAREA", "OPTION", "INPUT", "SELECT", "VIDEO"].indexOf(i.nodeName) !== -1) || (t.key === "Tab" ? v(this.container, Un) : Z(this.container, Un), t.ctrlKey || t.altKey || t.shiftKey)) return; this.emit("keydown", e, t); let c = n[e]; c && typeof this[c] == "function" && (t.preventDefault(), this[c]())
+            if (!this.isTopmost()) return; this.isCompact || !this.option("idle") || this.isClosing() || this.resetIdle();
+            let e = t.key, n = this.option("keyboard");
+            if (!n) return;
+            let i = t.composedPath()[0], s = document.activeElement && document.activeElement.classList, l = s && s.contains("f-button") || i.dataset.carouselPage || i.dataset.carouselIndex;
+            if (e !== "Escape" && !l && N(i) && (i.isContentEditable || ["TEXTAREA", "OPTION", "INPUT", "SELECT", "VIDEO"].indexOf(i.nodeName) !== -1) || (t.key === "Tab" ? v(this.container, Un) : Z(this.container, Un), t.ctrlKey || t.altKey || t.shiftKey)) return; this.emit("keydown", e, t);
+            let c = n[e]; c && typeof this[c] == "function" && (t.preventDefault(), this[c]())
         }
         onResize() {
             let t = this.container;
-            if (!t) return; let e = this.isCompact; t.classList.toggle(Ci, e), this.manageCaption(this.getSlide()), this.isCompact ? this.clearIdle() : this.endIdle(), this.scale(), this.emit("resize")
+            if (!t) return;
+            let e = this.isCompact; t.classList.toggle(Ci, e), this.manageCaption(this.getSlide()), this.isCompact ? this.clearIdle() : this.endIdle(), this.scale(), this.emit("resize")
         }
         onFocus(t) {
             this.isTopmost() && this.checkFocus(t)
@@ -4458,16 +4729,21 @@
                 let i = this.plugins.Toolbar;
                 if (i && i.state === ft.Ready) return
             }
-            if (!e || !t.contentEl || t.closeBtnEl) return; let n = this.option("tpl.closeButton");
+            if (!e || !t.contentEl || t.closeBtnEl) return;
+            let n = this.option("tpl.closeButton");
             if (n) {
                 let i = tt(this.localize(n)); t.closeBtnEl = t.contentEl.appendChild(i), t.el && v(t.el, "has-close-btn")
             }
         } manageCaption(t = void 0) {
-            var e, n; let i = "fancybox__caption", s = this.container;
-            if (!s) return; Z(s, fe); let l = this.isCompact || this.option("commonCaption"), c = !l;
+            var e, n;
+            let i = "fancybox__caption", s = this.container;
+            if (!s) return; Z(s, fe);
+            let l = this.isCompact || this.option("commonCaption"), c = !l;
             if (this.caption && this.stop(this.caption), c && this.caption && (this.caption.remove(), this.caption = null), l && !this.caption) for (let r of ((e = this.carousel) === null || e === void 0 ? void 0 : e.slides) || []) r.captionEl && (r.captionEl.remove(), r.captionEl = void 0, Z(r.el, fe), (n = r.el) === null || n === void 0 || n.removeAttribute("aria-labelledby"));
-            if (t || (t = this.getSlide()), !t || l && !this.isCurrentSlide(t)) return; let h = t.el, m = this.optionFor(t, "caption", "");
-            if (!m) return void (l && this.caption && this.animate(this.caption, "f-fadeOut", () => { this.caption && (this.caption.innerHTML = "") })); let a = null;
+            if (t || (t = this.getSlide()), !t || l && !this.isCurrentSlide(t)) return;
+            let h = t.el, m = this.optionFor(t, "caption", "");
+            if (!m) return void (l && this.caption && this.animate(this.caption, "f-fadeOut", () => { this.caption && (this.caption.innerHTML = "") }));
+            let a = null;
             if (c) {
                 if (a = t.captionEl || null, h && !a) {
                     let r = i + `_${this.id}_${t.index}`; a = document.createElement("div"), v(a, i), a.setAttribute("id", r), t.captionEl = h.appendChild(a), v(h, fe), h.setAttribute("aria-labelledby", r)
@@ -4479,12 +4755,17 @@
         }
         focus(t) {
             var e;
-            if (this.ignoreFocusChange) return; let n = document.activeElement || null, i = t?.target || null, s = this.container, l = (e = this.carousel) === null || e === void 0 ? void 0 : e.viewport;
-            if (!s || !l || !t && n && s.contains(n)) return; let c = this.getSlide(), h = c && c.state === _.Ready ? c.el : null;
-            if (!h || h.contains(n) || s === n) return; t && t.cancelable && t.preventDefault(), this.ignoreFocusChange = true; let m = Array.from(s.querySelectorAll(pn)), a = [], r = null; for (let u of m) {
+            if (this.ignoreFocusChange) return;
+            let n = document.activeElement || null, i = t?.target || null, s = this.container, l = (e = this.carousel) === null || e === void 0 ? void 0 : e.viewport;
+            if (!s || !l || !t && n && s.contains(n)) return;
+            let c = this.getSlide(), h = c && c.state === _.Ready ? c.el : null;
+            if (!h || h.contains(n) || s === n) return; t && t.cancelable && t.preventDefault(), this.ignoreFocusChange = true;
+            let m = Array.from(s.querySelectorAll(pn)), a = [], r = null;
+            for (let u of m) {
                 let p = !u.offsetParent || !!u.closest('[aria-hidden="true"]'), f = h && h.contains(u), Q = !l.contains(u);
                 if (u === s || (f || Q) && !p) {
-                    a.push(u); let b = u.dataset.origTabindex; b !== void 0 && b && (u.tabIndex = parseFloat(b)), u.removeAttribute("data-orig-tabindex"), !u.hasAttribute("autoFocus") && r || (r = u)
+                    a.push(u);
+                    let b = u.dataset.origTabindex; b !== void 0 && b && (u.tabIndex = parseFloat(b)), u.removeAttribute("data-orig-tabindex"), !u.hasAttribute("autoFocus") && r || (r = u)
                 }
                 else {
                     let b = u.dataset.origTabindex === void 0 ? u.getAttribute("tabindex") || "" : u.dataset.origTabindex; b && (u.dataset.origTabindex = b), u.tabIndex = -1
@@ -4505,14 +4786,17 @@
             return ((t = o.getInstance()) === null || t === void 0 ? void 0 : t.id) == this.id
         }
         animate(t = null, e = "", n) {
-            if (!t || !e) return void (n && n()); this.stop(t); let i = s => { s.target === t && t.dataset.animationName && (t.removeEventListener("animationend", i), delete t.dataset.animationName, n && n(), Z(t, e)) }; t.dataset.animationName = e, t.addEventListener("animationend", i), v(t, e)
+            if (!t || !e) return void (n && n()); this.stop(t);
+            let i = s => { s.target === t && t.dataset.animationName && (t.removeEventListener("animationend", i), delete t.dataset.animationName, n && n(), Z(t, e)) }; t.dataset.animationName = e, t.addEventListener("animationend", i), v(t, e)
         }
         stop(t) {
             t && t.dispatchEvent(new CustomEvent("animationend", { bubbles: false, cancelable: true, currentTarget: t }))
         }
         setContent(t, e = "", n = true) {
-            if (this.isClosing()) return; let i = t.el;
-            if (!i) return; let s = null;
+            if (this.isClosing()) return;
+            let i = t.el;
+            if (!i) return;
+            let s = null;
             if (N(e) ? s = e : (s = tt(e + ""), N(s) || (s = document.createElement("div"), s.innerHTML = e + "")), ["img", "picture", "iframe", "video", "audio"].includes(s.nodeName.toLowerCase())) {
                 let l = document.createElement("div"); l.appendChild(s), s = l
             }
@@ -4533,7 +4817,8 @@
             return ((e = this.carousel) === null || e === void 0 ? void 0 : e.prevPage) === null && t && t.index === ((n = this.getSlide()) === null || n === void 0 ? void 0 : n.index)
         }
         showLoading(t) {
-            t.state = _.Loading; let e = t.el; e && (v(e, Mi), this.emit("loading", t), t.spinnerEl || setTimeout(() => {
+            t.state = _.Loading;
+            let e = t.el; e && (v(e, Mi), this.emit("loading", t), t.spinnerEl || setTimeout(() => {
                 if (!this.isClosing() && !t.spinnerEl && t.state === _.Loading) {
                     let n = tt(Rn); v(n, "fancybox-spinner"), t.spinnerEl = n, e.prepend(n), this.animate(n, "f-fadeIn")
                 }
@@ -4541,22 +4826,29 @@
         }
         hideLoading(t) {
             let e = t.el;
-            if (!e) return; let n = t.spinnerEl; this.isClosing() ? n?.remove() : (Z(e, Mi), n && this.animate(n, "f-fadeOut", () => { n.remove() }), t.state === _.Loading && (this.emit("loaded", t), t.state = _.Ready))
+            if (!e) return;
+            let n = t.spinnerEl; this.isClosing() ? n?.remove() : (Z(e, Mi), n && this.animate(n, "f-fadeOut", () => { n.remove() }), t.state === _.Loading && (this.emit("loaded", t), t.state = _.Ready))
         }
         setError(t, e) {
-            if (this.isClosing()) return; let n = new Event("error", { bubbles: true, cancelable: true });
-            if (this.emit("error", n, t), n.defaultPrevented) return; t.error = e, this.hideLoading(t), this.clearContent(t); let i = document.createElement("div"); i.classList.add("fancybox-error"), i.innerHTML = this.localize(e || "<p>{{ERROR}}</p>"), this.setContent(t, i)
+            if (this.isClosing()) return;
+            let n = new Event("error", { bubbles: true, cancelable: true });
+            if (this.emit("error", n, t), n.defaultPrevented) return; t.error = e, this.hideLoading(t), this.clearContent(t);
+            let i = document.createElement("div"); i.classList.add("fancybox-error"), i.innerHTML = this.localize(e || "<p>{{ERROR}}</p>"), this.setContent(t, i)
         }
         clearContent(t) {
-            if (t.state === void 0) return; this.emit("clearContent", t), t.contentEl && (t.contentEl.remove(), t.contentEl = void 0); let e = t.el; e && (Z(e, "has-error"), Z(e, "has-unknown"), Z(e, `has-${t.type || "unknown"}`)), t.closeBtnEl && t.closeBtnEl.remove(), t.closeBtnEl = void 0, t.captionEl && t.captionEl.remove(), t.captionEl = void 0, t.spinnerEl && t.spinnerEl.remove(), t.spinnerEl = void 0
+            if (t.state === void 0) return; this.emit("clearContent", t), t.contentEl && (t.contentEl.remove(), t.contentEl = void 0);
+            let e = t.el; e && (Z(e, "has-error"), Z(e, "has-unknown"), Z(e, `has-${t.type || "unknown"}`)), t.closeBtnEl && t.closeBtnEl.remove(), t.closeBtnEl = void 0, t.captionEl && t.captionEl.remove(), t.captionEl = void 0, t.spinnerEl && t.spinnerEl.remove(), t.spinnerEl = void 0
         }
         getSlide() {
-            var t; let e = this.carousel;
+            var t;
+            let e = this.carousel;
             return ((t = e?.pages[e?.page]) === null || t === void 0 ? void 0 : t.slides[0]) || void 0
         }
         close(t, e) {
-            if (this.isClosing()) return; let n = new Event("shouldClose", { bubbles: true, cancelable: true });
-            if (this.emit("shouldClose", n, t), n.defaultPrevented) return; t && t.cancelable && (t.preventDefault(), t.stopPropagation()); let i = () => { this.proceedClose(t, e) }; this.startedFs && j && j.isFullscreen() ? Promise.resolve(j.exit()).then(() => i()) : i()
+            if (this.isClosing()) return;
+            let n = new Event("shouldClose", { bubbles: true, cancelable: true });
+            if (this.emit("shouldClose", n, t), n.defaultPrevented) return; t && t.cancelable && (t.preventDefault(), t.stopPropagation());
+            let i = () => { this.proceedClose(t, e) }; this.startedFs && j && j.isFullscreen() ? Promise.resolve(j.exit()).then(() => i()) : i()
         }
         clearIdle() {
             this.idleTimer && clearTimeout(this.idleTimer), this.idleTimer = null
@@ -4582,49 +4874,73 @@
             return [G.Closing, G.CustomClosing, G.Destroy].includes(this.state)
         }
         proceedClose(t, e) {
-            var n, i; this.state = G.Closing, this.clearIdle(), this.detachEvents(); let s = this.container, l = this.carousel, c = this.getSlide(), h = c && this.option("placeFocusBack") ? c.triggerEl || this.option("triggerEl") : null;
+            var n, i; this.state = G.Closing, this.clearIdle(), this.detachEvents();
+            let s = this.container, l = this.carousel, c = this.getSlide(), h = c && this.option("placeFocusBack") ? c.triggerEl || this.option("triggerEl") : null;
             if (h && (Xi(h) ? vi(h) : h.focus()), s && (Z(s, yn), v(s, "is-closing"), s.setAttribute(Bn, "true"), this.option("animated") && v(s, vn), s.style.pointerEvents = "none"), l) {
-                l.clearTransitions(), (n = l.panzoom) === null || n === void 0 || n.destroy(), (i = l.plugins.Navigation) === null || i === void 0 || i.detach(); for (let m of l.slides) {
-                    m.state = _.Closing, this.hideLoading(m); let a = m.contentEl; a && this.stop(a); let r = m?.panzoom; r && (r.stop(), r.detachEvents(), r.detachObserver()), this.isCurrentSlide(m) || l.emit("removeSlide", m)
+                l.clearTransitions(), (n = l.panzoom) === null || n === void 0 || n.destroy(), (i = l.plugins.Navigation) === null || i === void 0 || i.detach();
+                for (let m of l.slides) {
+                    m.state = _.Closing, this.hideLoading(m);
+                    let a = m.contentEl; a && this.stop(a);
+                    let r = m?.panzoom; r && (r.stop(), r.detachEvents(), r.detachObserver()), this.isCurrentSlide(m) || l.emit("removeSlide", m)
                 }
             } Ii = window.scrollX, _i = window.scrollY, window.addEventListener("scroll", this.onScroll), this.emit("close", t), this.state !== G.CustomClosing ? (e === void 0 && c && (e = this.optionFor(c, "hideClass")), e && c ? (this.animate(c.contentEl, e, () => { l && l.emit("removeSlide", c) }), setTimeout(() => { this.destroy() }, 500)) : this.destroy()) : setTimeout(() => { this.destroy() }, 500)
         }
         destroy() {
             var t;
-            if (this.state === G.Destroy) return; window.removeEventListener("scroll", this.onScroll), this.state = G.Destroy, (t = this.carousel) === null || t === void 0 || t.destroy(); let e = this.container; e && e.remove(), Ut.delete(this.id); let n = o.getInstance(); n ? n.focus() : (P && (P.remove(), P = null), mt && (mt.remove(), mt = null), Z(document.documentElement, Zi), (() => { if (!Zt) return; let i = document, s = i.body; s.classList.remove(Fn), s.style.setProperty(Ti, ""), i.documentElement.style.setProperty(Oi, "") })(), this.emit("destroy"))
+            if (this.state === G.Destroy) return; window.removeEventListener("scroll", this.onScroll), this.state = G.Destroy, (t = this.carousel) === null || t === void 0 || t.destroy();
+            let e = this.container; e && e.remove(), Ut.delete(this.id);
+            let n = o.getInstance(); n ? n.focus() : (P && (P.remove(), P = null), mt && (mt.remove(), mt = null), Z(document.documentElement, Zi), (() => {
+                if (!Zt) return;
+                let i = document, s = i.body; s.classList.remove(Fn), s.style.setProperty(Ti, ""), i.documentElement.style.setProperty(Oi, "")
+            })(), this.emit("destroy"))
         }
         static bind(t, e, n) {
-            if (!Zt) return; let i, s = "", l = {};
-            if (t === void 0 ? i = document.body : ct(t) ? (i = document.body, s = t, typeof e == "object" && (l = e || {})) : (i = t, ct(e) && (s = e), typeof n == "object" && (l = n || {})), !i || !N(i)) return; s = s || "[data-fancybox]"; let c = o.openers.get(i) || new Map; c.set(s, l), o.openers.set(i, c), c.size === 1 && i.addEventListener("click", o.fromEvent)
+            if (!Zt) return;
+            let i, s = "", l = {};
+            if (t === void 0 ? i = document.body : ct(t) ? (i = document.body, s = t, typeof e == "object" && (l = e || {})) : (i = t, ct(e) && (s = e), typeof n == "object" && (l = n || {})), !i || !N(i)) return; s = s || "[data-fancybox]";
+            let c = o.openers.get(i) || new Map; c.set(s, l), o.openers.set(i, c), c.size === 1 && i.addEventListener("click", o.fromEvent)
         }
         static unbind(t, e) {
             let n, i = "";
-            if (ct(t) ? (n = document.body, i = t) : (n = t, ct(e) && (i = e)), !n) return; let s = o.openers.get(n); s && i && s.delete(i), i && s || (o.openers.delete(n), n.removeEventListener("click", o.fromEvent))
+            if (ct(t) ? (n = document.body, i = t) : (n = t, ct(e) && (i = e)), !n) return;
+            let s = o.openers.get(n); s && i && s.delete(i), i && s || (o.openers.delete(n), n.removeEventListener("click", o.fromEvent))
         }
         static destroy() {
-            let t; for (; t = o.getInstance();)t.destroy(); for (let e of o.openers.keys()) e.removeEventListener("click", o.fromEvent); o.openers = new Map
+            let t;
+            for (; t = o.getInstance();)t.destroy();
+            for (let e of o.openers.keys()) e.removeEventListener("click", o.fromEvent); o.openers = new Map
         }
         static fromEvent(t) {
-            if (t.defaultPrevented || t.button && t.button !== 0 || t.ctrlKey || t.metaKey || t.shiftKey) return; let e = t.composedPath()[0], n = e.closest("[data-fancybox-trigger]");
+            if (t.defaultPrevented || t.button && t.button !== 0 || t.ctrlKey || t.metaKey || t.shiftKey) return;
+            let e = t.composedPath()[0], n = e.closest("[data-fancybox-trigger]");
             if (n) {
                 let p = n.dataset.fancyboxTrigger || "", f = document.querySelectorAll(`[data-fancybox="${p}"]`), Q = parseInt(n.dataset.fancyboxIndex || "", 10) || 0; e = f[Q] || e
             }
-            if (!(e && e instanceof Element)) return; let i, s, l, c;
+            if (!(e && e instanceof Element)) return;
+            let i, s, l, c;
             if ([...o.openers].reverse().find(([p, f]) => !(!p.contains(e) || ![...f].reverse().find(([Q, b]) => {
                 let g = e.closest(Q);
                 return !!g && (i = p, s = Q, l = g, c = b, true)
-            }))), !i || !s || !l) return; c = c || {}, t.preventDefault(), e = l; let h = [], m = X({}, Ln, c); m.event = t, m.triggerEl = e, m.delegate = n; let a = m.groupAll, r = m.groupAttr, d = r && e ? e.getAttribute(`${r}`) : "";
-            if ((!e || d || a) && (h = [].slice.call(i.querySelectorAll(s))), e && !a && (h = d ? h.filter(p => p.getAttribute(`${r}`) === d) : [e]), !h.length) return; let u = o.getInstance();
+            }))), !i || !s || !l) return; c = c || {}, t.preventDefault(), e = l;
+            let h = [], m = X({}, Ln, c); m.event = t, m.triggerEl = e, m.delegate = n;
+            let a = m.groupAll, r = m.groupAttr, d = r && e ? e.getAttribute(`${r}`) : "";
+            if ((!e || d || a) && (h = [].slice.call(i.querySelectorAll(s))), e && !a && (h = d ? h.filter(p => p.getAttribute(`${r}`) === d) : [e]), !h.length) return;
+            let u = o.getInstance();
             return u && u.options.triggerEl && h.indexOf(u.options.triggerEl) > -1 ? void 0 : (e && (m.startIndex = h.indexOf(e)), o.fromNodes(h, m))
         }
         static fromSelector(t, e, n) {
             let i = null, s = "", l = {};
-            if (ct(t) ? (i = document.body, s = t, typeof e == "object" && (l = e || {})) : t instanceof HTMLElement && ct(e) && (i = t, s = e, typeof n == "object" && (l = n || {})), !i || !s) return false; let c = o.openers.get(i);
+            if (ct(t) ? (i = document.body, s = t, typeof e == "object" && (l = e || {})) : t instanceof HTMLElement && ct(e) && (i = t, s = e, typeof n == "object" && (l = n || {})), !i || !s) return false;
+            let c = o.openers.get(i);
             return !!c && (l = X({}, c.get(s) || {}, l), !!l && o.fromNodes(Array.from(i.querySelectorAll(s)), l))
         }
         static fromNodes(t, e) {
-            e = X({}, Ln, e || {}); let n = []; for (let i of t) {
-                let s = i.dataset || {}, l = s[Bt] || i.getAttribute(En) || i.getAttribute("currentSrc") || i.getAttribute(Bt) || void 0, c, h = e.delegate, m; h && n.length === e.startIndex && (c = h instanceof HTMLImageElement ? h : h.querySelector("img:not([aria-hidden])")), c || (c = i instanceof HTMLImageElement ? i : i.querySelector("img:not([aria-hidden])")), c && (m = c.currentSrc || c[Bt] || void 0, !m && c.dataset && (m = c.dataset.lazySrc || c.dataset[Bt] || void 0)); let a = { src: l, triggerEl: i, thumbEl: c, thumbElSrc: m, thumbSrc: m }; for (let r in s) {
+            e = X({}, Ln, e || {});
+            let n = [];
+            for (let i of t) {
+                let s = i.dataset || {}, l = s[Bt] || i.getAttribute(En) || i.getAttribute("currentSrc") || i.getAttribute(Bt) || void 0, c, h = e.delegate, m; h && n.length === e.startIndex && (c = h instanceof HTMLImageElement ? h : h.querySelector("img:not([aria-hidden])")), c || (c = i instanceof HTMLImageElement ? i : i.querySelector("img:not([aria-hidden])")), c && (m = c.currentSrc || c[Bt] || void 0, !m && c.dataset && (m = c.dataset.lazySrc || c.dataset[Bt] || void 0));
+                let a = { src: l, triggerEl: i, thumbEl: c, thumbElSrc: m, thumbSrc: m };
+                for (let r in s) {
                     let d = s[r] + ""; d = d !== "false" && (d === "true" || d), a[r] = d
                 }
                 n.push(a)
@@ -4690,17 +5006,20 @@
             let t = o.querySelector("audio"); t.volume = this.volumeValue
         }
         playAudio(o) {
-            let t = o.target; o.target.classList.contains("audio-player") || (t = o.target.closest(".audio-player")); let e = t.querySelector("audio");
+            let t = o.target; o.target.classList.contains("audio-player") || (t = o.target.closest(".audio-player"));
+            let e = t.querySelector("audio");
             if (this.playingValue && this.playingValue != t.id) {
                 let n = document.getElementById(this.playingValue); n && n.querySelector("audio").pause()
             }
             e.paused && e.play(), t.classList.add("playing"), this.playingValue = t.id, t.dataset.bpm && (this.bpmValue = t.dataset.bpm)
         }
         toggleAudio(o) {
-            let t = o.target; o.target.classList.contains("audio-player") || (t = o.target.closest(".audio-player")); let e = t.querySelector("audio"); t.classList.contains("playing") ? e.pause() : e.play()
+            let t = o.target; o.target.classList.contains("audio-player") || (t = o.target.closest(".audio-player"));
+            let e = t.querySelector("audio"); t.classList.contains("playing") ? e.pause() : e.play()
         }
         pauseAudio(o) {
-            let t = o.target; o.target.classList.contains("audio-player") || (t = o.target.closest(".audio-player")); let e = t.querySelector("audio"); t.classList.remove("playing"), document.querySelector(".audio-player.playing") || (this.playingValue = "")
+            let t = o.target; o.target.classList.contains("audio-player") || (t = o.target.closest(".audio-player"));
+            let e = t.querySelector("audio"); t.classList.remove("playing"), document.querySelector(".audio-player.playing") || (this.playingValue = "")
         }
         spawnNote() {
             if (this.playingValue) {
@@ -4708,12 +5027,15 @@
                 if (o) {
                     let t = o.querySelector(".audio-player__dog");
                     if (t) {
-                        o.classList.contains("playing-alt") ? o.classList.remove("playing-alt") : o.classList.add("playing-alt"); let e = document.createElement("img"); e.src = "/assets/images/note-small.png", e.classList.add("absolute", "animate-note", "z-30", "pixel"), e.width = 18, e.height = 18; let n = Math.floor(Math.random() * 10) - 10, i = Math.floor(Math.random() * 10) - 5, s = Math.floor(Math.random() * 10) - 40; e.setAttribute("style", `top: ${Math.floor(Math.random() * 10) - 10}; left: ${Math.floor(Math.random() * 30) + 40}%; offset-path: path('M 0 0 C ${n} ${n / 2} ${i} ${s} ${i} ${s}`), t.appendChild(e), setTimeout(function () { e.remove() }, 1e3), o.dataset.bpm && (this.bpmValue = o.dataset.bpm), this.nextNote = setTimeout(this.spawnNote.bind(this), 60 / this.bpmValue * 1e3)
+                        o.classList.contains("playing-alt") ? o.classList.remove("playing-alt") : o.classList.add("playing-alt");
+                        let e = document.createElement("img"); e.src = "/assets/images/note-small.png", e.classList.add("absolute", "animate-note", "z-30", "pixel"), e.width = 18, e.height = 18;
+                        let n = Math.floor(Math.random() * 10) - 10, i = Math.floor(Math.random() * 10) - 5, s = Math.floor(Math.random() * 10) - 40; e.setAttribute("style", `top: ${Math.floor(Math.random() * 10) - 10}; left: ${Math.floor(Math.random() * 30) + 40}%; offset-path: path('M 0 0 C ${n} ${n / 2} ${i} ${s} ${i} ${s}`), t.appendChild(e), setTimeout(function () { e.remove() }, 1e3), o.dataset.bpm && (this.bpmValue = o.dataset.bpm), this.nextNote = setTimeout(this.spawnNote.bind(this), 60 / this.bpmValue * 1e3)
                     }
                 }
             }
         } updateVolume(o) {
-            o.target.muted ? (this.mutedValue = true, this.volumeValue = 0) : (this.mutedValue = false, this.volumeValue = o.target.volume); for (let t of this.audioPlayerTargets) {
+            o.target.muted ? (this.mutedValue = true, this.volumeValue = 0) : (this.mutedValue = false, this.volumeValue = o.target.volume);
+            for (let t of this.audioPlayerTargets) {
                 let e = t.querySelector("audio"); e.volume = this.volumeValue
             }
         } stopNotes() {
@@ -4736,18 +5058,23 @@
         o.removeEventListener ? o.removeEventListener(t, e, n) : o.detachEvent && o.detachEvent("on".concat(t), e)
     }
     function to(o, t) {
-        let e = t.slice(0, t.length - 1); for (let n = 0; n < e.length; n++)e[n] = o[e[n].toLowerCase()];
+        let e = t.slice(0, t.length - 1);
+        for (let n = 0; n < e.length; n++)e[n] = o[e[n].toLowerCase()];
         return e
     }
     function eo(o) {
-        typeof o != "string" && (o = ""), o = o.replace(/\s/g, ""); let t = o.split(","), e = t.lastIndexOf(""); for (; e >= 0;)t[e - 1] += ",", t.splice(e, 1), e = t.lastIndexOf("");
+        typeof o != "string" && (o = ""), o = o.replace(/\s/g, "");
+        let t = o.split(","), e = t.lastIndexOf("");
+        for (; e >= 0;)t[e - 1] += ",", t.splice(e, 1), e = t.lastIndexOf("");
         return t
     }
     function Ea(o, t) {
-        let e = o.length >= t.length ? o : t, n = o.length >= t.length ? t : o, i = true; for (let s = 0; s < e.length; s++)n.indexOf(e[s]) === -1 && (i = false);
+        let e = o.length >= t.length ? o : t, n = o.length >= t.length ? t : o, i = true;
+        for (let s = 0; s < e.length; s++)n.indexOf(e[s]) === -1 && (i = false);
         return i
     }
-    var St = { backspace: 8, "\u232B": 8, tab: 9, clear: 12, enter: 13, "\u21A9": 13, return: 13, esc: 27, escape: 27, space: 32, left: 37, up: 38, right: 39, down: 40, del: 46, delete: 46, ins: 45, insert: 45, home: 36, end: 35, pageup: 33, pagedown: 34, capslock: 20, num_0: 96, num_1: 97, num_2: 98, num_3: 99, num_4: 100, num_5: 101, num_6: 102, num_7: 103, num_8: 104, num_9: 105, num_multiply: 106, num_add: 107, num_enter: 108, num_subtract: 109, num_decimal: 110, num_divide: 111, "\u21EA": 20, ",": 188, ".": 190, "/": 191, "`": 192, "-": Tn ? 173 : 189, "=": Tn ? 61 : 187, ";": Tn ? 59 : 186, "'": 222, "[": 219, "]": 221, "\\": 220 }, nt = { "\u21E7": 16, shift: 16, "\u2325": 18, alt: 18, option: 18, "\u2303": 17, ctrl: 17, control: 17, "\u2318": 91, cmd: 91, command: 91 }, Le = { 16: "shiftKey", 18: "altKey", 17: "ctrlKey", 91: "metaKey", shiftKey: 16, ctrlKey: 17, altKey: 18, metaKey: 91 }, I = { 16: false, 18: false, 17: false, 91: false }, M = {}; for (let o = 1; o < 20; o++)St["f".concat(o)] = 111 + o;
+    var St = { backspace: 8, "\u232B": 8, tab: 9, clear: 12, enter: 13, "\u21A9": 13, return: 13, esc: 27, escape: 27, space: 32, left: 37, up: 38, right: 39, down: 40, del: 46, delete: 46, ins: 45, insert: 45, home: 36, end: 35, pageup: 33, pagedown: 34, capslock: 20, num_0: 96, num_1: 97, num_2: 98, num_3: 99, num_4: 100, num_5: 101, num_6: 102, num_7: 103, num_8: 104, num_9: 105, num_multiply: 106, num_add: 107, num_enter: 108, num_subtract: 109, num_decimal: 110, num_divide: 111, "\u21EA": 20, ",": 188, ".": 190, "/": 191, "`": 192, "-": Tn ? 173 : 189, "=": Tn ? 61 : 187, ";": Tn ? 59 : 186, "'": 222, "[": 219, "]": 221, "\\": 220 }, nt = { "\u21E7": 16, shift: 16, "\u2325": 18, alt: 18, option: 18, "\u2303": 17, ctrl: 17, control: 17, "\u2318": 91, cmd: 91, command: 91 }, Le = { 16: "shiftKey", 18: "altKey", 17: "ctrlKey", 91: "metaKey", shiftKey: 16, ctrlKey: 17, altKey: 18, metaKey: 91 }, I = { 16: false, 18: false, 17: false, 91: false }, M = {};
+    for (let o = 1; o < 20; o++)St["f".concat(o)] = 111 + o;
     var C = [], Mt = null, no = "all", rt = new Map, Dt = o => St[o.toLowerCase()] || nt[o.toLowerCase()] || o.toUpperCase().charCodeAt(0), xa = o => Object.keys(St).find(t => St[t] === o), wa = o => Object.keys(nt).find(t => nt[t] === o);
     function io(o) {
         no = o || "all"
@@ -4765,70 +5092,73 @@
         let o = [];
         return Object.keys(M).forEach(t => {
             M[t].forEach(e => {
-                let { key: n, scope: i, mods: s, shortcut: l
-                }
-                    = e; o.push({ scope: i, shortcut: l, mods: s, keys: n.split("+").map(c => Dt(c)) })
+                let { key: n, scope: i, mods: s, shortcut: l } = e; o.push({ scope: i, shortcut: l, mods: s, keys: n.split("+").map(c => Dt(c)) })
             })
         }), o
     }
     function Ra(o) {
-        let t = o.target || o.srcElement, { tagName: e
-        }
-            = t, n = true, i = e === "INPUT" && !["checkbox", "radio", "range", "button", "file", "reset", "submit", "color"].includes(t.type);
+        let t = o.target || o.srcElement, { tagName: e } = t, n = true, i = e === "INPUT" && !["checkbox", "radio", "range", "button", "file", "reset", "submit", "color"].includes(t.type);
         return (t.isContentEditable || (i || e === "TEXTAREA" || e === "SELECT") && !t.readOnly) && (n = false), n
     }
     function Za(o) {
         return typeof o == "string" && (o = Dt(o)), C.indexOf(o) !== -1
     }
     function Oa(o, t) {
-        let e, n; o || (o = kt()); for (let i in M) if (Object.prototype.hasOwnProperty.call(M, i)) for (e = M[i], n = 0; n < e.length;)e[n].scope === o ? e.splice(n, 1).forEach(l => {
-            let { element: c
-            }
-                = l;
+        let e, n; o || (o = kt());
+        for (let i in M) if (Object.prototype.hasOwnProperty.call(M, i)) for (e = M[i], n = 0; n < e.length;)e[n].scope === o ? e.splice(n, 1).forEach(l => {
+            let { element: c } = l;
             return Sn(c)
         }) : n++; kt() === o && io(t || "all")
     }
     function Ta(o) {
         let t = o.keyCode || o.which || o.charCode, e = C.indexOf(t);
         if (e >= 0 && C.splice(e, 1), o.key && o.key.toLowerCase() === "meta" && C.splice(0, C.length), (t === 93 || t === 224) && (t = 91), t in I) {
-            I[t] = false; for (let n in nt) nt[n] === t && ($[n] = false)
+            I[t] = false;
+            for (let n in nt) nt[n] === t && ($[n] = false)
         }
     } function oo(o) {
         if (typeof o > "u") Object.keys(M).forEach(i => { Array.isArray(M[i]) && M[i].forEach(s => We(s)), delete M[i] }), Sn(null); else if (Array.isArray(o)) o.forEach(i => { i.key && We(i) }); else if (typeof o == "object") o.key && We(o); else if (typeof o == "string") {
-            for (var t = arguments.length, e = new Array(t > 1 ? t - 1 : 0), n = 1; n < t; n++)e[n - 1] = arguments[n]; let [i, s] = e; typeof i == "function" && (s = i, i = ""), We({ key: o, scope: i, method: s, splitKey: "+" })
+            for (var t = arguments.length, e = new Array(t > 1 ? t - 1 : 0), n = 1; n < t; n++)e[n - 1] = arguments[n];
+            let [i, s] = e; typeof i == "function" && (s = i, i = ""), We({ key: o, scope: i, method: s, splitKey: "+" })
         }
     } var We = o => {
-        let { key: t, scope: e, method: n, splitKey: i = "+"
-        }
-            = o; eo(t).forEach(l => {
-                let c = l.split(i), h = c.length, m = c[h - 1], a = m === "*" ? "*" : Dt(m);
-                if (!M[a]) return; e || (e = kt()); let r = h > 1 ? to(nt, c) : [], d = []; M[a] = M[a].filter(u => {
-                    let f = (n ? u.method === n : true) && u.scope === e && Ea(u.mods, r);
-                    return f && d.push(u.element), !f
-                }), d.forEach(u => Sn(u))
-            })
+        let { key: t, scope: e, method: n, splitKey: i = "+" } = o; eo(t).forEach(l => {
+            let c = l.split(i), h = c.length, m = c[h - 1], a = m === "*" ? "*" : Dt(m);
+            if (!M[a]) return; e || (e = kt());
+            let r = h > 1 ? to(nt, c) : [], d = []; M[a] = M[a].filter(u => {
+                let f = (n ? u.method === n : true) && u.scope === e && Ea(u.mods, r);
+                return f && d.push(u.element), !f
+            }), d.forEach(u => Sn(u))
+        })
     };
     function $i(o, t, e, n) {
-        if (t.element !== n) return; let i;
+        if (t.element !== n) return;
+        let i;
         if (t.scope === e || t.scope === "all") {
-            i = t.mods.length > 0; for (let s in I) Object.prototype.hasOwnProperty.call(I, s) && (!I[s] && t.mods.indexOf(+s) > -1 || I[s] && t.mods.indexOf(+s) === -1) && (i = false); (t.mods.length === 0 && !I[16] && !I[18] && !I[17] && !I[91] || i || t.shortcut === "*") && (t.keys = [], t.keys = t.keys.concat(C), t.method(o, t) === false && (o.preventDefault ? o.preventDefault() : o.returnValue = false, o.stopPropagation && o.stopPropagation(), o.cancelBubble && (o.cancelBubble = true)))
+            i = t.mods.length > 0;
+            for (let s in I) Object.prototype.hasOwnProperty.call(I, s) && (!I[s] && t.mods.indexOf(+s) > -1 || I[s] && t.mods.indexOf(+s) === -1) && (i = false); (t.mods.length === 0 && !I[16] && !I[18] && !I[17] && !I[91] || i || t.shortcut === "*") && (t.keys = [], t.keys = t.keys.concat(C), t.method(o, t) === false && (o.preventDefault ? o.preventDefault() : o.returnValue = false, o.stopPropagation && o.stopPropagation(), o.cancelBubble && (o.cancelBubble = true)))
         }
     } function qi(o, t) {
         let e = M["*"], n = o.keyCode || o.which || o.charCode;
         if (!$.filter.call(this, o)) return;
         if ((n === 93 || n === 224) && (n = 91), C.indexOf(n) === -1 && n !== 229 && C.push(n), ["metaKey", "ctrlKey", "altKey", "shiftKey"].forEach(c => { let h = Le[c]; o[c] && C.indexOf(h) === -1 ? C.push(h) : !o[c] && C.indexOf(h) > -1 ? C.splice(C.indexOf(h), 1) : c === "metaKey" && o[c] && (C = C.filter(m => m in Le || m === n)) }), n in I) {
-            I[n] = true; for (let c in nt) nt[c] === n && ($[c] = true);
+            I[n] = true;
+            for (let c in nt) nt[c] === n && ($[c] = true);
             if (!e) return
         }
-        for (let c in I) Object.prototype.hasOwnProperty.call(I, c) && (I[c] = o[Le[c]]); o.getModifierState && !(o.altKey && !o.ctrlKey) && o.getModifierState("AltGraph") && (C.indexOf(17) === -1 && C.push(17), C.indexOf(18) === -1 && C.push(18), I[17] = true, I[18] = true); let i = kt();
+        for (let c in I) Object.prototype.hasOwnProperty.call(I, c) && (I[c] = o[Le[c]]); o.getModifierState && !(o.altKey && !o.ctrlKey) && o.getModifierState("AltGraph") && (C.indexOf(17) === -1 && C.push(17), C.indexOf(18) === -1 && C.push(18), I[17] = true, I[18] = true);
+        let i = kt();
         if (e) for (let c = 0; c < e.length; c++)e[c].scope === i && (o.type === "keydown" && e[c].keydown || o.type === "keyup" && e[c].keyup) && $i(o, e[c], i, t);
-        if (!(n in M)) return; let s = M[n], l = s.length; for (let c = 0; c < l; c++)if ((o.type === "keydown" && s[c].keydown || o.type === "keyup" && s[c].keyup) && s[c].key) {
-            let h = s[c], { splitKey: m
-            }
-                = h, a = h.key.split(m), r = []; for (let d = 0; d < a.length; d++)r.push(Dt(a[d])); r.sort().join("") === C.sort().join("") && $i(o, h, i, t)
+        if (!(n in M)) return;
+        let s = M[n], l = s.length;
+        for (let c = 0; c < l; c++)if ((o.type === "keydown" && s[c].keydown || o.type === "keyup" && s[c].keyup) && s[c].key) {
+            let h = s[c], { splitKey: m } = h, a = h.key.split(m), r = [];
+            for (let d = 0; d < a.length; d++)r.push(Dt(a[d])); r.sort().join("") === C.sort().join("") && $i(o, h, i, t)
         }
     } function $(o, t, e) {
-        C = []; let n = eo(o), i = [], s = "all", l = document, c = 0, h = false, m = true, a = "+", r = false, d = false; for (e === void 0 && typeof t == "function" && (e = t), Object.prototype.toString.call(t) === "[object Object]" && (t.scope && (s = t.scope), t.element && (l = t.element), t.keyup && (h = t.keyup), t.keydown !== void 0 && (m = t.keydown), t.capture !== void 0 && (r = t.capture), typeof t.splitKey == "string" && (a = t.splitKey), t.single === true && (d = true)), typeof t == "string" && (s = t), d && oo(o, s); c < n.length; c++)o = n[c].split(a), i = [], o.length > 1 && (i = to(nt, o)), o = o[o.length - 1], o = o === "*" ? "*" : Dt(o), o in M || (M[o] = []), M[o].push({ keyup: h, keydown: m, scope: s, mods: i, shortcut: n[c], method: e, key: n[c], splitKey: a, element: l });
+        C = [];
+        let n = eo(o), i = [], s = "all", l = document, c = 0, h = false, m = true, a = "+", r = false, d = false;
+        for (e === void 0 && typeof t == "function" && (e = t), Object.prototype.toString.call(t) === "[object Object]" && (t.scope && (s = t.scope), t.element && (l = t.element), t.keyup && (h = t.keyup), t.keydown !== void 0 && (m = t.keydown), t.capture !== void 0 && (r = t.capture), typeof t.splitKey == "string" && (a = t.splitKey), t.single === true && (d = true)), typeof t == "string" && (s = t), d && oo(o, s); c < n.length; c++)o = n[c].split(a), i = [], o.length > 1 && (i = to(nt, o)), o = o[o.length - 1], o = o === "*" ? "*" : Dt(o), o in M || (M[o] = []), M[o].push({ keyup: h, keydown: m, scope: s, mods: i, shortcut: n[c], method: e, key: n[c], splitKey: a, element: l });
         if (typeof l < "u" && window) {
             if (!rt.has(l)) {
                 let u = function () {
@@ -4847,30 +5177,24 @@
     function Sn(o) {
         let t = Object.values(M).flat();
         if (t.findIndex(n => {
-            let { element: i
-            }
-                = n;
+            let { element: i } = n;
             return i === o
         }) < 0) {
-            let { keydownListener: n, keyupListenr: i, capture: s
-            }
-                = rt.get(o) || {}; n && i && (Ct(o, "keyup", i, s), Ct(o, "keydown", n, s), rt.delete(o))
+            let { keydownListener: n, keyupListenr: i, capture: s } = rt.get(o) || {}; n && i && (Ct(o, "keyup", i, s), Ct(o, "keydown", n, s), rt.delete(o))
         }
         if ((t.length <= 0 || rt.size <= 0) && (Object.keys(rt).forEach(i => {
-            let { keydownListener: s, keyupListenr: l, capture: c
-            }
-                = rt.get(i) || {}; s && l && (Ct(i, "keyup", l, c), Ct(i, "keydown", s, c), rt.delete(i))
+            let { keydownListener: s, keyupListenr: l, capture: c } = rt.get(i) || {}; s && l && (Ct(i, "keyup", l, c), Ct(i, "keydown", s, c), rt.delete(i))
         }), rt.clear(), Object.keys(M).forEach(i => delete M[i]), Mt)) {
-            let { listener: i, capture: s
-            }
-                = Mt; Ct(window, "focus", i, s), Mt = null
+            let { listener: i, capture: s } = Mt; Ct(window, "focus", i, s), Mt = null
         }
-    } var Mn = { getPressedKeyString: La, setScope: io, getScope: kt, deleteScope: Oa, getPressedKeyCodes: Wa, getAllKeyCodes: Va, isPressed: Za, filter: Ra, trigger: Ca, unbind: oo, keyMap: St, modifier: nt, modifierMap: Le }; for (let o in Mn) Object.prototype.hasOwnProperty.call(Mn, o) && ($[o] = Mn[o]);
+    } var Mn = { getPressedKeyString: La, setScope: io, getScope: kt, deleteScope: Oa, getPressedKeyCodes: Wa, getAllKeyCodes: Va, isPressed: Za, filter: Ra, trigger: Ca, unbind: oo, keyMap: St, modifier: nt, modifierMap: Le };
+    for (let o in Mn) Object.prototype.hasOwnProperty.call(Mn, o) && ($[o] = Mn[o]);
     if (typeof window < "u") {
         let o = window.hotkeys; $.noConflict = t => (t && window.hotkeys === $ && (window.hotkeys = o), $), window.hotkeys = $
     }
     function Ma(o, t) {
-        var e = {}; for (var n in o) Object.prototype.hasOwnProperty.call(o, n) && t.indexOf(n) < 0 && (e[n] = o[n]);
+        var e = {};
+        for (var n in o) Object.prototype.hasOwnProperty.call(o, n) && t.indexOf(n) < 0 && (e[n] = o[n]);
         if (o != null && typeof Object.getOwnPropertySymbols == "function") for (var i = 0, n = Object.getOwnPropertySymbols(o); i < n.length; i++)t.indexOf(n[i]) < 0 && Object.prototype.propertyIsEnumerable.call(o, n[i]) && (e[n[i]] = o[n[i]]);
         return e
     }
@@ -4878,24 +5202,19 @@
         constructor(t, e = {}) {
             var n, i, s; this.log = (h, m) => { this.debug && (this.logger.groupCollapsed(`%c${this.controller.identifier} %c#${h}`, "color: #3B82F6", "color: unset"), this.logger.log(Object.assign({ controllerId: this.controllerId }, m)), this.logger.groupEnd()) }, this.warn = h => { this.logger.warn(`%c${this.controller.identifier} %c${h}`, "color: #3B82F6; font-weight: bold", "color: unset") }, this.dispatch = (h, m = {}) => {
                 if (this.dispatchEvent) {
-                    let { event: a
-                    }
-                        = m, r = Ma(m, ["event"]), d = this.extendedEvent(h, a || null, r); this.targetElement.dispatchEvent(d), this.log("dispatchEvent", Object.assign({ eventName: d.type }, r))
+                    let { event: a } = m, r = Ma(m, ["event"]), d = this.extendedEvent(h, a || null, r); this.targetElement.dispatchEvent(d), this.log("dispatchEvent", Object.assign({ eventName: d.type }, r))
                 }
             }, this.call = (h, m = {}) => {
                 let a = this.controller[h];
                 if (typeof a == "function") return a.call(this.controller, m)
             }, this.extendedEvent = (h, m, a) => {
-                let { bubbles: r, cancelable: d, composed: u
-                }
-                    = m || { bubbles: true, cancelable: true, composed: true };
+                let { bubbles: r, cancelable: d, composed: u } = m || { bubbles: true, cancelable: true, composed: true };
                 return m && Object.assign(a, { originalEvent: m }), new CustomEvent(this.composeEventName(h), { bubbles: r, cancelable: d, composed: u, detail: a })
             }, this.composeEventName = h => {
                 let m = h;
                 return this.eventPrefix === true ? m = `${this.controller.identifier}:${h}` : typeof this.eventPrefix == "string" && (m = `${this.eventPrefix}:${h}`), m
-            }, this.debug = (i = (n = e?.debug) !== null && n !== void 0 ? n : t.application.stimulusUseDebug) !== null && i !== void 0 ? i : kn.debug, this.logger = (s = e?.logger) !== null && s !== void 0 ? s : kn.logger, this.controller = t, this.controllerId = t.element.id || t.element.dataset.id, this.targetElement = e?.element || t.element; let { dispatchEvent: l, eventPrefix: c
-            }
-                = Object.assign({}, kn, e); Object.assign(this, { dispatchEvent: l, eventPrefix: c }), this.controllerInitialize = t.initialize.bind(t), this.controllerConnect = t.connect.bind(t), this.controllerDisconnect = t.disconnect.bind(t)
+            }, this.debug = (i = (n = e?.debug) !== null && n !== void 0 ? n : t.application.stimulusUseDebug) !== null && i !== void 0 ? i : kn.debug, this.logger = (s = e?.logger) !== null && s !== void 0 ? s : kn.logger, this.controller = t, this.controllerId = t.element.id || t.element.dataset.id, this.targetElement = e?.element || t.element;
+            let { dispatchEvent: l, eventPrefix: c } = Object.assign({}, kn, e); Object.assign(this, { dispatchEvent: l, eventPrefix: c }), this.controllerInitialize = t.initialize.bind(t), this.controllerConnect = t.connect.bind(t), this.controllerDisconnect = t.disconnect.bind(t)
         }
     }, Gn = class extends Dn {
         constructor(t, e) {
@@ -4906,7 +5225,8 @@
             }, this.unbind = () => { for (let n in this.hotkeysOptions.hotkeys) $.unbind(n) }, this.controller = t, this.hotkeysOptions = e, this.enhanceController(), this.bind()
         }
         enhanceController() {
-            this.hotkeysOptions.filter && ($.filter = this.hotkeysOptions.filter); let t = this.controller.disconnect.bind(this.controller), e = () => { this.unbind(), t() }; Object.assign(this.controller, { disconnect: e })
+            this.hotkeysOptions.filter && ($.filter = this.hotkeysOptions.filter);
+            let t = this.controller.disconnect.bind(this.controller), e = () => { this.unbind(), t() }; Object.assign(this.controller, { disconnect: e })
         }
     }, Sa = o => ({
         handler: o[0], options: {
@@ -4979,7 +5299,8 @@
             this.updateCountdown(), this.startedValue || (setInterval(this.updateCountdown.bind(this), 1e3), this.startedValue = true)
         }
     };
-    R(It, "targets", ["date", "countdown", "info"]), R(It, "values", {
+    R(It, "targets", ["date", "countdown", "info"])
+    R(It, "values", {
         time: { type: String, default: "" }, cooldown: { type: Number, default: 0 }, started: { type: Boolean, default: false }, locale: { type: String, default: "en_US" }, source: { type: String, default: "/is-it-ready-yet.txt" }, timeSinceRefresh: {
             type: Number, default: 0
         }
@@ -4995,8 +5316,10 @@
                     var e = Math.floor(Math.random() * 600) + 800 + t * 10, n = Math.floor(Math.random() * 450) + 20 + t * 10; t % 2 == 0 && (e = 0 - e - 20), this.appendPixel(e, n, this.containerTarget)
                 }
             } if (this.hasMobileTarget && false) {
-                var o; for (var t; t < o; t++)var e, n;
-                var i; for (var t; t < i; t++)var e, n
+                var o;
+                for (var t; t < o; t++)var e, n;
+                var i;
+                for (var t; t < i; t++)var e, n
             }
 
         }
@@ -5015,7 +5338,10 @@
     var _t = Pt(Ze(), 1);
     var Nt = class extends V {
         connect() {
-            let o = new _t.Howl({ src: ["/assets/audio/sprinkle.ogg", "/assets/audio/sprinkle.mp3"], volume: .5 }); this.sprinkle = o; let t = new _t.Howl({ src: ["/assets/audio/bagel_ralsei.ogg", "/assets/audio/bagel_ralsei.mp3"], volume: .5 }); this.ralsei = t; let e = new _t.Howl({ src: ["/assets/audio/bagel_susie.ogg", "/assets/audio/bagel_susie.mp3"], volume: .5 }); this.susie = e; let n = new _t.Howl({ src: ["/assets/audio/face.ogg", "/assets/audio/face.mp3"], volume: .5 }); this.face = n, localStorage.getItem("rarecats-points") !== null && (this.pointsValue = localStorage.getItem("rarecats-points")), this.summonCat(), setTimeout(() => { this.catTarget.classList.remove("hidden"), this.initializedValue = true, window.requestAnimationFrame(this.catTick.bind(this)) }, 100)
+            let o = new _t.Howl({ src: ["/assets/audio/sprinkle.ogg", "/assets/audio/sprinkle.mp3"], volume: .5 }); this.sprinkle = o;
+            let t = new _t.Howl({ src: ["/assets/audio/bagel_ralsei.ogg", "/assets/audio/bagel_ralsei.mp3"], volume: .5 }); this.ralsei = t;
+            let e = new _t.Howl({ src: ["/assets/audio/bagel_susie.ogg", "/assets/audio/bagel_susie.mp3"], volume: .5 }); this.susie = e;
+            let n = new _t.Howl({ src: ["/assets/audio/face.ogg", "/assets/audio/face.mp3"], volume: .5 }); this.face = n, localStorage.getItem("rarecats-points") !== null && (this.pointsValue = localStorage.getItem("rarecats-points")), this.summonCat(), setTimeout(() => { this.catTarget.classList.remove("hidden"), this.initializedValue = true, window.requestAnimationFrame(this.catTick.bind(this)) }, 100)
         }
         summonCat() {
             let o = Math.floor(Math.random() * 1e3) + 1; this.pullsValue >= 100 ? this.hardReset() : o <= 700 ? (this.catTarget.setAttribute("src", "/assets/images/cat-001.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 10)) : o <= 879 ? (this.catTarget.setAttribute("src", "/assets/images/cat-002.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 50)) : o <= 959 ? (this.catTarget.setAttribute("src", "/assets/images/cat-005.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 250)) : o <= 989 ? (this.catTarget.setAttribute("src", "/assets/images/cat-006.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 1e3)) : o <= 999 ? (this.catTarget.setAttribute("src", "/assets/images/cat-007.gif"), this.catTarget.setAttribute("data-rarecats-points-param", 3e3)) : this.initializedValue == false ? this.summonCat() : this.hardReset(), this.xValue = Math.floor(Math.random() * (document.body.clientWidth - 200)), this.yValue = Math.floor(Math.random() * (document.body.clientHeight - 200)), this.horizontalValue = Math.round(Math.random()) ? 1 : -1, this.verticalValue = Math.round(Math.random()) ? 1 : -1, this.updateCat()
@@ -5059,7 +5385,9 @@
                 en: { rumble: "You can never defeat us!!! Let's rumble!" }, ja: {
                     rumble: "\u304A\u307E\u3048\u306B\u306F\u3000\u308F\u308C\u3089\u3092\u3000\u305F\u304A\u3059\u3053\u3068\u306F\u3000\u3067\u304D\u306C\uFF01\u3000\u3044\u304F\u305E\uFF01\uFF01"
                 }
-            }; let o = new An.Howl({ src: ["/assets/audio/slam.ogg", "/assets/audio/slam.mp3"], volume: .5 }); this.slam = o; let t = new An.Howl({ src: ["/assets/audio/ma.ogg", "/assets/audio/ma.mp3"], volume: .5 }); this.ma = t
+            };
+            let o = new An.Howl({ src: ["/assets/audio/slam.ogg", "/assets/audio/slam.mp3"], volume: .5 }); this.slam = o;
+            let t = new An.Howl({ src: ["/assets/audio/ma.ogg", "/assets/audio/ma.mp3"], volume: .5 }); this.ma = t
         }
         start() {
             this.startedValue == false && (this.slam.play(), this.doorTarget.classList.add("hidden"), this.squareTarget.classList.remove("hidden"), window.requestAnimationFrame(this.moveTick.bind(this)), setTimeout(() => { this.clickedValue == false && (this.escapedTarget.classList.remove("hidden"), this.escapedValue = true, this.squareTarget.classList.add("hidden"), window.getSelection().removeAllRanges()) }, 5e3))
@@ -5097,7 +5425,9 @@
     var Te = Pt(lo(), 1);
     var Ce = class extends V {
         parallaxTargetConnected(o) {
-            o.classList.add("parallax"); let t = 10; "distance" in o.dataset && (t = o.dataset.distance); let e = window.innerHeight / 200; Te.create({
+            o.classList.add("parallax");
+            let t = 10; "distance" in o.dataset && (t = o.dataset.distance);
+            let e = window.innerHeight / 200; Te.create({
                 elem: o, from: 0, to: "bottom-top", direct: true, props: {
                     "--tw-translate-y": {
                         from: 0, to: `-${e * t}px`
@@ -5130,7 +5460,8 @@
     var jn = {}; J(jn, { default: () => Me });
     var Me = class extends V {
         connect() {
-            this.appendStar(Math.floor(Math.random() * 10) + 450, Math.floor(Math.random() * 10) + 100, false), this.appendStar(Math.floor(Math.random() * 10) + 320, Math.floor(Math.random() * 5) + 105, false), this.appendStar(Math.floor(Math.random() * 10) + 480, Math.floor(Math.random() * 10) + 150, false), this.appendStar(Math.floor(Math.random() * 10) + 500, Math.floor(Math.random() * 10) + 350, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 450), Math.floor(Math.random() * 10) + 100, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 320), Math.floor(Math.random() * 5) + 105, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 480), Math.floor(Math.random() * 10) + 150, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 500), Math.floor(Math.random() * 10) + 325, false); for (var o = Math.floor(Math.random() * 6) + 4, t = 0; t < o; t++) {
+            this.appendStar(Math.floor(Math.random() * 10) + 450, Math.floor(Math.random() * 10) + 100, false), this.appendStar(Math.floor(Math.random() * 10) + 320, Math.floor(Math.random() * 5) + 105, false), this.appendStar(Math.floor(Math.random() * 10) + 480, Math.floor(Math.random() * 10) + 150, false), this.appendStar(Math.floor(Math.random() * 10) + 500, Math.floor(Math.random() * 10) + 350, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 450), Math.floor(Math.random() * 10) + 100, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 320), Math.floor(Math.random() * 5) + 105, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 480), Math.floor(Math.random() * 10) + 150, false), this.appendStar(0 - (Math.floor(Math.random() * 10) + 500), Math.floor(Math.random() * 10) + 325, false);
+            for (var o = Math.floor(Math.random() * 6) + 4, t = 0; t < o; t++) {
                 var e = Math.floor(Math.random() * 300) + 600 + t * 10, n = Math.floor(Math.random() * 200) + 200 + t * 10, i = false; t < 2 && (i = true), t % 2 == 0 && (e = 0 - e - 20), this.appendStar(e, n, i)
             }
         } appendStar(o, t, e) {
@@ -5181,7 +5512,8 @@
                     }
                 } let e = document.createElement("span");
                 if (e.classList.add("absolute", "w-[8px]", "h-[8px]", "bg-white", "pointer-events-none", "select-none"), this.revealingValue ? e.classList.add("z-1") : e.classList.add("z-4"), e.setAttribute("data-therapy-target", "dot"), e.setAttribute("style", `left: ${o.clientX}px; top: ${o.clientY}px`), this.containerTarget.append(e), this.dotTargets.length > 500) {
-                    let n = this.dotTargets.length - 500; for (let i of this.dotTargets) if (i.remove(), n -= 1, n <= 0) break
+                    let n = this.dotTargets.length - 500;
+                    for (let i of this.dotTargets) if (i.remove(), n -= 1, n <= 0) break
                 }
                 this.dotsDrawnValue += 1, this.revealingValue == false && this.dotsDrawnValue > 2500 && (this.revealingValue = true, this.treeTarget.classList.remove("hidden"), this.coverboxTarget.classList.remove("hidden"), this.treeTarget.setAttribute("style", "opacity: 0"))
             }
