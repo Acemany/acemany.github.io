@@ -11312,17 +11312,18 @@
                 t = new Date(this.timeValue),
                 e = "",
                 n = t.getTime() - o,
-                i = Math.floor(n / (1e3 * 60 * 60 * 24))
-            i < 10 && i > 0 && (i = `0${i}`)
-            let s = Math.floor((n % (1e3 * 60 * 60 * 24)) / (1e3 * 60 * 60))
-            s < 10 && s >= 0 && (s = `0${s}`)
-            let l = Math.floor((n % (1e3 * 60 * 60)) / (1e3 * 60))
-            l < 10 && l >= 0 && (l = `0${l}`), l == 0 && (l = "00")
-            let c = Math.floor((n % (1e3 * 60)) / 1e3)
+                days = Math.abs(Math.ceil(n / (1e3 * 60 * 60 * 24)))
+            days < 10 && days > 0 && (days = `0${days}`)
+            let hours = Math.abs(Math.ceil((n % (1e3 * 60 * 60 * 24)) / (1e3 * 60 * 60)))
+            hours < 10 && hours >= 0 && (hours = `0${hours}`)
+            let minutes = Math.abs(Math.ceil((n % (1e3 * 60 * 60)) / (1e3 * 60)))
+            minutes < 10 && minutes >= 0 && (minutes = `0${minutes}`)
+            minutes == 0 && (minutes = "00")
+            let seconds = Math.abs(Math.ceil((n % (1e3 * 60)) / 1e3))
             if (
-                (c < 10 && (c = `0${c}`),
-                    i == 0 ? (s == 0 ? (e = " scale-[1.5]") : (e = " scale-[1.3]")) : i <= 3 && (e = " scale-[1.1]"),
-                    n < 0)
+                (seconds < 10 && (seconds = `0${seconds}`),
+                    days == 0 ? (hours == 0 ? (e = " scale-[1.5]") : (e = " scale-[1.3]")) : days <= 3 && (e = " scale-[1.1]"),
+                    n > 0)
             )
                 (this.dateTarget.innerHTML = "NOW"),
                     (this.countdownTarget.innerHTML = "(REFRESH)"),
@@ -11350,23 +11351,24 @@
                         "December",
                     ],
                         m = this.timeValue.substring(9, 10)
-                        ; (this.dateTarget.innerHTML = `Releasing on ${h[t.getMonth()]} ${m - 1}, ${this.timeValue.substring(
+                        ; (this.dateTarget.innerHTML = `Released on ${h[t.getMonth()]} ${m - 1}, ${this.timeValue.substring(
                             0,
                             4
                         )}`),
                             (this.infoTarget.innerHTML = `* ${h[t.getMonth()]} ${m} in Japan, Australia, and New Zealand`)
                 }
-                this.countdownTarget.innerHTML = `<div class='flex gap-x-2 items-center justify-center${e}'>${i > 0
+                console.log(days, hours, minutes, seconds, hours > 0, days > 0)
+                this.countdownTarget.innerHTML = `<div class='flex gap-x-2 items-center justify-center${e}'>${days > 0
+                    ? "<span class='text-3xl whitespace-nowrap md:text-6xl min-w-[50px] md:min-w-[86px] text-right'>" +
+                    days +
+                    "</span><span class='text-2xl md:text-5xl w-4 md:w-8'>:</span>"
+                    : ""
+                    }${hours > 0
                         ? "<span class='text-3xl whitespace-nowrap md:text-6xl min-w-[50px] md:min-w-[86px] text-right'>" +
-                        i +
+                        hours +
                         "</span><span class='text-2xl md:text-5xl w-4 md:w-8'>:</span>"
                         : ""
-                    }${i > 0 || s > 0
-                        ? "<span class='text-3xl whitespace-nowrap md:text-6xl min-w-[50px] md:min-w-[86px] text-right'>" +
-                        s +
-                        "</span><span class='text-2xl md:text-5xl w-4 md:w-8'>:</span>"
-                        : ""
-                    }<span class='text-3xl whitespace-nowrap md:text-6xl min-w-[50px] md:min-w-[86px] text-right'>${l}</span><span class='text-2xl md:text-5xl w-4 md:w-8'>:</span><span class='text-3xl whitespace-nowrap md:text-6xl min-w-[50px] md:min-w-[86px] text-right'>${c}</span></div>`
+                    }<span class='text-3xl whitespace-nowrap md:text-6xl min-w-[50px] md:min-w-[86px] text-right'>${minutes}</span><span class='text-2xl md:text-5xl w-4 md:w-8'>:</span><span class='text-3xl whitespace-nowrap md:text-6xl min-w-[50px] md:min-w-[86px] text-right'>${seconds}</span></div>`
             }
         }
         getLatestCountdown() {
